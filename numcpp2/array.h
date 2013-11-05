@@ -51,4 +51,24 @@ array_t<T, 1> array(int length)
 	return array_t<T, 1>(address, origin, shape);
 }
 
+template <typename T>
+array_t<T, 2> array(int height, int width)
+{
+	// allocate buffer
+	T *buffer = new T[height * width];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	size_type *shape = new int[2];
+	shape[0] = height;
+	shape[1] = width;
+
+	return array_t<T, 2>(address, origin, shape);
+}
+
 #endif // __ARRAY_H__

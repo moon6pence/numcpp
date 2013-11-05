@@ -9,5 +9,8 @@ int main()
 	// Test: allocate 1d array
 	auto test1 = array<int>(1024);
 
+	// Test: allocate 2d array
+	auto test2 = array<int>(3, 2);
+
 	return 0;
 }
