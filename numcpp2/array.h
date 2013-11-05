@@ -32,6 +32,30 @@ void array_deleter(T const *p)
 	delete[] p;
 }
 
+template <typename T, int Dim = 1>
+array_t<T, Dim> array(int *shape)
+{
+	int size = 1;
+	for (int i = 0; i < Dim; i++)
+		size *= shape[i];
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	size_type *new_shape = new int[Dim];
+	for (int i = 0; i < Dim; i++)
+		new_shape[i] = shape[i];
+
+	return array_t<T, Dim>(address, origin, new_shape);
+}
+
 template <typename T>
 array_t<T, 1> array(int length)
 {

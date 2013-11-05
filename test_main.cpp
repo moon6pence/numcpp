@@ -12,5 +12,11 @@ int main()
 	// Test: allocate 2d array
 	auto test2 = array<int>(3, 2);
 
+	// Test: allocate n-dimensonal array
+	int shape[3] = {2, 3, 4};
+	auto test3 = array<int, 3>(shape);
+
+	printf("Bye!");
+
 	return 0;
 }
