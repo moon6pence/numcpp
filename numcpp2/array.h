@@ -1,7 +1,8 @@
 #ifndef __ARRAY_H__
 #define __ARRAY_H__
 
-#include <memory> // shared_ptr
+#include <memory> // shared_ptr, unique_ptr
+#include "tmp.h" // template metaprogramming to unroll small loops
 
 typedef int size_type;
 typedef size_type* shape_type;
@@ -35,9 +36,11 @@ void array_deleter(T const *p)
 template <typename T, int Dim = 1>
 array_t<T, Dim> array(int *shape)
 {
-	int size = 1;
-	for (int i = 0; i < Dim; i++)
-		size *= shape[i];
+	// (without template metaprogramming)
+	// int size = 1;
+	// for (int i = 0; i < Dim; i++) 
+	//	size *= shape[i];
+	int size = TMP<Dim>::multiply_all(shape);
 
 	// allocate buffer
 	T *buffer = new T[size];
@@ -50,8 +53,11 @@ array_t<T, Dim> array(int *shape)
 
 	// shape
 	size_type *new_shape = new int[Dim];
-	for (int i = 0; i < Dim; i++)
-		new_shape[i] = shape[i];
+
+	// (without template metaprogramming)
+	// for (int i = 0; i < Dim; i++)
+	//	new_shape[i] = shape[i];
+	TMP<Dim>::copy(new_shape, shape);
 
 	return array_t<T, Dim>(address, origin, new_shape);
 }
