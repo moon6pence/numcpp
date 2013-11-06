@@ -5,7 +5,6 @@
 #include "tmp.h" // template metaprogramming to unroll small loops
 
 typedef int size_type;
-typedef size_type* shape_type;
 
 template <typename T, int Dim = 1>
 struct array_t
@@ -16,14 +15,31 @@ private:
 	// TODO: make member variables const
 	std::shared_ptr<void> _address;
 	value_type *_origin;
-	std::unique_ptr<size_type> _shape;
+	size_type *_shape;
 
 public:
-	array_t(std::shared_ptr<void> address, value_type *origin, shape_type shape) :
+	array_t(std::shared_ptr<void> address, value_type *origin, size_type *shape) :
 		_address(address), 
 		_origin(origin), 
-		_shape(shape)
+		_shape(shape) // this pointer will be deleted in destructor
 	{
+	}
+
+	~array_t()
+	{
+		delete[] _shape;
+	}
+
+	/** Returns count of all element in array */
+	int size()
+	{
+		// (without template metaprogramming)
+		// int size = 1;
+		// for (int i = 0; i < Dim; i++)
+		// 	size *= _shape[i];
+		int size = TMP<Dim>::multiply_all(_shape);	
+
+		return size;	
 	}
 };
 
