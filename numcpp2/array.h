@@ -78,11 +78,13 @@ array_t<T, Dim> array(int *shape)
 	return array_t<T, Dim>(address, origin, new_shape);
 }
 
-template <typename T>
-array_t<T, 1> array(int length)
+template <typename T, typename... Shape>
+array_t<T, sizeof...(Shape)> array(Shape... shape)
 {
+	int size = multiply_all(shape...);
+
 	// allocate buffer
-	T *buffer = new T[length];
+	T *buffer = new T[size];
 
 	// address
 	std::shared_ptr<void> address(buffer, array_deleter<T>);
@@ -91,30 +93,10 @@ array_t<T, 1> array(int length)
 	T *origin = buffer;
 
 	// shape
-	size_type *shape = new int[1];
-	shape[0] = length;
+	size_type *new_shape = new int[sizeof...(Shape)];
+	copy(new_shape, shape...);
 
-	return array_t<T, 1>(address, origin, shape);
-}
-
-template <typename T>
-array_t<T, 2> array(int height, int width)
-{
-	// allocate buffer
-	T *buffer = new T[height * width];
-
-	// address
-	std::shared_ptr<void> address(buffer, array_deleter<T>);
-
-	// origin
-	T *origin = buffer;
-
-	// shape
-	size_type *shape = new int[2];
-	shape[0] = height;
-	shape[1] = width;
-
-	return array_t<T, 2>(address, origin, shape);
+	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
 }
 
 #endif // __ARRAY_H__
