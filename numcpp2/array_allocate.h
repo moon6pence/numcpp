@@ -25,7 +25,7 @@ array_t<T, Dim> empty()
 	T *origin = buffer;
 
 	// shape
-	size_type *new_shape = new int[Dim];
+	int *new_shape = new int[Dim];
 	TMP<Dim>::fill(new_shape, 0);	
 
 	return array_t<T, Dim>(address, origin, new_shape);
@@ -47,7 +47,7 @@ array_t<T, sizeof...(Shape)> array(Shape... shape)
 	T *origin = buffer;
 
 	// shape
-	size_type *new_shape = new int[sizeof...(Shape)];
+	int *new_shape = new int[sizeof...(Shape)];
 	copy(new_shape, shape...);
 
 	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);

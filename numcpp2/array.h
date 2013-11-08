@@ -4,23 +4,20 @@
 #include <memory> // shared_ptr, unique_ptr
 #include "tmp.h" // template metaprogramming to unroll small loops
 
-typedef int size_type;
-
 template <typename T, int Dim = 1>
 struct array_t
 {
-	typedef T value_type;
+public:
 	typedef T *iterator;
 	typedef const T *const_iterator;
 
 private:
-	// TODO: make member variables const
 	std::shared_ptr<void> _address;
-	value_type *_origin;
-	size_type *_shape;
+	T *_origin;
+	int *_shape;
 
 public:
-	array_t(std::shared_ptr<void> address, value_type *origin, size_type *shape) :
+	array_t(std::shared_ptr<void> address, T *origin, int *shape) :
 		_address(address), 
 		_origin(origin), 
 		_shape(shape) // this pointer will be deleted in destructor
