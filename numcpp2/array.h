@@ -31,7 +31,7 @@ public:
 	}
 
 	/** Returns count of all element in array */
-	int size()
+	int size() const
 	{
 		// (without template metaprogramming)
 		// int size = 1;
@@ -41,62 +41,34 @@ public:
 
 		return size;	
 	}
+
+	/** Returns raw pointer of array */
+	T *raw_pointer() 
+	{ 
+		return _origin; 
+	}
+
+	/** Returns raw pointer of array (const) */
+	const T *raw_pointer() const
+	{
+		return _origin;
+	}
+
+	/** Auto conversion to raw pointer */
+	// 1. Should I use this? 
+	// 2. explicit? 
+	operator T *()
+	{
+		return raw_pointer();
+	}
+
+	/** Auto conversion to raw pointer (const) */
+	operator const T *() const
+	{
+		return raw_pointer();
+	}
 };
 
-template <typename T>
-void array_deleter(T const *p)
-{
-	delete[] p;
-}
-
-template <typename T, int Dim = 1>
-array_t<T, Dim> array(int *shape)
-{
-	// (without template metaprogramming)
-	// int size = 1;
-	// for (int i = 0; i < Dim; i++) 
-	//	size *= shape[i];
-	int size = TMP<Dim>::multiply_all(shape);
-
-	// allocate buffer
-	T *buffer = new T[size];
-
-	// address
-	std::shared_ptr<void> address(buffer, array_deleter<T>);
-
-	// origin
-	T *origin = buffer;
-
-	// shape
-	size_type *new_shape = new int[Dim];
-
-	// (without template metaprogramming)
-	// for (int i = 0; i < Dim; i++)
-	//	new_shape[i] = shape[i];
-	TMP<Dim>::copy(new_shape, shape);
-
-	return array_t<T, Dim>(address, origin, new_shape);
-}
-
-template <typename T, typename... Shape>
-array_t<T, sizeof...(Shape)> array(Shape... shape)
-{
-	int size = multiply_all(shape...);
-
-	// allocate buffer
-	T *buffer = new T[size];
-
-	// address
-	std::shared_ptr<void> address(buffer, array_deleter<T>);
-
-	// origin
-	T *origin = buffer;
-
-	// shape
-	size_type *new_shape = new int[sizeof...(Shape)];
-	copy(new_shape, shape...);
-
-	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
-}
+#include "array_allocate.h"
 
 #endif // __ARRAY_H__
