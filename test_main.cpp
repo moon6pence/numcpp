@@ -7,21 +7,29 @@ int main()
 	puts("Hello World!");
 
 	// Test: allocate 1d array
-	auto test1 = array<int>(1024);
-	printf("1d array size = %d\n", test1.size());
+	{
+		auto test = array<int>(1024);
+		printf("1d array size = %d\n", test.size());
+	}
 
 	// Test: allocate 2d array
-	auto test2 = array<int>(3, 2);
-	printf("2d array size = %d\n", test2.size());
+	{
+		auto test = array<int>(3, 2);
+		printf("2d array size = %d\n", test.size());
+	}
 
 	// Test: allocate n-dimensonal array
-	int shape[3] = {2, 3, 4};
-	auto test3 = array<int, 3>(shape);
-	printf("nd array size = %d\n", test3.size());
+	{
+		int shape[3] = {2, 3, 4};
+		auto test = array<int, 3>(shape);
+		printf("nd array size = %d\n", test.size());
+	}
 
 	// Test: allocate n-dimensional array with variadic tempalte
-	auto test4 = array<int>(2, 3, 4);
-	printf("nd array size = %d\n", test4.size());
+	{
+		auto test = array<int>(2, 3, 4);
+		printf("nd array size = %d\n", test.size());
+	}
 
 	puts("Bye!");
 
