@@ -18,14 +18,7 @@ int main()
 		printf("2d array size = %d\n", test.size());
 	}
 
-	// Test: allocate n-dimensonal array
-	{
-		int shape[3] = {2, 3, 4};
-		auto test = array<int, 3>(shape);
-		printf("nd array size = %d\n", test.size());
-	}
-
-	// Test: allocate n-dimensional array with variadic tempalte
+	// Test: allocate n-dimensional
 	{
 		auto test = array<int>(2, 3, 4);
 		printf("nd array size = %d\n", test.size());
@@ -33,13 +26,10 @@ int main()
 
 	// Test: zeros
 	{
-		int shape[3] = {2, 3, 4};
-		auto test1 = zeros<int, 3>(shape), test2 = zeros<int>(4, 5, 6);
+		auto test = zeros<int>(4, 5, 6);
 
-		printf("test1.size() = %d\n", test1.size());
-		printf("test2.size() = %d\n", test2.size());
-		printf("test1[0] = %d\n", test1[0]);
-		printf("test1[1] = %d\n", test2[0]);
+		printf("test.size() = %d\n", test.size());
+		printf("test[0] = %d\n", test[0]);
 	}
 
 	puts("Bye!");
