@@ -1,12 +1,37 @@
 #ifndef __ARRAY_FUNCTIONS_H__
 #define __ARRAY_FUNCTIONS_H__
 
+#include <algorithm>
+
 template <typename T>
 void array_deleter(T const *p)
 {
 	delete[] p;
 }
 
+/** Allocate empty array */
+template <typename T, int Dim>
+array_t<T, Dim> empty()
+{
+	int size = 0;
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	size_type *new_shape = new int[Dim];
+	TMP<Dim>::fill(new_shape, 0);	
+
+	return array_t<T, Dim>(address, origin, new_shape);
+}
+
+/** Allocate array with given shape */
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> array(Shape... shape)
 {
@@ -28,8 +53,7 @@ array_t<T, sizeof...(Shape)> array(Shape... shape)
 	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
 }
 
-#include <algorithm>
-
+/** Array filled with zero */
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> zeros(Shape... shape)
 {
@@ -38,6 +62,7 @@ array_t<T, sizeof...(Shape)> zeros(Shape... shape)
 	return result;
 }
 
+/** Array filled with one */
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> ones(Shape... shape)
 {

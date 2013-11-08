@@ -16,6 +16,12 @@ struct TMP
 		dst[0] = src[0];
 		TMP<N - 1>::copy(dst + 1, src + 1);
 	}
+
+	static int fill(int *dst, int value)
+	{
+		dst[0] = value;
+		TMP<N - 1>::copy(dst + 1, value);
+	}
 };
 
 template <>
@@ -29,6 +35,11 @@ struct TMP<1>
 	static int copy(int *dst, const int *src)
 	{
 		dst[0] = src[0];
+	}
+
+	static int fill(int *dst, int value)
+	{
+		dst[0] = value;
 	}
 };
 

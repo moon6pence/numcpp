@@ -29,7 +29,13 @@ public:
 
 	~array_t()
 	{
-		delete[] _shape;
+		if (_shape) { delete[] _shape; _shape = nullptr; }
+	}
+
+	/** Check if array is empty */
+	bool empty() const
+	{
+		return _address == nullptr || _origin == nullptr || _shape == nullptr;
 	}
 
 	/** Returns count of all element in array */

@@ -33,6 +33,17 @@ int main()
 		print(test1);
 	}
 
+	// Test: empty array
+	{
+		auto empty_array = empty<int, 1>();
+
+		if (empty_array.empty()) puts("It's empty!");
+		printf("empty_array.size() = %d\n", empty_array.size());
+
+		printf("print(empty_array) : "); 
+		print(empty_array);
+	}
+
 	puts("Bye!");
 
 	return 0;
