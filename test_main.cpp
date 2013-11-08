@@ -26,10 +26,13 @@ int main()
 
 	// Test: zeros
 	{
-		auto test = zeros<int>(4, 5, 6);
+		auto test0 = zeros<int>(4, 5, 6);
+		auto test1 = ones<int>(4, 5, 6);
 
-		printf("test.size() = %d\n", test.size());
-		printf("test[0] = %d\n", test[0]);
+		printf("test0.size() = %d\n", test0.size());
+		printf("test1.size() = %d\n", test1.size());
+		printf("test0[0] = %d\n", test0[0]);
+		printf("test1[0] = %d\n", test1[0]);
 	}
 
 	puts("Bye!");

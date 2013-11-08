@@ -28,13 +28,21 @@ array_t<T, sizeof...(Shape)> array(Shape... shape)
 	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
 }
 
-#include <string.h> // memset
+#include <algorithm>
 
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> zeros(Shape... shape)
 {
 	array_t<T, sizeof...(Shape)> result = array<T, Shape...>(shape...);
-	memset(result, 0, result.size() * sizeof(T));
+	std::fill(result.begin(), result.end(), T());
+	return result;
+}
+
+template <typename T, typename... Shape>
+array_t<T, sizeof...(Shape)> ones(Shape... shape)
+{
+	array_t<T, sizeof...(Shape)> result = array<T, Shape...>(shape...);
+	std::fill(result.begin(), result.end(), T() + 1);
 	return result;
 }
 

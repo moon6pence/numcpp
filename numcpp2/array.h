@@ -10,6 +10,8 @@ template <typename T, int Dim = 1>
 struct array_t
 {
 	typedef T value_type;
+	typedef T *iterator;
+	typedef const T *const_iterator;
 
 private:
 	// TODO: make member variables const
@@ -66,6 +68,30 @@ public:
 	operator const T *() const
 	{
 		return raw_pointer();
+	}
+
+	/** begin iterator */
+	iterator begin()
+	{
+		return _origin;
+	}
+
+	/** end iterator */
+	iterator end()
+	{
+		return _origin + size();
+	}
+
+	/** begin const_iterator */
+	const_iterator begin() const
+	{
+		return _origin;
+	}
+
+	/** end const_interator */
+	const_iterator end() const
+	{
+		return _origin + size();
 	}
 };
 
