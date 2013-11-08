@@ -96,5 +96,6 @@ public:
 };
 
 #include "array_allocate.h"
+#include "array_function.h"
 
 #endif // __ARRAY_H__

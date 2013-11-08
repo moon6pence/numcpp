@@ -24,15 +24,13 @@ int main()
 		printf("nd array size = %d\n", test.size());
 	}
 
-	// Test: zeros
+	// Test: zeros, ones, print
 	{
-		auto test0 = zeros<int>(4, 5, 6);
-		auto test1 = ones<int>(4, 5, 6);
+		auto test0 = zeros<int>(2, 3, 4);
+		auto test1 = ones<int>(2, 3, 4);
 
-		printf("test0.size() = %d\n", test0.size());
-		printf("test1.size() = %d\n", test1.size());
-		printf("test0[0] = %d\n", test0[0]);
-		printf("test1[0] = %d\n", test1[0]);
+		print(test0);
+		print(test1);
 	}
 
 	puts("Bye!");
