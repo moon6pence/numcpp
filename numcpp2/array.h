@@ -39,7 +39,7 @@ public:
 		// int size = 1;
 		// for (int i = 0; i < Dim; i++)
 		// 	size *= _shape[i];
-		int size = TMP<Dim>::multiply_all(_shape);	
+		int size = TMP<Dim>::product(_shape);	
 
 		return size;	
 	}

@@ -6,9 +6,9 @@
 template <int N>
 struct TMP
 {
-	static int multiply_all(int *array)
+	static int product(int *array)
 	{
-		return array[0] * TMP<N - 1>::multiply_all(array + 1);
+		return array[0] * TMP<N - 1>::product(array + 1);
 	}
 
 	static int copy(int *dst, const int *src)
@@ -21,7 +21,7 @@ struct TMP
 template <>
 struct TMP<1>
 {
-	static int multiply_all(int *array)
+	static int product(int *array)
 	{
 		return array[0];
 	}
@@ -35,15 +35,15 @@ struct TMP<1>
 // ## Variadic templates
 
 template <typename Arg1>
-int multiply_all(Arg1 arg1) 
+int product(Arg1 arg1) 
 { 
 	return arg1;
 }
 
 template <typename Arg1, typename... Args>
-int multiply_all(Arg1 arg1, Args... args)
+int product(Arg1 arg1, Args... args)
 {
-	return arg1 * multiply_all(args...);
+	return arg1 * product(args...);
 }
 
 template <typename T, typename Arg1>

@@ -10,7 +10,7 @@ void array_deleter(T const *p)
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> array(Shape... shape)
 {
-	int size = multiply_all(shape...);
+	int size = product(shape...);
 
 	// allocate buffer
 	T *buffer = new T[size];
