@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 
+namespace numcpp {
+
 template <typename T, int Dim>
 void print(const array_t<T, Dim> &array)
 {
@@ -16,5 +18,7 @@ void print(const array_t<T, Dim> &array)
 
 	std::cout << std::endl;
 }
+
+} // namespace numcpp
 
 #endif // __ARRAY_FUNCTION_H__

@@ -3,6 +3,8 @@
 
 // # TMP.h : template metaprogramming to unroll small compile-time loops
 
+namespace numcpp {
+
 template <int N>
 struct TMP
 {
@@ -69,5 +71,7 @@ void copy(T *dst, Arg1 arg1, Args... args)
 	dst[0] = arg1;
 	copy(dst + 1, args...);	
 }
+
+} // namespace numcpp
 
 #endif // __TMP_H__

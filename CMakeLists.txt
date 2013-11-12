@@ -11,5 +11,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 add_executable(
 	test
 	test_main.cpp
-	numcpp2/array.h
+	numcpp/array.h
 )

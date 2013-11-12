@@ -4,6 +4,8 @@
 #include <memory> // shared_ptr, unique_ptr
 #include "tmp.h" // template metaprogramming to unroll small loops
 
+namespace numcpp {
+
 template <typename T, int Dim = 1>
 struct array_t
 {
@@ -124,6 +126,8 @@ public:
 		return _origin + size();
 	}
 };
+
+} // namespace numcpp
 
 #include "array_allocate.h"
 #include "array_function.h"

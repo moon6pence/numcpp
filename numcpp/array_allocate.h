@@ -3,6 +3,8 @@
 
 #include <algorithm>
 
+namespace numcpp {
+
 template <typename T>
 void array_deleter(T const *p)
 {
@@ -70,5 +72,7 @@ array_t<T, sizeof...(Shape)> ones(Shape... shape)
 	std::fill(result.begin(), result.end(), T() + 1);
 	return result;
 }
+
+} // namespace numcpp
 
 #endif // __ARRAY_FUNCTIONS_H__
