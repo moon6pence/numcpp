@@ -47,6 +47,33 @@ public:
 		return size;	
 	}
 
+	/** Returns size in certain dimension */
+	int size(int dim) const
+	{
+		return _shape[dim];
+	}
+
+	/** Returns length of 1 dimension array(=vector) */
+	int length() const
+	{
+		static_assert(Dim == 1, "This function is only for array_t<T, 1>");
+		return size(0);
+	}
+
+	/** Returns height of 2 dimension array(=matrix, image) */
+	int height() const
+	{
+		static_assert(Dim == 2, "This function is only for array_t<T, 2>");
+		return size(0);
+	}
+
+	/** Returns width of 2 dimension array(=matrix, image) */
+	int width() const
+	{
+		static_assert(Dim == 2, "This function is only for array_t<T, 2>");
+		return size(1);
+	}
+
 	/** Returns raw pointer of array */
 	T *raw_pointer() 
 	{ 
