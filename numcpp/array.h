@@ -27,6 +27,8 @@ public:
 		if (_shape) { delete[] _shape; _shape = nullptr; }
 	}
 
+	// ## Part 1. Concepts of array_t, requirements on array types
+
 	/** Check if array is empty */
 	bool empty() const
 	{
@@ -51,6 +53,22 @@ public:
 		return _shape[dim];
 	}
 
+	/** Returns raw pointer of array */
+	T *raw_pointer() 
+	{ 
+		return _origin; 
+	}
+
+	/** Returns raw pointer of array (const) */
+	const T *raw_pointer() const
+	{
+		return _origin;
+	}
+
+
+
+	// ## Part 2. Syntatic sugars
+
 	/** Returns length of 1 dimension array(=vector) */
 	int length() const
 	{
@@ -70,18 +88,6 @@ public:
 	{
 		static_assert(Dim == 2, "This function is only for array_t<T, 2>");
 		return size(1);
-	}
-
-	/** Returns raw pointer of array */
-	T *raw_pointer() 
-	{ 
-		return _origin; 
-	}
-
-	/** Returns raw pointer of array (const) */
-	const T *raw_pointer() const
-	{
-		return _origin;
 	}
 
 	/** Auto conversion to raw pointer */
