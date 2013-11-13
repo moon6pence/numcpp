@@ -59,8 +59,27 @@ public:
 		return _origin;
 	}
 
+	T &at(int x) const
+	{
+		return _origin[x];
+	}
 
+	T &at(int y, int x) const
+	{
+		return _origin[y * _shape[1] + x];
+	}
 
+	T &at(int z, int y, int x) const
+	{
+		return _origin[(z * _shape[1] + y) * _shape[2] + x];
+	}
+
+	template <typename... Index>
+	T &operator() (Index... index)
+	{
+		return at(index...);
+	}
+	
 	// ## Part 2. Syntatic sugars
 
 	/** Check if array is empty */
