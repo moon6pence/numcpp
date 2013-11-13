@@ -1,7 +1,7 @@
 #ifndef __ARRAY_FUNCTIONS_H__
 #define __ARRAY_FUNCTIONS_H__
 
-#include <algorithm>
+#include "array_function.h"
 
 namespace numcpp {
 
@@ -60,7 +60,7 @@ template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> zeros(Shape... shape)
 {
 	array_t<T, sizeof...(Shape)> result = array<T, Shape...>(shape...);
-	std::fill(result.begin(), result.end(), T());
+	fill(result, T());
 	return result;
 }
 
@@ -69,7 +69,7 @@ template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> ones(Shape... shape)
 {
 	array_t<T, sizeof...(Shape)> result = array<T, Shape...>(shape...);
-	std::fill(result.begin(), result.end(), T() + 1);
+	fill(result, T() + 1);
 	return result;
 }
 

@@ -26,12 +26,15 @@ int main()
 		printf("nd array size = %d\n", test.size());
 	}
 
-	// Test: zeros, ones, print
+	// Test: zeros, ones, fill, print
 	{
 		auto test0 = np::zeros<int>(2, 3, 4);
 		auto test1 = np::ones<int>(2, 3, 4);
 
 		np::print(test0);
+		np::print(test1);
+
+		np::fill(test1, 11);
 		np::print(test1);
 	}
 
