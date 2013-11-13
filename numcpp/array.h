@@ -24,16 +24,10 @@ public:
 
 	~array_t()
 	{
-		if (_shape) { delete[] _shape; _shape = nullptr; }
+		delete[] _shape;
 	}
 
 	// ## Part 1. Concepts of array_t, requirements on array types
-
-	/** Check if array is empty */
-	bool empty() const
-	{
-		return _address == nullptr || _origin == nullptr || _shape == nullptr;
-	}
 
 	/** Returns count of all element in array */
 	int size() const
@@ -68,6 +62,12 @@ public:
 
 
 	// ## Part 2. Syntatic sugars
+
+	/** Check if array is empty */
+	bool empty() const
+	{
+		return size() == 0;
+	}
 
 	/** Returns length of 1 dimension array(=vector) */
 	int length() const

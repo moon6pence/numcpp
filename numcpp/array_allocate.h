@@ -6,22 +6,19 @@
 namespace numcpp {
 
 template <typename T>
-void array_deleter(T const *p)
+void empty_deleter(T const *p)
 {
-	delete[] p;
 }
 
 /** Allocate empty array */
 template <typename T, int Dim>
 array_t<T, Dim> empty()
 {
-	int size = 0;
-
-	// allocate buffer
-	T *buffer = new T[size];
+	// data buffer is nullptr
+	T *buffer = nullptr;
 
 	// address
-	std::shared_ptr<void> address(buffer, array_deleter<T>);
+	std::shared_ptr<void> address(buffer, empty_deleter<T>);
 
 	// origin
 	T *origin = buffer;
@@ -31,6 +28,12 @@ array_t<T, Dim> empty()
 	TMP<Dim>::fill(new_shape, 0);	
 
 	return array_t<T, Dim>(address, origin, new_shape);
+}
+
+template <typename T>
+void array_deleter(T const *p)
+{
+	delete[] p;
 }
 
 /** Allocate array with given shape */
