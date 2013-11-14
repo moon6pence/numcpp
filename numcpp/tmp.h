@@ -72,6 +72,18 @@ void copy(T *dst, Arg1 arg1, Args... args)
 	copy(dst + 1, args...);	
 }
 
+template <typename Index0>
+int offset(int *shape, Index0 index0)
+{
+	return index0;
+}
+
+template <typename Index0, typename... Index>
+int offset(int *shape, Index0 index0, Index... index)
+{
+	return index0 + shape[0] * offset(shape + 1, index...);
+}
+
 } // namespace numcpp
 
 #endif // __TMP_H__

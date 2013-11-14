@@ -32,13 +32,7 @@ public:
 	/** Returns count of all element in array */
 	int size() const
 	{
-		// (without template metaprogramming)
-		// int size = 1;
-		// for (int i = 0; i < Dim; i++)
-		// 	size *= _shape[i];
-		int size = TMP<Dim>::product(_shape);	
-
-		return size;	
+		return TMP<Dim>::product(_shape);	
 	}
 
 	/** Returns size in certain dimension */
@@ -59,27 +53,18 @@ public:
 		return _origin;
 	}
 
-	T &at(int x) const
+	template <typename... Index>
+	T &at(Index... index)
 	{
-		return _origin[x];
-	}
-
-	T &at(int x, int y) const
-	{
-		return _origin[x + _shape[0] * y];
-	}
-
-	T &at(int x, int y, int z) const
-	{
-		return _origin[x + _shape[0] * (y + _shape[1] * z)];
+		return _origin[offset(_shape, index...)];	
 	}
 
 	template <typename... Index>
-	T &operator() (Index... index)
+	const T &at(Index... index) const
 	{
-		return at(index...);
+		return _origin[offset(_shape, index...)];	
 	}
-	
+
 	// ## Part 2. Syntatic sugars
 
 	/** Check if array is empty */
@@ -121,6 +106,18 @@ public:
 	operator const T *() const
 	{
 		return raw_pointer();
+	}
+
+	template <typename... Index>
+	T &operator() (Index... index)
+	{
+		return at(index...);
+	}
+	
+	template <typename... Index>
+	const T &operator() (Index... index) const
+	{
+		return at(index...);
 	}
 };
 
