@@ -59,23 +59,23 @@ int main()
 		test1(4) = 5;
 		np::print(test1);
 
-		auto test2 = np::array<int>(2, 3);
+		auto test2 = np::array<int>(3, 2);
 		test2(0, 0) = 1;
-		test2(0, 1) = 2;
-		test2(0, 2) = 3;
-		test2(1, 0) = 4;
+		test2(1, 0) = 2;
+		test2(2, 0) = 3;
+		test2(0, 1) = 4;
 		test2(1, 1) = 5;
-		test2(1, 2) = 6;
+		test2(2, 1) = 6;
 		np::print(test2);
 
 		auto test3 = np::array<int>(2, 2, 2);
 		test3(0, 0, 0) = 1;
-		test3(0, 0, 1) = 2;
+		test3(1, 0, 0) = 2;
 		test3(0, 1, 0) = 3;
-		test3(0, 1, 1) = 4;
-		test3(1, 0, 0) = 5;
+		test3(1, 1, 0) = 4;
+		test3(0, 0, 1) = 5;
 		test3(1, 0, 1) = 6;
-		test3(1, 1, 0) = 7;
+		test3(0, 1, 1) = 7;
 		test3(1, 1, 1) = 8;
 		np::print(test3);
 	}

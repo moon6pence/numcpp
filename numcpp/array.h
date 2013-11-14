@@ -64,14 +64,14 @@ public:
 		return _origin[x];
 	}
 
-	T &at(int y, int x) const
+	T &at(int x, int y) const
 	{
-		return _origin[y * _shape[1] + x];
+		return _origin[x + _shape[0] * y];
 	}
 
-	T &at(int z, int y, int x) const
+	T &at(int x, int y, int z) const
 	{
-		return _origin[(z * _shape[1] + y) * _shape[2] + x];
+		return _origin[x + _shape[0] * (y + _shape[1] * z)];
 	}
 
 	template <typename... Index>
