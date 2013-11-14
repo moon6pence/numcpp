@@ -5,29 +5,34 @@
 
 namespace numcpp {
 
+// ## Recursive templates with N
+
 template <int N>
-struct TMP
+struct TMP_N
 {
+	/** Product all elements in array */
 	static int product(int *array)
 	{
-		return array[0] * TMP<N - 1>::product(array + 1);
+		return array[0] * TMP_N<N - 1>::product(array + 1);
 	}
 
+	/** Copy elements from src array to dst array */
 	static int copy(int *dst, const int *src)
 	{
 		dst[0] = src[0];
-		TMP<N - 1>::copy(dst + 1, src + 1);
+		TMP_N<N - 1>::copy(dst + 1, src + 1);
 	}
 
+	/** Fill array elements with value */
 	static int fill(int *dst, int value)
 	{
 		dst[0] = value;
-		TMP<N - 1>::copy(dst + 1, value);
+		TMP_N<N - 1>::copy(dst + 1, value);
 	}
 };
 
 template <>
-struct TMP<1>
+struct TMP_N<1>
 {
 	static int product(int *array)
 	{
@@ -45,44 +50,50 @@ struct TMP<1>
 	}
 };
 
-// ## Variadic templates
+// ## Recursive templates with variadic arguments
 
-template <typename Arg1>
-int product(Arg1 arg1) 
-{ 
-	return arg1;
-}
-
-template <typename Arg1, typename... Args>
-int product(Arg1 arg1, Args... args)
+namespace TMP_V
 {
-	return arg1 * product(args...);
-}
+	/** product all arguments */
+	template <typename Arg1>
+	int product(Arg1 arg1) 
+	{ 
+		return arg1;
+	}
 
-template <typename T, typename Arg1>
-void copy(T *dst, Arg1 arg1)
-{
-	dst[0] = arg1;	
-}
+	template <typename Arg1, typename... Args>
+	int product(Arg1 arg1, Args... args)
+	{
+		return arg1 * product(args...);
+	}
 
-template <typename T, typename Arg1, typename... Args>
-void copy(T *dst, Arg1 arg1, Args... args)
-{
-	dst[0] = arg1;
-	copy(dst + 1, args...);	
-}
+	/** Copy all arguments to dst array */
+	template <typename Arg1>
+	void copy(int *dst, Arg1 arg1)
+	{
+		dst[0] = arg1;	
+	}
 
-template <typename Index0>
-int offset(int *shape, Index0 index0)
-{
-	return index0;
-}
+	template <typename Arg1, typename... Args>
+	void copy(int *dst, Arg1 arg1, Args... args)
+	{
+		dst[0] = arg1;
+		copy(dst + 1, args...);	
+	}
 
-template <typename Index0, typename... Index>
-int offset(int *shape, Index0 index0, Index... index)
-{
-	return index0 + shape[0] * offset(shape + 1, index...);
-}
+	/** Calculate offset of array element with shape and givin indexes */
+	template <typename Arg1>
+	int offset(int *shape, Arg1 arg1)
+	{
+		return arg1;
+	}
+
+	template <typename Arg1, typename... Args>
+	int offset(int *shape, Arg1 arg1, Args... args)
+	{
+		return arg1 + shape[0] * offset(shape + 1, args...);
+	}
+};
 
 } // namespace numcpp
 

@@ -25,7 +25,7 @@ array_t<T, Dim> empty()
 
 	// shape
 	int *new_shape = new int[Dim];
-	TMP<Dim>::fill(new_shape, 0);	
+	TMP_N<Dim>::fill(new_shape, 0);	
 
 	return array_t<T, Dim>(address, origin, new_shape);
 }
@@ -40,7 +40,7 @@ void array_deleter(T const *p)
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> array(Shape... shape)
 {
-	int size = product(shape...);
+	int size = TMP_V::product(shape...);
 
 	// allocate buffer
 	T *buffer = new T[size];
@@ -53,7 +53,7 @@ array_t<T, sizeof...(Shape)> array(Shape... shape)
 
 	// shape
 	int *new_shape = new int[sizeof...(Shape)];
-	copy(new_shape, shape...);
+	TMP_V::copy(new_shape, shape...);
 
 	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
 }

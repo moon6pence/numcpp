@@ -32,7 +32,7 @@ public:
 	/** Returns count of all element in array */
 	int size() const
 	{
-		return TMP<Dim>::product(_shape);	
+		return TMP_N<Dim>::product(_shape);	
 	}
 
 	/** Returns size in certain dimension */
@@ -56,13 +56,13 @@ public:
 	template <typename... Index>
 	T &at(Index... index)
 	{
-		return _origin[offset(_shape, index...)];	
+		return _origin[TMP_V::offset(_shape, index...)];	
 	}
 
 	template <typename... Index>
 	const T &at(Index... index) const
 	{
-		return _origin[offset(_shape, index...)];	
+		return _origin[TMP_V::offset(_shape, index...)];	
 	}
 
 	// ## Part 2. Syntatic sugars
