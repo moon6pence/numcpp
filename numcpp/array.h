@@ -30,7 +30,7 @@ public:
 	array_t(array_t &) = delete;
 
 	array_t(array_t &&other) :
-		_address(other._address), 
+		_address(std::move(other._address)), 
 		_origin(other._origin), 
 		_shape(other._shape)
 	{
