@@ -1,5 +1,5 @@
-#ifndef __ARRAY_FUNCTIONS_H__
-#define __ARRAY_FUNCTIONS_H__
+#ifndef __NUMCPP_ARRAY_FUNCTIONS_H__
+#define __NUMCPP_ARRAY_FUNCTIONS_H__
 
 #include "array_function.h"
 
@@ -78,4 +78,4 @@ array_t<T, sizeof...(Shape)> ones(Shape... shape)
 
 } // namespace numcpp
 
-#endif // __ARRAY_FUNCTIONS_H__
+#endif // __NUMCPP_ARRAY_FUNCTIONS_H__

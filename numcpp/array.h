@@ -1,5 +1,5 @@
-#ifndef __ARRAY_H__
-#define __ARRAY_H__
+#ifndef __NUMCPP_ARRAY_H__
+#define __NUMCPP_ARRAY_H__
 
 #include <memory> // shared_ptr, unique_ptr
 #include "tmp.h" // template metaprogramming to unroll small loops
@@ -136,4 +136,4 @@ public:
 #include "array_allocate.h"
 #include "array_function.h"
 
-#endif // __ARRAY_H__
+#endif // __NUMCPP_ARRAY_H__

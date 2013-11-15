@@ -1,5 +1,5 @@
-#ifndef __TMP_H__
-#define __TMP_H__
+#ifndef __NUMCPP_TMP_H__
+#define __NUMCPP_TMP_H__
 
 // # TMP.h : template metaprogramming to unroll small compile-time loops
 
@@ -97,4 +97,4 @@ namespace TMP_V
 
 } // namespace numcpp
 
-#endif // __TMP_H__
+#endif // __NUMCPP_TMP_H__

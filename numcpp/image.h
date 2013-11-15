@@ -1,5 +1,5 @@
-#ifndef __IMAGE_H__
-#define __IMAGE_H__
+#ifndef __NUMCPP_IMAGE_H__
+#define __NUMCPP_IMAGE_H__
 
 #include <string.h> // memcpy
 
@@ -57,4 +57,4 @@ void imwrite(const array_t<uint8_t, 2> &array, const std::string &file_path)
 
 } // namespace numcpp
 
-#endif // __IMAGE_H__
+#endif // __NUMCPP_IMAGE_H__

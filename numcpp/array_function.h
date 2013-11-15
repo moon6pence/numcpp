@@ -1,5 +1,5 @@
-#ifndef __ARRAY_FUNCTION_H__
-#define __ARRAY_FUNCTION_H__
+#ifndef __NUMCPP_ARRAY_FUNCTION_H__
+#define __NUMCPP_ARRAY_FUNCTION_H__
 
 #include <algorithm>
 #include <iostream>
@@ -51,4 +51,4 @@ void print(const array_t<T, Dim> &array)
 
 } // namespace numcpp
 
-#endif // __ARRAY_FUNCTION_H__
+#endif // __NUMCPP_ARRAY_FUNCTION_H__
