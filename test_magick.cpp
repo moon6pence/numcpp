@@ -34,9 +34,7 @@ int main(int argc, char *argv[])
 		printf("image size = (%d, %d)\n", image.width(), image.height());
 
 		// Invert image
-		for (int y = 0; y < image.height(); y++)
-			for (int x = 0; x < image.width(); x++)
-				image(x, y) = 255 - image(x, y);
+		np::map(image, [](uint8_t pixel) { return 255 - pixel; });
 
 		np::imwrite(image, "result.bmp");
 	}

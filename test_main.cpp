@@ -83,6 +83,20 @@ int main()
 		np::print(test3);
 	}
 
+	// Test: map high-order function
+	{
+		auto test1 = np::array<int>(5), test2 = np::array<int>(5);	
+		test1(0) = 1;
+		test1(1) = 2;
+		test1(2) = 3;
+		test1(3) = 4;
+		test1(4) = 5;
+
+		np::map(test2, test1, [](int i) { return i + 1; });
+		np::print(test1);
+		np::print(test2);
+	}
+
 	puts("Bye!");
 
 	return 0;

@@ -30,12 +30,14 @@ const T *end(const array_t<T, Dim> &array)
 	return array.raw_pointer() + array.size();
 }
 
+/** Fill array with same value */
 template <typename T, int Dim>
 void fill(array_t<T, Dim> &dst, const T &value)
 {
 	std::fill(begin(dst), end(dst), value);
 }
 
+/** Print all elements in array */
 template <typename T, int Dim>
 void print(const array_t<T, Dim> &array)
 {
@@ -47,6 +49,20 @@ void print(const array_t<T, Dim> &array)
 		});
 
 	std::cout << std::endl;
+}
+
+/** Apply function to each element in array */
+template <typename T, typename U, int Dim, typename UnaryFunction>
+void map(array_t<T, Dim> &dst, const array_t<U, Dim> &src, UnaryFunction function)
+{
+	std::transform(begin(src), end(src), begin(dst), function);
+}
+
+/** Apply function to each element in array (in-place version) */
+template <typename T, int Dim, typename UnaryFunction>
+void map(array_t<T, Dim> &srcDst, UnaryFunction function)
+{
+	std::transform(begin(srcDst), end(srcDst), begin(srcDst), function);
 }
 
 } // namespace numcpp
