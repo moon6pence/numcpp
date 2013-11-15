@@ -12,6 +12,9 @@ add_executable(
 	test
 	test_main.cpp
 	numcpp/array.h
+	numcpp/array_allocate.h
+	numcpp/array_function.h
+	numcpp/tmp.h
 )
 
 # Executable: magick
@@ -20,6 +23,7 @@ include_directories("/usr/local/include/GraphicsMagick")
 add_executable(
 	magick
 	test_magick.cpp
+	numcpp/image.h
 )
 
 target_link_libraries(

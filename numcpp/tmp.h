@@ -24,7 +24,7 @@ struct TMP_N
 	}
 
 	/** Fill array elements with value */
-	static int fill(int *dst, int value)
+	static void fill(int *dst, int value)
 	{
 		dst[0] = value;
 		TMP_N<N - 1>::fill(dst + 1, value);
@@ -44,7 +44,7 @@ struct TMP_N<1>
 		dst[0] = src[0];
 	}
 
-	static int fill(int *dst, int value)
+	static void fill(int *dst, int value)
 	{
 		dst[0] = value;
 	}

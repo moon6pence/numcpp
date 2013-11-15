@@ -65,7 +65,8 @@ array_t<T, 1> array(std::initializer_list<T> values)
 {
 	auto result = array<T>(values.size());
 	std::copy(begin(values), end(values), begin(result));
-	return result;
+
+	return std::move(result);
 }
 
 /** Array filled with zero */
@@ -74,7 +75,8 @@ array_t<T, sizeof...(Shape)> zeros(Shape... shape)
 {
 	auto result = array<T, Shape...>(shape...);
 	fill(result, T());
-	return result;
+
+	return std::move(result);
 }
 
 /** Array filled with one */
@@ -83,7 +85,8 @@ array_t<T, sizeof...(Shape)> ones(Shape... shape)
 {
 	auto result = array<T, Shape...>(shape...);
 	fill(result, T() + 1);
-	return result;
+
+	return std::move(result);
 }
 
 /** One-dimensional array from j to k, such as {j, j+1, ..., k} */
@@ -97,7 +100,7 @@ array_t<T, 1> colon(T j, T k)
 	for (int index = 0; index < result.length(); index++)
 		result(index) = j + index;
 
-	return result;
+	return std::move(result);
 }
 
 /** One-dimensional array from j to k step i, such as {j, j+i, j+2i, ... } */
@@ -111,7 +114,7 @@ array_t<T, 1> colon(T j, T i, T k)
 	for (int index = 0; index < result.length(); index++)
 		result(index) = j + index * i;
 
-	return result;
+	return std::move(result);
 }
 
 } // namespace numcpp
