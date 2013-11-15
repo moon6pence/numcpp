@@ -4,8 +4,10 @@ project(numcpp2)
 # Project header directory
 include_directories("${PROJECT_SOURCE_DIR}")
 
-# CXX compiler option
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
+# Compiler option for C++11
+if (${CMAKE_COMPILER_IS_GNUCXX})
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
+endif (${CMAKE_COMPILER_IS_GNUCXX})
 
 # Executable: test
 add_executable(
@@ -18,7 +20,9 @@ add_executable(
 )
 
 # Executable: magick
-include_directories("/usr/local/include/GraphicsMagick")
+if (${UNIX})
+	include_directories("/usr/local/include/GraphicsMagick")
+endif (${UNIX})
 
 add_executable(
 	magick
@@ -26,7 +30,9 @@ add_executable(
 	numcpp/image.h
 )
 
-target_link_libraries(
-	magick
-	GraphicsMagick++ GraphicsMagick gomp pthread
-)
+if (${UNIX})
+	target_link_libraries(
+		magick
+		GraphicsMagick++ GraphicsMagick gomp pthread
+	)
+endif (${UNIX})
