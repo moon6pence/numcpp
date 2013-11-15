@@ -27,7 +27,7 @@ struct TMP_N
 	static int fill(int *dst, int value)
 	{
 		dst[0] = value;
-		TMP_N<N - 1>::copy(dst + 1, value);
+		TMP_N<N - 1>::fill(dst + 1, value);
 	}
 };
 

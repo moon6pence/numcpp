@@ -40,13 +40,16 @@ int main()
 
 	// Test: empty array
 	{
-		auto empty_array = np::empty<int, 1>();
+		auto empty1 = np::empty<int, 1>();
 
-		if (empty_array.empty()) puts("It's empty!");
-		printf("empty_array.size() = %d\n", empty_array.size());
+		if (empty1.empty()) puts("It's empty!");
+		printf("empty1.size() = %d\n", empty1.size());
 
-		printf("print(empty_array) : "); 
-		print(empty_array);
+		printf("print(empty1) : "); 
+		np::print(empty1);
+
+		auto empty2 = np::empty<int, 2>();
+		printf("empty2.size() = %d\n", empty2.size());
 	}
 
 	// Test: at(x, y, ...) or operator(x, y, ...)
