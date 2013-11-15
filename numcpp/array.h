@@ -24,7 +24,17 @@ public:
 
 	~array_t()
 	{
-		delete[] _shape;
+		if (_shape) { delete[] _shape; _shape = nullptr; }
+	}
+
+	array_t(array_t &) = delete;
+
+	array_t(array_t &&other) :
+		_address(other._address), 
+		_origin(other._origin), 
+		_shape(other._shape)
+	{
+		other._shape = nullptr;
 	}
 
 	// ## Part 1. Concepts of array_t, requirements on array types
