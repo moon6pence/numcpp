@@ -102,6 +102,12 @@ int main()
 		np::print(np::colon(1.0, 1.5, 9.9));	
 	}
 
+	// Test: array with initializer_list
+	{
+		auto test1 = np::array({3, 2, 1, 5, 4});
+		np::print(test1);	
+	}
+
 	puts("Bye!");
 
 	return 0;

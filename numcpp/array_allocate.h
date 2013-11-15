@@ -1,6 +1,7 @@
 #ifndef __NUMCPP_ARRAY_FUNCTIONS_H__
 #define __NUMCPP_ARRAY_FUNCTIONS_H__
 
+#include <initializer_list>
 #include "array_function.h"
 
 namespace numcpp {
@@ -56,6 +57,15 @@ array_t<T, sizeof...(Shape)> array(Shape... shape)
 	TMP_V::copy(new_shape, shape...);
 
 	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
+}
+
+/** Allocate array assigned with initializer_list */
+template <typename T>
+array_t<T, 1> array(std::initializer_list<T> values)
+{
+	auto result = array<T>(values.size());
+	std::copy(begin(values), end(values), begin(result));
+	return result;
 }
 
 /** Array filled with zero */
