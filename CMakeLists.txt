@@ -13,3 +13,16 @@ add_executable(
 	test_main.cpp
 	numcpp/array.h
 )
+
+# Executable: magick
+include_directories("/usr/local/include/GraphicsMagick")
+
+add_executable(
+	magick
+	test_magick.cpp
+)
+
+target_link_libraries(
+	magick
+	GraphicsMagick++ GraphicsMagick gomp pthread
+)
