@@ -62,7 +62,7 @@ array_t<T, sizeof...(Shape)> array(Shape... shape)
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> zeros(Shape... shape)
 {
-	array_t<T, sizeof...(Shape)> result = array<T, Shape...>(shape...);
+	auto result = array<T, Shape...>(shape...);
 	fill(result, T());
 	return result;
 }
@@ -71,8 +71,36 @@ array_t<T, sizeof...(Shape)> zeros(Shape... shape)
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> ones(Shape... shape)
 {
-	array_t<T, sizeof...(Shape)> result = array<T, Shape...>(shape...);
+	auto result = array<T, Shape...>(shape...);
 	fill(result, T() + 1);
+	return result;
+}
+
+/** One-dimensional array from j to k, such as {j, j+1, ..., k} */
+template <typename T>
+array_t<T, 1> colon(T j, T k)
+{
+	if (k < j) 
+		return empty<T, 1>();
+
+	auto result = array<T>(k - j + 1);
+	for (int index = 0; index < result.length(); index++)
+		result(index) = j + index;
+
+	return result;
+}
+
+/** One-dimensional array from j to k step i, such as {j, j+i, j+2i, ... } */
+template <typename T>
+array_t<T, 1> colon(T j, T i, T k)
+{
+	if (i == 0 || (i > 0 && j > k) || (i < 0 && j < k))
+		return empty<T, 1>();	
+
+	auto result = array<T>((int)((k - j) / i) + 1);
+	for (int index = 0; index < result.length(); index++)
+		result(index) = j + index * i;
+
 	return result;
 }
 

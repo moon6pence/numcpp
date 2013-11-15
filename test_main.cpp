@@ -85,16 +85,21 @@ int main()
 
 	// Test: map high-order function
 	{
-		auto test1 = np::array<int>(5), test2 = np::array<int>(5);	
-		test1(0) = 1;
-		test1(1) = 2;
-		test1(2) = 3;
-		test1(3) = 4;
-		test1(4) = 5;
+		auto test1 = np::colon(1, 5), test2 = np::array<int>(5);	
 
 		np::map(test2, test1, [](int i) { return i + 1; });
 		np::print(test1);
 		np::print(test2);
+	}
+
+	// Test: colon function
+	{
+		np::print(np::colon(1, 10));	
+		np::print(np::colon(1.5, 10.0));	
+
+		np::print(np::colon(1, 2, 10));	
+		np::print(np::colon(1.0, 1.5, 10.0));	
+		np::print(np::colon(1.0, 1.5, 9.9));	
 	}
 
 	puts("Bye!");
