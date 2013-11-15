@@ -61,13 +61,18 @@ int main(int argc, char *argv[])
 
 	// Test: Magick++
 	{
-		Magick::Image image;	
+		using namespace Magick;
 
 		try
 		{
+			Image image;
 			image.read("Lena.bmp");
 			printf("width: %d height: %d\n", 
 				image.size().width(), image.size().height());
+
+			Blob blob;
+			image.write(&blob, "RGB");
+			printf("blob.length() = %lu\n", blob.length());
 		}
 		catch (Magick::Exception &error)
 		{
