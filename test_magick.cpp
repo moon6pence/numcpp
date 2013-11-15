@@ -33,6 +33,26 @@ array_t<uint8_t, 2> imread(const std::string &file_path)
 	}
 }
 
+void imwrite(const array_t<uint8_t, 2> &array, const std::string &file_path)
+{
+	using namespace Magick;
+
+	try
+	{
+		Blob blob(array.raw_pointer(), array.size() * sizeof(uint8_t));
+
+		Image image;
+		image.size(Geometry(array.width(), array.height()));
+		image.magick("r");
+		image.read(blob);
+		image.write(file_path);
+	}
+	catch (Magick::Exception &error)
+	{
+		puts(error.what());
+	}
+}
+
 } // namespace numcpp
 
 int main(int argc, char *argv[])
@@ -57,9 +77,16 @@ int main(int argc, char *argv[])
 
 	namespace np = numcpp;
 
-	// Test: imread
+	// Test: imread, imwrite
 	{
 		auto image = np::imread("Lena.bmp");
 		printf("image size = (%d, %d)\n", image.width(), image.height());
+
+		// Invert image
+		for (int y = 0; y < image.height(); y++)
+			for (int x = 0; x < image.width(); x++)
+				image(x, y) = 255 - image(x, y);
+
+		np::imwrite(image, "result.bmp");
 	}
 }
