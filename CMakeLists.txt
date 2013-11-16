@@ -36,7 +36,27 @@ if (${UNIX})
 	)
 endif (${UNIX})
 
+# Executable: ipp
+if (${UNIX})
+	include_directories("/opt/intel/ipp/include")
+	link_directories("/opt/intel/ipp/lib/intel64")
+endif (${UNIX})
+
+add_executable(
+	ipp
+	test_ipp.cpp
+)
+
+if (${UNIX})
+	target_link_libraries(
+		ipp
+		ippi
+	)
+endif (${UNIX})
+
+# Executable: circularize
 add_executable(
 	circularize
 	example/circularize.cpp
 )
+
