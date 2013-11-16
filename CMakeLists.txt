@@ -27,7 +27,6 @@ endif (${UNIX})
 add_executable(
 	magick
 	test_magick.cpp
-	numcpp/image.h
 )
 
 if (${UNIX})
@@ -36,3 +35,8 @@ if (${UNIX})
 		GraphicsMagick++ GraphicsMagick gomp pthread
 	)
 endif (${UNIX})
+
+add_executable(
+	circularize
+	example/circularize.cpp
+)
