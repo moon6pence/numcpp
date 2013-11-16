@@ -51,18 +51,28 @@ void print(const array_t<T, Dim> &array)
 	std::cout << std::endl;
 }
 
-/** Apply function to each element in array */
+/** Apply unary function to each element in array */
 template <typename T, typename U, int Dim, typename UnaryFunction>
 void map(array_t<T, Dim> &dst, const array_t<U, Dim> &src, UnaryFunction function)
 {
 	std::transform(begin(src), end(src), begin(dst), function);
 }
 
-/** Apply function to each element in array (in-place version) */
+/** Apply unary function to each element in array (in-place version) */
 template <typename T, int Dim, typename UnaryFunction>
 void map(array_t<T, Dim> &srcDst, UnaryFunction function)
 {
 	std::transform(begin(srcDst), end(srcDst), begin(srcDst), function);
+}
+
+/** Apply binary function to each element in array */
+template <typename T, typename U, typename V, int Dim, typename BinaryFunction>
+void map(
+	array_t<T, Dim> &dst, 
+	const array_t<U, Dim> &src1, const array_t<V, Dim> &src2, 
+	BinaryFunction function)
+{
+	std::transform(begin(src1), end(src1), begin(src2), begin(dst), function);
 }
 
 } // namespace numcpp

@@ -19,20 +19,53 @@ add_executable(
 	numcpp/tmp.h
 )
 
-# Executable: magick
+# Dependency : GraphicsMagick
 if (${UNIX})
 	include_directories("/usr/local/include/GraphicsMagick")
 endif (${UNIX})
 
+# Executable: magick
 add_executable(
 	magick
 	test_magick.cpp
-	numcpp/image.h
 )
 
 if (${UNIX})
 	target_link_libraries(
 		magick
 		GraphicsMagick++ GraphicsMagick gomp pthread
+	)
+endif (${UNIX})
+
+# Dependency: ipp
+if (${UNIX})
+	include_directories("/opt/intel/ipp/include")
+	link_directories("/opt/intel/ipp/lib/intel64")
+endif (${UNIX})
+
+# Executable: ipp
+add_executable(
+	ipp
+	test_ipp.cpp
+)
+
+if (${UNIX})
+	target_link_libraries(
+		ipp
+		ippi
+	)
+endif (${UNIX})
+
+# Executable: circularize
+add_executable(
+	circularize
+	example/circularize.cpp
+)
+
+if (${UNIX})
+	target_link_libraries(
+		circularize
+		GraphicsMagick++ GraphicsMagick gomp pthread
+		ippi
 	)
 endif (${UNIX})
