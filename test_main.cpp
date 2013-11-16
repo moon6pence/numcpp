@@ -108,6 +108,16 @@ int main()
 		np::print(test1);	
 	}
 
+	// Test: meshgrid
+	{
+		auto xgv = np::colon(0, 5), ygv = np::colon(0, 5);
+		auto X = np::array<int>(6, 6), Y = np::array<int>(6, 6);
+
+		np::meshgrid(X, Y, xgv, ygv);
+		np::print(X);
+		np::print(Y);
+	}
+
 	puts("Bye!");
 
 	return 0;

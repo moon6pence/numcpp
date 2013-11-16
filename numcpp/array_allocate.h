@@ -1,8 +1,10 @@
 #ifndef __NUMCPP_ARRAY_FUNCTIONS_H__
 #define __NUMCPP_ARRAY_FUNCTIONS_H__
 
-#include <initializer_list>
 #include "array_function.h"
+
+#include <initializer_list>
+#include <assert.h>
 
 namespace numcpp {
 
@@ -115,6 +117,23 @@ array_t<T, 1> colon(T j, T i, T k)
 		result(index) = j + index * i;
 
 	return std::move(result);
+}
+
+// TODO: return two array at once
+template <typename T> 
+void meshgrid(
+	array_t<T, 2> &X, array_t<T, 2> &Y, 
+	const array_t<T, 1> &xgv, const array_t<T, 1> &ygv)
+{
+	assert(xgv.length() == X.width() && xgv.length() == Y.width());
+	assert(ygv.length() == Y.height() && ygv.length() == Y.height());
+
+	for (int y = 0; y < ygv.length(); y++)
+		for (int x = 0; x < xgv.length(); x++)
+		{
+			X(x, y) = xgv(x);
+			Y(x, y) = ygv(y);
+		}
 }
 
 } // namespace numcpp
