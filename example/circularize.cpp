@@ -1,13 +1,40 @@
 #include <numcpp/array.h>
+#include <numcpp/image.h>
+
+#include <ipp.h>
 #include <math.h>
 
 namespace np = numcpp;
 
+template <typename T>
+int stepBytes(const numcpp::array_t<T, 2> &image)
+{
+	return image.width() * sizeof(T);
+}
+
+template <typename T>
+IppiSize ippiSize(const numcpp::array_t<T, 2> &image)
+{
+	IppiSize result = { image.width(), image.height() };
+	return result;
+}
+
+template <typename T>
+IppiRect ippiRect(const numcpp::array_t<T, 2> &image)
+{
+	IppiRect result = { 0, 0, image.width(), image.height() };
+	return result;
+}
+
 int main(int argc, char *argv[])
 {
-	int width = 1024, height = 1024;
+	Magick::InitializeMagick(argv[0]);
 
-	const int DIAMETER = 5;
+	auto image = np::imread("example/input.bmp");
+	const int width = image.width(), height = image.height();;
+	printf("width = %d, height = %d\n", width, height);
+
+	const int DIAMETER = 1024;
 	auto X = np::array<float>(DIAMETER, DIAMETER);
 	auto Y = np::array<float>(DIAMETER, DIAMETER);
 	meshgrid(X, Y, np::colon(0.f, DIAMETER - 1.f), np::colon(0.f, DIAMETER - 1.f));
@@ -42,10 +69,21 @@ int main(int argc, char *argv[])
 		return _rho * (height-1) / (DIAMETER/2);
 	});
 
-	np::print(X);
-	np::print(Y);
-	np::print(theta);
-	np::print(rho);
-	np::print(x_map);
-	np::print(y_map);
+	// np::print(X);
+	// np::print(Y);
+	// np::print(theta);
+	// np::print(rho);
+	// np::print(x_map);
+	// np::print(y_map);
+
+	auto result_image = np::array<uint8_t>(DIAMETER, DIAMETER);
+
+	ippiRemap_8u_C1R(
+		image, ippiSize(image), stepBytes(image), ippiRect(image), 
+		x_map, stepBytes(x_map), 
+		y_map, stepBytes(y_map), 
+		result_image, stepBytes(result_image), ippiSize(result_image), 
+		IPPI_INTER_LINEAR);
+
+	np::imwrite(result_image, "example/output.bmp");
 }
