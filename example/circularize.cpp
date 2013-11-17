@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
 
 	// theta
 	auto theta = np::array<float>(X.width(), X.height());
-	np::map(theta, Y, X, atan2);
+	np::map(theta, Y, X, [](float _y, float _x) { return atan2(_y, _x); });
 
 	// X map: interpolate (-pi, pi) -> (0, width - 1)
 	const float PI = 3.1415927f;

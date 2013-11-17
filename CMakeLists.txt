@@ -27,6 +27,10 @@ add_executable(
 # Dependency : GraphicsMagick
 if (${UNIX})
 	include_directories("/usr/local/include/GraphicsMagick")
+elseif (${WIN32})
+	include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18")
+	include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/Magick++/lib")
+	link_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/VisualMagick/lib")
 endif (${UNIX})
 
 # Executable: magick
@@ -39,6 +43,12 @@ if (${UNIX})
 	target_link_libraries(
 		magick
 		GraphicsMagick++ GraphicsMagick gomp pthread
+	)
+elseif (${WIN32})
+	target_link_libraries(
+		magick
+		CORE_RL_magick_
+		CORE_RL_Magick++_
 	)
 endif (${UNIX})
 
@@ -65,6 +75,13 @@ if (${UNIX})
 	target_link_libraries(
 		circularize
 		GraphicsMagick++ GraphicsMagick gomp pthread
+		ippi
+	)
+elseif (${WIN32})
+	target_link_libraries(
+		circularize
+		CORE_RL_magick_
+		CORE_RL_Magick++_
 		ippi
 	)
 endif (${UNIX})

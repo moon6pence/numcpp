@@ -26,7 +26,7 @@ array_t<uint8_t, 2> imread(const std::string &file_path)
 
 		auto result = array<uint8_t>(image.size().width(), image.size().height());
 		memcpy(result, blob.data(), blob.length());
-		return result;
+		return std::move(result);
 	}
 	catch (Magick::Exception &error)
 	{
