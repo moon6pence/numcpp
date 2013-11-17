@@ -42,24 +42,18 @@ if (${UNIX})
 	)
 endif (${UNIX})
 
-# Dependency: ipp
+# Dependency: Intel IPP
 if (${UNIX})
 	include_directories("/opt/intel/ipp/include")
 	link_directories("/opt/intel/ipp/lib/intel64")
+elseif (${WIN32})
+	include_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/include")
+	link_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/lib/ia32")
 endif (${UNIX})
 
 # Executable: ipp
-add_executable(
-	ipp
-	test_ipp.cpp
-)
-
-if (${UNIX})
-	target_link_libraries(
-		ipp
-		ippi
-	)
-endif (${UNIX})
+add_executable(ipp test_ipp.cpp)
+target_link_libraries(ipp ippi)
 
 # Executable: circularize
 add_executable(
