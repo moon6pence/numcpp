@@ -98,7 +98,7 @@ array_t<T, 1> colon(T j, T k)
 	if (k < j) 
 		return empty<T, 1>();
 
-	auto result = array<T>(k - j + 1);
+	auto result = array<T>((int)(k - j + 1));
 	for (int index = 0; index < result.length(); index++)
 		result(index) = j + index;
 
