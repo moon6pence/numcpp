@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <Magick++.h>
 
-#include <numcpp/array.h>
+#include "array_allocate.h"
 
 namespace numcpp {
 

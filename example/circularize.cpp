@@ -1,4 +1,4 @@
-#include <numcpp/array.h>
+#include <numcpp.h>
 #include <numcpp/image.h>
 
 #include <ipp.h>

@@ -133,7 +133,4 @@ public:
 
 } // namespace numcpp
 
-#include "array_allocate.h"
-#include "array_function.h"
-
 #endif // __NUMCPP_ARRAY_H__

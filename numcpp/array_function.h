@@ -1,6 +1,8 @@
 #ifndef __NUMCPP_ARRAY_FUNCTION_H__
 #define __NUMCPP_ARRAY_FUNCTION_H__
 
+#include "array.h"
+
 #include <algorithm>
 #include <iostream>
 

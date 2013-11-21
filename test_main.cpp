@@ -1,4 +1,4 @@
-#include <numcpp/array.h>
+#include <numcpp.h>
 #include <stdio.h>
 
 int main()

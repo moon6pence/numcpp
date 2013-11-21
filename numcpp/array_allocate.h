@@ -1,6 +1,7 @@
 #ifndef __NUMCPP_ARRAY_FUNCTIONS_H__
 #define __NUMCPP_ARRAY_FUNCTIONS_H__
 
+#include "array.h"
 #include "array_function.h"
 
 #include <initializer_list>

@@ -18,6 +18,7 @@ endif (${MSVC})
 add_executable(
 	test
 	test_main.cpp
+	numcpp.h
 	numcpp/array.h
 	numcpp/array_allocate.h
 	numcpp/array_function.h

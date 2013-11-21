@@ -1,5 +1,7 @@
-#include <stdio.h>
+#include <numcpp.h>
 #include <numcpp/image.h>
+
+#include <stdio.h>
 
 int main(int argc, char *argv[])
 {
