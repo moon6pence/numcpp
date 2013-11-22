@@ -1,0 +1,7 @@
+#ifndef __NUMCPP_CONFIG_H__
+#define __NUMCPP_CONFIG_H__
+
+#cmakedefine USE_MAGICK
+#cmakedefine USE_IPP
+
+#endif // __NUMCPP_CONFIG_H__

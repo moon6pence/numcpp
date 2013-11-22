@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 2.8.8)
 project(numcpp2)
 
 # Conditional build with external dependencies
-SET(USE_MAGICK ON CACHE BOOL "Use GraphicsMagick library")
-SET(USE_IPP ON CACHE BOOL "Use Intel IPP library")
+set(USE_MAGICK ON CACHE BOOL "Use GraphicsMagick library")
+set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
+configure_file(config.h.in config.h)
 
 # Project header directory
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 
 # Compiler option for gcc: C++11
 if (${CMAKE_COMPILER_IS_GNUCXX})
