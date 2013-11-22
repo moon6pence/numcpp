@@ -18,10 +18,10 @@ if (${MSVC})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SCL_SECURE_NO_WARNINGS" )
 endif (${MSVC})
 
-# Executable: test
-add_executable(
-	test
-	test_main.cpp
+# Library: numcpp
+add_library(
+	numcpp
+	numcpp.cpp
 	numcpp.h
 	numcpp/array.h
 	numcpp/array_allocate.h
@@ -31,77 +31,48 @@ add_executable(
 
 # External library: GraphicsMagick
 if (USE_MAGICK)
-
-	# Dependency : GraphicsMagick
 	if (${UNIX})
 		include_directories("/usr/local/include/GraphicsMagick")
+		target_link_libraries(numcpp GraphicsMagick++ GraphicsMagick gomp pthread)
 	elseif (${WIN32})
 		include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18")
 		include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/Magick++/lib")
 		link_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/VisualMagick/lib")
+		target_link_libraries(numcpp CORE_RL_magick_ CORE_RL_Magick++_)
 	endif (${UNIX})
-
-	# Testcase: magick
-	add_executable(
-		magick
-		test_magick.cpp
-	)
-
-	if (${UNIX})
-		target_link_libraries(
-			magick
-			GraphicsMagick++ GraphicsMagick gomp pthread
-		)
-	elseif (${WIN32})
-		target_link_libraries(
-			magick
-			CORE_RL_magick_
-			CORE_RL_Magick++_
-		)
-	endif (${UNIX})
-
 endif(USE_MAGICK)
 
 # External library: Intel IPP
 if (USE_IPP)
-
-	# Dependency: Intel IPP
 	if (${UNIX})
 		include_directories("/opt/intel/ipp/include")
 		link_directories("/opt/intel/ipp/lib/intel64")
+		target_link_libraries(numcpp ippi)
 	elseif (${WIN32})
 		include_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/include")
 		link_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/lib/ia32")
+		target_link_libraries(numcpp ippi)
 	endif (${UNIX})
-
-	# Testcase: ipp
-	add_executable(ipp test_ipp.cpp)
-	target_link_libraries(ipp ippi)
-
 endif(USE_IPP)
+
+# Executable: test
+add_executable(test test_main.cpp)
+target_link_libraries(test numcpp)
+
+# Testcase: magick
+if (USE_MAGICK)
+	add_executable(magick test_magick.cpp	)
+	target_link_libraries(magick numcpp)
+endif (USE_MAGICK)
+
+# Testcase: ipp
+if (USE_IPP)
+	add_executable(ipp test_ipp.cpp)
+	target_link_libraries(ipp numcpp)
+endif (USE_IPP)
 
 # Example: circularize
 if (USE_MAGICK AND USE_IPP)
-
-	# Executable: circularize
-	add_executable(
-		circularize
-		example/circularize.cpp
-	)
-
-	if (${UNIX})
-		target_link_libraries(
-			circularize
-			GraphicsMagick++ GraphicsMagick gomp pthread
-			ippi
-		)
-	elseif (${WIN32})
-		target_link_libraries(
-			circularize
-			CORE_RL_magick_
-			CORE_RL_Magick++_
-			ippi
-		)
-	endif (${UNIX})
-
+	add_executable(circularize example/circularize.cpp)
+	target_link_libraries(circularize numcpp)
 endif(USE_MAGICK AND USE_IPP)
