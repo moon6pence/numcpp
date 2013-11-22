@@ -4,6 +4,7 @@ project(numcpp2)
 # Conditional build with external dependencies
 set(USE_MAGICK ON CACHE BOOL "Use GraphicsMagick library")
 set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
+set(USE_CUDA OFF CACHE BOOL "Use NVIDIA CUDA")
 configure_file(config.h.in config.h)
 
 # Project header directory
@@ -41,7 +42,7 @@ if (USE_MAGICK)
 		link_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/VisualMagick/lib")
 		target_link_libraries(numcpp CORE_RL_magick_ CORE_RL_Magick++_)
 	endif (${UNIX})
-endif(USE_MAGICK)
+endif (USE_MAGICK)
 
 # External library: Intel IPP
 if (USE_IPP)
@@ -54,7 +55,18 @@ if (USE_IPP)
 		link_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/lib/ia32")
 		target_link_libraries(numcpp ippi)
 	endif (${UNIX})
-endif(USE_IPP)
+endif (USE_IPP)
+
+# External library: NVIDIA CUDA
+if (USE_CUDA)
+	find_package(CUDA)
+
+	# Generate 2.0 code
+	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
+
+	# Use C++03 compiler, not C++11
+	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
+endif (USE_CUDA)
 
 # Executable: test
 add_executable(test test_main.cpp)
@@ -71,6 +83,12 @@ if (USE_IPP)
 	add_executable(ipp test_ipp.cpp)
 	target_link_libraries(ipp numcpp)
 endif (USE_IPP)
+
+# Testcase: cuda
+if (USE_CUDA)
+	cuda_compile(TEST_CUDA_O test_cuda.cu)
+	cuda_add_executable(cuda ${TEST_CUDA_O})
+endif (USE_CUDA)
 
 # Example: circularize
 if (USE_MAGICK AND USE_IPP)
