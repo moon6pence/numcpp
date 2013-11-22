@@ -86,8 +86,11 @@ endif (USE_IPP)
 
 # Testcase: cuda
 if (USE_CUDA)
-	cuda_compile(TEST_CUDA_O test_cuda.cu)
-	cuda_add_executable(cuda ${TEST_CUDA_O})
+	cuda_compile(TEST_CUDA_KERNEL_O test_cuda_kernel.cu)
+	cuda_add_library(cuda_kernel ${TEST_CUDA_KERNEL_O})
+
+	add_executable(cuda test_cuda.cpp)
+	target_link_libraries(cuda cuda_kernel numcpp)	
 endif (USE_CUDA)
 
 # Example: circularize

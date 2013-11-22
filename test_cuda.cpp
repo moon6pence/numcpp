@@ -1,11 +1,9 @@
-#include <iostream>
-#include <cuda.h>
+#include "test_cuda_kernel.h"
 
-__global__ void vecAdd(const int *A, const int *B, int *C)
-{
-	int idx = blockIdx.x * blockDim.x + threadIdx.x;
-	C[idx] = A[idx] + B[idx];
-}
+#include <numcpp.h>
+
+#include <iostream>
+#include <cuda_runtime.h>
 
 int main(int argc, char **argv)
 {
@@ -39,7 +37,7 @@ int main(int argc, char **argv)
 	cudaMemcpy(b_d, b, N * sizeof(int), cudaMemcpyHostToDevice);
 
 	// Run kernel
-	vecAdd <<< 1, 5 >>> (a_d, b_d, c_d);
+	vecAdd(a_d, b_d, c_d, N);
 
 	// Blocks until the device has completed all preceding requested tasks
 	cudaThreadSynchronize();
