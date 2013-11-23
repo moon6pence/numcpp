@@ -82,8 +82,8 @@ void test_device_array()
 	auto c_d = np::device_array<int>(5);
 
 	// Copy from host to device
-	cudaMemcpy(a_d, a, N * sizeof(int), cudaMemcpyHostToDevice);
-	cudaMemcpy(b_d, b, N * sizeof(int), cudaMemcpyHostToDevice);
+	host_to_device(a_d, a);
+	host_to_device(b_d, b);
 
 	// Run kernel
 	vecAdd(a_d, b_d, c_d, N);
@@ -92,7 +92,7 @@ void test_device_array()
 	cudaThreadSynchronize();
 
 	// Copy from device to host
-	cudaMemcpy(c, c_d, N * sizeof(int), cudaMemcpyDeviceToHost);
+	device_to_host(c, c_d);
 
 	// Print C
 	for (int i = 0; i < N; i++)
