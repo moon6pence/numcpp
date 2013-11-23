@@ -3,5 +3,6 @@
 
 #cmakedefine USE_MAGICK
 #cmakedefine USE_IPP
+#cmakedefine USE_CUDA
 
 #endif // __NUMCPP_CONFIG_H__
