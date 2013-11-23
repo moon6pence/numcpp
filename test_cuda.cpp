@@ -1,11 +1,12 @@
 #include "test_cuda_kernel.h"
 
 #include <numcpp.h>
+#include <numcpp/device_array.h>
 
 #include <iostream>
 #include <cuda_runtime.h>
 
-int main(int argc, char **argv)
+void test_cuda()
 {
 	using namespace std;
 
@@ -53,6 +54,56 @@ int main(int argc, char **argv)
 	cudaFree(a_d);
 	cudaFree(b_d);
 	cudaFree(c_d);
+}
+
+void test_device_array()
+{
+	using namespace std;
+	namespace np = numcpp;
+
+	const int N = 5;
+
+	// Data on the host memory
+	auto a = np::array({1, 2, 3, 4, 5}), b = np::array({3, 3, 3, 3, 3});
+	auto c = np::array<int>(5);
+
+	// Print A
+	for (int i = 0; i < N; i++)
+		cout << a[i] << " ";
+	cout << endl;
+
+	// Print B
+	for (int i = 0; i < N; i++)
+		cout << b[i] << " ";
+	cout << endl;
+
+	// Data on the device memory
+	auto a_d = np::device_array<int>(5), b_d = np::device_array<int>(5);
+	auto c_d = np::device_array<int>(5);
+
+	// Copy from host to device
+	cudaMemcpy(a_d, a, N * sizeof(int), cudaMemcpyHostToDevice);
+	cudaMemcpy(b_d, b, N * sizeof(int), cudaMemcpyHostToDevice);
+
+	// Run kernel
+	vecAdd(a_d, b_d, c_d, N);
+
+	// Blocks until the device has completed all preceding requested tasks
+	cudaThreadSynchronize();
+
+	// Copy from device to host
+	cudaMemcpy(c, c_d, N * sizeof(int), cudaMemcpyDeviceToHost);
+
+	// Print C
+	for (int i = 0; i < N; i++)
+		cout << c[i] << " ";
+	cout << endl;
+}
+
+int main(int argc, char **argv)
+{
+	test_cuda();
+	test_device_array();
 
 	return 0;
 }
