@@ -27,8 +27,10 @@ public:
 		if (_shape) { delete[] _shape; _shape = nullptr; }
 	}
 
-	array_t(array_t &) = delete;
+private:
+	array_t(array_t &) { }
 
+public:
 	array_t(array_t &&other) :
 		_address(std::move(other._address)), 
 		_origin(other._origin), 
@@ -63,6 +65,7 @@ public:
 		return _origin;
 	}
 
+#ifdef VARIADIC_TEMPLATE
 	template <typename... Index>
 	T &at(Index... index)
 	{
@@ -74,6 +77,37 @@ public:
 	{
 		return _origin[TMP_V::offset(_shape, index...)];	
 	}
+#else // ifndef VARIADIC_TEMPLATE
+	T &at(int index0)
+	{
+		return _origin[index0];	
+	}
+
+	T &at(int index0, int index1)
+	{
+		return _origin[index0 + _shape[0] * index1];	
+	}
+
+	T &at(int index0, int index1, int index2)
+	{
+		return _origin[index0 + _shape[0] * (index1 + _shape[1] * index2)];	
+	}
+
+	const T &at(int index0) const
+	{
+		return _origin[index0];	
+	}
+
+	const T &at(int index0, int index1) const
+	{
+		return _origin[index0 + _shape[0] * index1];	
+	}
+
+	const T &at(int index0, int index1, int index2) const
+	{
+		return _origin[index0 + _shape[0] * (index1 + _shape[1] * index2)];	
+	}
+#endif // VARIADIC_TEMPLATE
 
 	// ## Part 2. Syntatic sugars
 
@@ -118,6 +152,7 @@ public:
 		return raw_pointer();
 	}
 
+#ifdef VARIADIC_TEMPLATE
 	template <typename... Index>
 	T &operator() (Index... index)
 	{
@@ -129,6 +164,15 @@ public:
 	{
 		return at(index...);
 	}
+#else
+	T &operator() (int index0) { return at(index0); }
+	T &operator() (int index0, int index1) { return at(index0, index1); }
+	T &operator() (int index0, int index1, int index2) { return at(index0, index1, index2); }
+
+	const T &operator() (int index0) const { return at(index0); }
+	const T &operator() (int index0, int index1) const { return at(index0, index1); }
+	const T &operator() (int index0, int index1, int index2) const { return at(index0, index1, index2); }
+#endif
 };
 
 } // namespace numcpp

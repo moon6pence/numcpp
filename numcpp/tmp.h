@@ -52,6 +52,8 @@ struct TMP_N<1>
 
 // ## Recursive templates with variadic arguments
 
+#ifdef VARIADIC_TEMPLATE
+
 namespace TMP_V
 {
 	/** product all arguments */
@@ -94,6 +96,8 @@ namespace TMP_V
 		return arg1 + shape[0] * offset(shape + 1, args...);
 	}
 };
+
+#endif
 
 } // namespace numcpp
 

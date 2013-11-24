@@ -5,6 +5,8 @@ project(numcpp2)
 set(USE_MAGICK ON CACHE BOOL "Use GraphicsMagick library")
 set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
 set(USE_CUDA OFF CACHE BOOL "Use NVIDIA CUDA")
+set(VARIADIC_TEMPLATE ON CACHE BOOL "Supports C++11 variadic template")
+set(INITIALIZER_LIST ON CACHE BOOL "Supports C++11 initializer_list")
 configure_file(config.h.in config.h)
 
 # Project header directory

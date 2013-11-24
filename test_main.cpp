@@ -26,12 +26,14 @@ int main()
 		printf("nd array size = %d\n", test.size());
 	}
 
-	// Test: zeros, ones, fill, print
+	// Test: fill, print
 	{
-		auto test0 = np::zeros<int>(2, 3, 4);
-		auto test1 = np::ones<int>(2, 3, 4);
-
+		auto test0 = np::array<int>(2, 3, 4);
+		np::fill(test0, 0);
 		np::print(test0);
+
+		auto test1 = np::array<int>(2, 3, 4);
+		np::fill(test1, 1);
 		np::print(test1);
 
 		np::fill(test1, 11);
@@ -102,11 +104,13 @@ int main()
 		np::print(np::colon(1.0, 1.5, 9.9));	
 	}
 
+#ifdef INITIALIZER_LIST
 	// Test: array with initializer_list
 	{
 		auto test1 = np::array({3, 2, 1, 5, 4});
 		np::print(test1);	
 	}
+#endif // INITIALIZER_LIST
 
 	// Test: meshgrid
 	{

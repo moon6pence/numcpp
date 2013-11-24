@@ -4,7 +4,10 @@
 #include "array.h"
 #include "array_function.h"
 
+#ifdef INITIALIZER_LIST
 #include <initializer_list>
+#endif
+
 #include <assert.h>
 
 namespace numcpp {
@@ -40,6 +43,8 @@ void array_deleter(T const *p)
 	delete[] p;
 }
 
+#ifdef VARIADIC_TEMPLATE
+
 /** Allocate array with given shape */
 template <typename T, typename... Shape>
 array_t<T, sizeof...(Shape)> array(Shape... shape)
@@ -62,6 +67,81 @@ array_t<T, sizeof...(Shape)> array(Shape... shape)
 	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
 }
 
+#else // ifndef VARIADIC_TEMPLATE
+
+/** Allocate 1 dimension array */
+template <typename T>
+array_t<T, 1> array(int shape0)
+{
+	int size = shape0;
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[1];
+	new_shape[0] = shape0;
+
+	return array_t<T, 1>(address, origin, new_shape);
+}
+
+/** Allocate 2 dimension array */
+template <typename T>
+array_t<T, 2> array(int shape0, int shape1)
+{
+	int size = shape0 * shape1;
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[2];
+	new_shape[0] = shape0;
+	new_shape[1] = shape1;
+
+	return array_t<T, 2>(address, origin, new_shape);
+}
+
+/** Allocate 3 dimension array */
+template <typename T>
+array_t<T, 3> array(int shape0, int shape1, int shape2)
+{
+	int size = shape0 * shape1 * shape2;
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[3];
+	new_shape[0] = shape0;
+	new_shape[1] = shape1;
+	new_shape[2] = shape2;
+
+	return array_t<T, 3>(address, origin, new_shape);
+}
+
+#endif // VARIADIC_TEMPLATE
+
+#ifdef INITIALIZER_LIST
+
 /** Allocate array assigned with initializer_list */
 template <typename T>
 array_t<T, 1> array(std::initializer_list<T> values)
@@ -72,25 +152,7 @@ array_t<T, 1> array(std::initializer_list<T> values)
 	return std::move(result);
 }
 
-/** Array filled with zero */
-template <typename T, typename... Shape>
-array_t<T, sizeof...(Shape)> zeros(Shape... shape)
-{
-	auto result = array<T, Shape...>(shape...);
-	fill(result, T());
-
-	return std::move(result);
-}
-
-/** Array filled with one */
-template <typename T, typename... Shape>
-array_t<T, sizeof...(Shape)> ones(Shape... shape)
-{
-	auto result = array<T, Shape...>(shape...);
-	fill(result, T() + 1);
-
-	return std::move(result);
-}
+#endif // INITIALIZER_LIST
 
 /** One-dimensional array from j to k, such as {j, j+1, ..., k} */
 template <typename T>

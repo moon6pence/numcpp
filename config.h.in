@@ -4,5 +4,7 @@
 #cmakedefine USE_MAGICK
 #cmakedefine USE_IPP
 #cmakedefine USE_CUDA
+#cmakedefine VARIADIC_TEMPLATE
+#cmakedefine INITIALIZER_LIST
 
 #endif // __NUMCPP_CONFIG_H__
