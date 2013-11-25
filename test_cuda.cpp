@@ -64,7 +64,10 @@ void test_device_array()
 	const int N = 5;
 
 	// Data on the host memory
-	auto a = np::array({1, 2, 3, 4, 5}), b = np::array({3, 3, 3, 3, 3});
+	// auto a = np::array({1, 2, 3, 4, 5}), b = np::array({3, 3, 3, 3, 3});
+	auto a = np::array<int>(5), b = np::array<int>(5);
+	a(0) = 1; a(1) = 2; a(2) = 3; a(3) = 4; a(4) = 5; 
+	b(0) = 3; b(1) = 3; b(2) = 3; b(3) = 3; b(4) = 3; 
 	auto c = np::array<int>(5);
 
 	// Print A

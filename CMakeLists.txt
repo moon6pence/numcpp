@@ -31,6 +31,10 @@ add_library(
 	numcpp/array_allocate.h
 	numcpp/array_function.h
 	numcpp/tmp.h
+
+	# TODO: conditional add?
+	numcpp/image.h
+	numcpp/device_array.h
 )
 
 # External library: GraphicsMagick
@@ -66,8 +70,10 @@ if (USE_CUDA)
 	# Generate 2.0 code
 	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
 
-	# Use C++03 compiler, not C++11
-	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
+	if (${UNIX})
+		# Use C++03 compiler, not C++11
+		set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
+	endif (${UNIX})
 endif (USE_CUDA)
 
 # Executable: test
