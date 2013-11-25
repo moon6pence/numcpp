@@ -109,7 +109,7 @@ array_t<T, 3> device_array(int shape0, int shape1, int shape2)
 	return array_t<T, 3>(address, origin, new_shape);
 }
 
-#endif VARIADIC_TEMPLATE
+#endif // VARIADIC_TEMPLATE
 
 template <typename T, int Dim>
 void host_to_device(array_t<T, Dim> &dst_d, const array_t<T, Dim> &src)
