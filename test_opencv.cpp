@@ -1,3 +1,5 @@
+#include <numcpp.h>
+
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -20,6 +22,16 @@ int main()
 	
 		imshow("test_opencv", image);
 		waitKey(0);
+	}
+
+	// Testcase: numcpp::imread, numcpp::imshow
+	{
+		namespace np = numcpp;
+
+		auto image = np::imread("Lena.bmp");
+		cout << "width: " << image.width() << " height: " << image.height() << endl;
+
+		np::imshow(image);
 	}
 
 	return 0;

@@ -11,4 +11,8 @@
 #include "numcpp/image.h"
 #endif
 
+#ifdef USE_OPENCV
+#include "numcpp/image.h"
+#endif
+
 #endif // __NUMCPP_H__
