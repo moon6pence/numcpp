@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.8)
 project(numcpp2)
 
 # Conditional build with external dependencies
-set(USE_MAGICK ON CACHE BOOL "Use GraphicsMagick library")
+set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
 set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
 set(USE_CUDA OFF CACHE BOOL "Use NVIDIA CUDA")
 set(VARIADIC_TEMPLATE ON CACHE BOOL "Supports C++11 variadic template")
@@ -37,18 +37,11 @@ add_library(
 	numcpp/device_array.h
 )
 
-# External library: GraphicsMagick
-if (USE_MAGICK)
-	if (${UNIX})
-		include_directories("/usr/local/include/GraphicsMagick")
-		target_link_libraries(numcpp GraphicsMagick++ GraphicsMagick gomp pthread)
-	elseif (${WIN32})
-		include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18")
-		include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/Magick++/lib")
-		link_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/VisualMagick/lib")
-		target_link_libraries(numcpp CORE_RL_magick_ CORE_RL_Magick++_)
-	endif (${UNIX})
-endif (USE_MAGICK)
+# External library: OpenCV
+if (USE_OPENCV)
+	find_package(OpenCV REQUIRED)
+	target_link_libraries(numcpp ${OpenCV_LIBS})
+endif (USE_OPENCV)
 
 # External library: Intel IPP
 if (USE_IPP)
@@ -65,7 +58,7 @@ endif (USE_IPP)
 
 # External library: NVIDIA CUDA
 if (USE_CUDA)
-	find_package(CUDA)
+	find_package(CUDA REQUIRED)
 
 	# Generate 2.0 code
 	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
@@ -80,11 +73,12 @@ endif (USE_CUDA)
 add_executable(test test_main.cpp)
 target_link_libraries(test numcpp)
 
-# Testcase: magick
-if (USE_MAGICK)
-	add_executable(magick test_magick.cpp	)
-	target_link_libraries(magick numcpp)
-endif (USE_MAGICK)
+# Testcase: OpenCV
+
+if (USE_OPENCV)
+	add_executable(opencv test_opencv.cpp)
+	target_link_libraries(opencv numcpp)
+endif (USE_OPENCV)
 
 # Testcase: ipp
 if (USE_IPP)
@@ -102,7 +96,7 @@ if (USE_CUDA)
 endif (USE_CUDA)
 
 # Example: circularize
-if (USE_MAGICK AND USE_IPP)
+if ((USE_MAGICK OR USE_OPENCV) AND USE_IPP)
 	add_executable(circularize example/circularize.cpp)
 	target_link_libraries(circularize numcpp)
-endif(USE_MAGICK AND USE_IPP)
+endif ((USE_MAGICK OR USE_OPENCV) AND USE_IPP)

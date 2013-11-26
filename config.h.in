@@ -1,7 +1,7 @@
 #ifndef __NUMCPP_CONFIG_H__
 #define __NUMCPP_CONFIG_H__
 
-#cmakedefine USE_MAGICK
+#cmakedefine USE_OPENCV
 #cmakedefine USE_IPP
 #cmakedefine USE_CUDA
 #cmakedefine VARIADIC_TEMPLATE
