@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.8)
 project(numcpp2)
 
 # Conditional build with external dependencies
-set(USE_MAGICK ON CACHE BOOL "Use GraphicsMagick library")
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
 set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
 set(USE_CUDA OFF CACHE BOOL "Use NVIDIA CUDA")
@@ -37,19 +36,6 @@ add_library(
 	numcpp/image.h
 	numcpp/device_array.h
 )
-
-# External library: GraphicsMagick
-if (USE_MAGICK)
-	if (${UNIX})
-		include_directories("/usr/local/include/GraphicsMagick")
-		target_link_libraries(numcpp GraphicsMagick++ GraphicsMagick gomp pthread)
-	elseif (${WIN32})
-		include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18")
-		include_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/Magick++/lib")
-		link_directories("$ENV{USERPROFILE}/GraphicsMagick-1.3.18/VisualMagick/lib")
-		target_link_libraries(numcpp CORE_RL_magick_ CORE_RL_Magick++_)
-	endif (${UNIX})
-endif (USE_MAGICK)
 
 # External library: OpenCV
 if (USE_OPENCV)
@@ -93,12 +79,6 @@ if (USE_OPENCV)
 	add_executable(opencv test_opencv.cpp)
 	target_link_libraries(opencv numcpp)
 endif (USE_OPENCV)
-
-# Testcase: magick
-if (USE_MAGICK)
-	add_executable(magick test_magick.cpp)
-	target_link_libraries(magick numcpp)
-endif (USE_MAGICK)
 
 # Testcase: ipp
 if (USE_IPP)
