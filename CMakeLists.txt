@@ -3,6 +3,7 @@ project(numcpp2)
 
 # Conditional build with external dependencies
 set(USE_MAGICK ON CACHE BOOL "Use GraphicsMagick library")
+set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
 set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
 set(USE_CUDA OFF CACHE BOOL "Use NVIDIA CUDA")
 set(VARIADIC_TEMPLATE ON CACHE BOOL "Supports C++11 variadic template")
@@ -50,6 +51,12 @@ if (USE_MAGICK)
 	endif (${UNIX})
 endif (USE_MAGICK)
 
+# External library: OpenCV
+if (USE_OPENCV)
+	find_package(OpenCV REQUIRED)
+	target_link_libraries(numcpp ${OpenCV_LIBS})
+endif (USE_OPENCV)
+
 # External library: Intel IPP
 if (USE_IPP)
 	if (${UNIX})
@@ -65,7 +72,7 @@ endif (USE_IPP)
 
 # External library: NVIDIA CUDA
 if (USE_CUDA)
-	find_package(CUDA)
+	find_package(CUDA REQUIRED)
 
 	# Generate 2.0 code
 	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
@@ -80,9 +87,16 @@ endif (USE_CUDA)
 add_executable(test test_main.cpp)
 target_link_libraries(test numcpp)
 
+# Testcase: OpenCV
+
+if (USE_OPENCV)
+	add_executable(opencv test_opencv.cpp)
+	target_link_libraries(opencv numcpp)
+endif (USE_OPENCV)
+
 # Testcase: magick
 if (USE_MAGICK)
-	add_executable(magick test_magick.cpp	)
+	add_executable(magick test_magick.cpp)
 	target_link_libraries(magick numcpp)
 endif (USE_MAGICK)
 
