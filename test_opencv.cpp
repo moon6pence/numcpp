@@ -31,7 +31,14 @@ int main()
 		auto image = np::imread("Lena.bmp");
 		cout << "width: " << image.width() << " height: " << image.height() << endl;
 
+		// Invert image
+		np::map(image, [](uint8_t pixel) { return 255 - pixel; });
+
+		// Show image
 		np::imshow(image);
+
+		// Save image
+		np::imwrite(image, "result.bmp");
 	}
 
 	return 0;

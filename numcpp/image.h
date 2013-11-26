@@ -90,11 +90,18 @@ void imshow(const array_t<uint8_t, 2> &image)
 {
 	using namespace cv;
 
-	Mat cv_image(image.height(), image.width(), CV_8U, 
-		const_cast<uint8_t *>(image.raw_pointer()));
-	
+	Mat cv_image(image.height(), image.width(), CV_8U, const_cast<uint8_t *>(image.raw_pointer()));
+
 	cv::imshow("numcpp::imshow", cv_image);
 	waitKey(0);
+}
+
+void imwrite(const array_t<uint8_t, 2> &image, const std::string &file_path)
+{
+	using namespace cv;
+
+	Mat cv_image(image.height(), image.width(), CV_8U, const_cast<uint8_t *>(image.raw_pointer()));
+	cv::imwrite(file_path, cv_image);
 }
 
 #endif // USE_OPENCV
