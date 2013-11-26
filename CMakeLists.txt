@@ -116,7 +116,7 @@ if (USE_CUDA)
 endif (USE_CUDA)
 
 # Example: circularize
-if (USE_MAGICK AND USE_IPP)
+if ((USE_MAGICK OR USE_OPENCV) AND USE_IPP)
 	add_executable(circularize example/circularize.cpp)
 	target_link_libraries(circularize numcpp)
-endif(USE_MAGICK AND USE_IPP)
+endif ((USE_MAGICK OR USE_OPENCV) AND USE_IPP)
