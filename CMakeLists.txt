@@ -28,7 +28,6 @@ add_library(
 	numcpp.cpp
 	numcpp.h
 	numcpp/array.h
-	numcpp/array_allocate.h
 	numcpp/array_function.h
 	numcpp/tmp.h
 

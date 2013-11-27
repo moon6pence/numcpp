@@ -194,6 +194,134 @@ public:
 #endif
 };
 
+template <typename T>
+void empty_deleter(T const *p)
+{
+}
+
+/** Allocate empty array */
+template <typename T, int Dim>
+array_t<T, Dim> empty()
+{
+	// data buffer is nullptr
+	T *buffer = nullptr;
+
+	// address
+	std::shared_ptr<void> address(buffer, empty_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[Dim];
+	TMP_N<Dim>::fill(new_shape, 0);	
+
+	return array_t<T, Dim>(address, origin, new_shape);
+}
+
+template <typename T>
+void array_deleter(T const *p)
+{
+	delete[] p;
+}
+
+#ifdef VARIADIC_TEMPLATE
+
+/** Allocate array with given shape */
+template <typename T, typename... Shape>
+array_t<T, sizeof...(Shape)> array(Shape... shape)
+{
+	int size = TMP_V::product(shape...);
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[sizeof...(Shape)];
+	TMP_V::copy(new_shape, shape...);
+
+	return array_t<T, sizeof...(Shape)>(address, origin, new_shape);
+}
+
+#else // ifndef VARIADIC_TEMPLATE
+
+/** Allocate 1 dimension array */
+template <typename T>
+array_t<T, 1> array(int shape0)
+{
+	int size = shape0;
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[1];
+	new_shape[0] = shape0;
+
+	return array_t<T, 1>(address, origin, new_shape);
+}
+
+/** Allocate 2 dimension array */
+template <typename T>
+array_t<T, 2> array(int shape0, int shape1)
+{
+	int size = shape0 * shape1;
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[2];
+	new_shape[0] = shape0;
+	new_shape[1] = shape1;
+
+	return array_t<T, 2>(address, origin, new_shape);
+}
+
+/** Allocate 3 dimension array */
+template <typename T>
+array_t<T, 3> array(int shape0, int shape1, int shape2)
+{
+	int size = shape0 * shape1 * shape2;
+
+	// allocate buffer
+	T *buffer = new T[size];
+
+	// address
+	std::shared_ptr<void> address(buffer, array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[3];
+	new_shape[0] = shape0;
+	new_shape[1] = shape1;
+	new_shape[2] = shape2;
+
+	return array_t<T, 3>(address, origin, new_shape);
+}
+
+#endif // VARIADIC_TEMPLATE
+
 } // namespace numcpp
 
 #endif // __NUMCPP_ARRAY_H__

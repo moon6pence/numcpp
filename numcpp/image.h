@@ -1,7 +1,7 @@
 #ifndef __NUMCPP_IMAGE_H__
 #define __NUMCPP_IMAGE_H__
 
-#include "array_allocate.h"
+#include "array.h"
 
 #include <string.h> // memcpy
 

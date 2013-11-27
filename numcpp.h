@@ -4,7 +4,6 @@
 #include "config.h"
 
 #include "numcpp/array.h"
-#include "numcpp/array_allocate.h"
 #include "numcpp/array_function.h"
 
 #ifdef USE_OPENCV
