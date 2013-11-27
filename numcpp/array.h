@@ -29,14 +29,33 @@ public:
 
 private:
 	array_t(array_t &) { }
+	const array_t &operator=(const array_t &) { }
 
 public:
+	// Move constructor
 	array_t(array_t &&other) :
 		_address(std::move(other._address)), 
 		_origin(other._origin), 
 		_shape(other._shape)
 	{
 		other._shape = nullptr;
+	}
+
+	// Move assign
+	const array_t &operator=(array_t &&other)
+	{
+		// Deallocate this
+		if (_shape) { delete[] _shape; _shape = nullptr; }
+
+		// Move from other
+		_address = std::move(other._address);
+		_origin = other._origin;
+		_shape = other._shape;
+
+		// Clear other
+		other._shape = nullptr;
+
+		return *this;
 	}
 
 	// ## Part 1. Concepts of array_t, requirements on array types
