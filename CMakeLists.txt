@@ -34,6 +34,7 @@ add_library(
 
 	# TODO: conditional add?
 	numcpp/image.h
+	numcpp/ipp.h
 	numcpp/device_array.h
 )
 
@@ -48,11 +49,11 @@ if (USE_IPP)
 	if (${UNIX})
 		include_directories("/opt/intel/ipp/include")
 		link_directories("/opt/intel/ipp/lib/intel64")
-		target_link_libraries(numcpp ippi)
+		target_link_libraries(numcpp ippcore ipps ippi)
 	elseif (${WIN32})
 		include_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/include")
 		link_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/lib/ia32")
-		target_link_libraries(numcpp ippi)
+		target_link_libraries(numcpp ippcore ipps ippi)
 	endif (${UNIX})
 endif (USE_IPP)
 
