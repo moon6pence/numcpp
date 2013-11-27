@@ -28,10 +28,6 @@ IppiRect ippiRect(const numcpp::array_t<T, 2> &image)
 
 int main(int argc, char *argv[])
 {
-#ifdef USE_MAGICK
-	Magick::InitializeMagick(argv[0]);
-#endif // USE_MAGICK
-
 	auto image = np::imread("example/input.bmp");
 	const int width = image.width(), height = image.height();;
 	printf("width = %d, height = %d\n", width, height);
