@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <fstream> // fromfile
 
 namespace numcpp {
 
@@ -75,6 +76,30 @@ void map(
 	BinaryFunction function)
 {
 	std::transform(begin(src1), end(src1), begin(src2), begin(dst), function);
+}
+
+/* Read array from text file */
+template <typename T>
+array_t<T, 1> fromfile(const std::string &file_name)
+{
+	using namespace std;
+
+	std::fstream file(file_name, std::ios::in);
+	if (!file.is_open()) return empty<T, 1>();
+
+	vector<T> buffer;
+	while (!file.eof())
+	{
+		T value;
+		file >> value;
+
+		if (!file.fail())
+			buffer.push_back(value);
+	}
+
+	auto result = array<T>(buffer.size());
+	std::copy(begin(buffer), end(buffer), begin(result));
+	return std::move(result);
 }
 
 } // namespace numcpp
