@@ -98,6 +98,6 @@ endif (USE_CUDA)
 
 # Example: circularize
 if (USE_OPENCV AND USE_IPP)
-	add_executable(circularize example/circularize.cpp)
+	add_executable(circularize example/circularize.h example/circularize.cpp)
 	target_link_libraries(circularize numcpp)
 endif (USE_OPENCV AND USE_IPP)
