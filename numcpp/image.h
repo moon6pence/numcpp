@@ -10,7 +10,7 @@
 
 namespace numcpp {
 
-array_t<uint8_t, 2> imread(const std::string &file_path)
+inline array_t<uint8_t, 2> imread(const std::string &file_path)
 {
 	using namespace cv;
 
@@ -28,7 +28,7 @@ array_t<uint8_t, 2> imread(const std::string &file_path)
 	return std::move(result);
 }
 
-void imwrite(const array_t<uint8_t, 2> &image, const std::string &file_path)
+inline void imwrite(const array_t<uint8_t, 2> &image, const std::string &file_path)
 {
 	using namespace cv;
 
@@ -36,7 +36,7 @@ void imwrite(const array_t<uint8_t, 2> &image, const std::string &file_path)
 	cv::imwrite(file_path, cv_image);
 }
 
-void imshow(const array_t<uint8_t, 2> &image)
+inline void imshow(const array_t<uint8_t, 2> &image)
 {
 	using namespace cv;
 
