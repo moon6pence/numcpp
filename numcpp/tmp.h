@@ -17,7 +17,7 @@ struct TMP_N
 	}
 
 	/** Copy elements from src array to dst array */
-	static int copy(int *dst, const int *src)
+	static void copy(int *dst, const int *src)
 	{
 		dst[0] = src[0];
 		TMP_N<N - 1>::copy(dst + 1, src + 1);
@@ -39,7 +39,7 @@ struct TMP_N<1>
 		return array[0];
 	}
 
-	static int copy(int *dst, const int *src)
+	static void copy(int *dst, const int *src)
 	{
 		dst[0] = src[0];
 	}

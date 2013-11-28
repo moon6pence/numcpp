@@ -4,15 +4,14 @@
 #include "config.h"
 
 #include "numcpp/array.h"
-#include "numcpp/array_allocate.h"
 #include "numcpp/array_function.h"
-
-#ifdef USE_MAGICK
-#include "numcpp/image.h"
-#endif
 
 #ifdef USE_OPENCV
 #include "numcpp/image.h"
+#endif
+
+#ifdef USE_IPP
+#include "numcpp/ipp.h"
 #endif
 
 #endif // __NUMCPP_H__
