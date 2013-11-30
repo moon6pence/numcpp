@@ -10,26 +10,27 @@
 
 namespace numcpp {
 
-/*
 template <typename T>
-cv::Mat to_cv_mat(array_t<T, 2> &array)
+inline cv::Mat to_cv_mat(array_t<T, 2> &array)
 {
-	static_assert(false, "This type does not support in OpenCV");
+	// static_assert(false, "This type does not support in OpenCV");
+	return cv::Mat();
 }
 
 template <typename T>
-const cv::Mat to_cv_mat(const array_t<T, 2> &array)
+inline const cv::Mat to_cv_mat(const array_t<T, 2> &array)
 {
-	static_assert(false, "This type does not support in OpenCV");
+	// static_assert(false, "This type does not support in OpenCV");
+	return cv::Mat();
 }
-*/
-// template <>
+
+template <>
 inline cv::Mat to_cv_mat(array_t<uint8_t, 2> &array)
 {
 	return cv::Mat(array.height(), array.width(), CV_8U, array.raw_pointer());
 }
 
-// template <>
+template <>
 inline const cv::Mat to_cv_mat(const array_t<uint8_t, 2> &array)
 {
 	return cv::Mat(array.height(), array.width(), CV_8U, const_cast<uint8_t *>(array.raw_pointer()));
