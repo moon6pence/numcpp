@@ -36,6 +36,18 @@ inline const cv::Mat to_cv_mat(const array_t<uint8_t, 2> &array)
 	return cv::Mat(array.height(), array.width(), CV_8U, const_cast<uint8_t *>(array.raw_pointer()));
 }
 
+template <>
+inline cv::Mat to_cv_mat(array_t<float, 2> &array)
+{
+	return cv::Mat(array.height(), array.width(), CV_32F, array.raw_pointer());
+}
+
+template <>
+inline const cv::Mat to_cv_mat(const array_t<float, 2> &array)
+{
+	return cv::Mat(array.height(), array.width(), CV_32F, const_cast<float *>(array.raw_pointer()));
+}
+
 inline void cv_mat_deleter(cv::Mat *cv_mat)
 {
 	delete cv_mat;

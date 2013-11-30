@@ -96,7 +96,7 @@ if (USE_CUDA)
 endif (USE_CUDA)
 
 # Example: circularize
-if (USE_OPENCV AND USE_IPP)
+if (USE_OPENCV)
 	add_executable(circularize example/circularize.h example/circularize.cpp)
 	target_link_libraries(circularize numcpp)
-endif (USE_OPENCV AND USE_IPP)
+endif (USE_OPENCV)

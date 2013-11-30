@@ -11,12 +11,7 @@ struct Circularize
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.width(), src.height(), DIAMETER);
 
-		ippiRemap_8u_C1R(
-			src, ippiSize(src), stepBytes(src), ippiRect(src), 
-			x_map, stepBytes(x_map), 
-			y_map, stepBytes(y_map), 
-			dst, stepBytes(dst), ippiSize(dst), 
-			IPPI_INTER_LINEAR);
+		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
 	}
 
 	void buildCircularizeMap(const int WIDTH, const int HEIGHT, const int DIAMETER)
