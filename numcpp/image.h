@@ -36,6 +36,31 @@ inline const cv::Mat to_cv_mat(const array_t<uint8_t, 2> &array)
 	return cv::Mat(array.height(), array.width(), CV_8U, const_cast<uint8_t *>(array.raw_pointer()));
 }
 
+inline void cv_mat_deleter(cv::Mat *cv_mat)
+{
+	delete cv_mat;
+}
+
+/** Allocate array from cv::Mat */
+inline array_t<uint8_t, 2> from_cv_mat(cv::Mat &cv_mat)
+{
+	// allocate cv::Mat (add reference)
+	cv::Mat *ref = new cv::Mat(cv_mat);
+
+	// address
+	std::shared_ptr<void> address(ref, cv_mat_deleter);
+
+	// origin
+	uint8_t *origin = reinterpret_cast<uint8_t *>(ref->data);
+
+	// shape
+	int *new_shape = new int[2];
+	new_shape[0] = cv_mat.cols;
+	new_shape[1] = cv_mat.rows;
+
+	return array_t<uint8_t, 2>(address, origin, new_shape);
+}
+
 inline array_t<uint8_t, 2> imread(const std::string &file_path)
 {
 	using namespace cv;
@@ -47,11 +72,7 @@ inline array_t<uint8_t, 2> imread(const std::string &file_path)
 	Mat cv_image_grayscale;
 	cvtColor(cv_image, cv_image_grayscale, CV_BGR2GRAY);
 
-	auto result = array<uint8_t>(cv_image_grayscale.cols, cv_image_grayscale.rows);
-	// TODO: Check cv_image.step
-	memcpy(result, cv_image_grayscale.data, cv_image.total() * sizeof(uint8_t));
-
-	return std::move(result);
+	return from_cv_mat(cv_image_grayscale);
 }
 
 inline void imwrite(const array_t<uint8_t, 2> &image, const std::string &file_path)
