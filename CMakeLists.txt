@@ -32,7 +32,7 @@ add_library(
 	numcpp/tmp.h
 
 	# TODO: conditional add?
-	numcpp/image.h
+	numcpp/opencv.h
 	numcpp/ipp.h
 	numcpp/device_array.h
 )

@@ -7,7 +7,7 @@
 #include "numcpp/array_function.h"
 
 #ifdef USE_OPENCV
-#include "numcpp/image.h"
+#include "numcpp/opencv.h"
 #endif
 
 #ifdef USE_IPP
