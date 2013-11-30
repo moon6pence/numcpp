@@ -15,6 +15,14 @@ private:
 	int *_shape;
 
 public:
+	array_t() : 
+		_address(nullptr), 
+		_origin(nullptr), 
+		_shape(new int[Dim])
+	{
+		TMP_N<Dim>::fill(_shape, 0);	
+	}
+
 	array_t(std::shared_ptr<void> address, T *origin, int *shape) :
 		_address(address), 
 		_origin(origin), 
@@ -194,29 +202,11 @@ public:
 #endif
 };
 
-template <typename T>
-void empty_deleter(T const *p)
-{
-}
-
 /** Allocate empty array */
 template <typename T, int Dim>
 array_t<T, Dim> empty()
 {
-	// data buffer is nullptr
-	T *buffer = nullptr;
-
-	// address
-	std::shared_ptr<void> address(buffer, empty_deleter<T>);
-
-	// origin
-	T *origin = buffer;
-
-	// shape
-	int *new_shape = new int[Dim];
-	TMP_N<Dim>::fill(new_shape, 0);	
-
-	return array_t<T, Dim>(address, origin, new_shape);
+	return array_t<T, Dim>();
 }
 
 template <typename T>

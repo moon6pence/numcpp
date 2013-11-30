@@ -6,13 +6,6 @@ struct Circularize
 {
 	array_t<float, 2> x_map, y_map;
 
-	Circularize() : 
-		// TODO: default constructor
-		x_map(empty<float, 2>()), 
-		y_map(empty<float, 2>())
-	{
-	}
-
 	void operator() (array_t<uint8_t, 2> &dst, const array_t<uint8_t, 2> &src, const int DIAMETER)
 	{
 		if (x_map.empty() || y_map.empty())
