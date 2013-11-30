@@ -10,6 +10,31 @@
 
 namespace numcpp {
 
+/*
+template <typename T>
+cv::Mat to_cv_mat(array_t<T, 2> &array)
+{
+	static_assert(false, "This type does not support in OpenCV");
+}
+
+template <typename T>
+const cv::Mat to_cv_mat(const array_t<T, 2> &array)
+{
+	static_assert(false, "This type does not support in OpenCV");
+}
+*/
+// template <>
+inline cv::Mat to_cv_mat(array_t<uint8_t, 2> &array)
+{
+	return cv::Mat(array.height(), array.width(), CV_8U, array.raw_pointer());
+}
+
+// template <>
+inline const cv::Mat to_cv_mat(const array_t<uint8_t, 2> &array)
+{
+	return cv::Mat(array.height(), array.width(), CV_8U, const_cast<uint8_t *>(array.raw_pointer()));
+}
+
 inline array_t<uint8_t, 2> imread(const std::string &file_path)
 {
 	using namespace cv;
@@ -30,20 +55,13 @@ inline array_t<uint8_t, 2> imread(const std::string &file_path)
 
 inline void imwrite(const array_t<uint8_t, 2> &image, const std::string &file_path)
 {
-	using namespace cv;
-
-	Mat cv_image(image.height(), image.width(), CV_8U, const_cast<uint8_t *>(image.raw_pointer()));
-	cv::imwrite(file_path, cv_image);
+	cv::imwrite(file_path, to_cv_mat(image));
 }
 
 inline void imshow(const array_t<uint8_t, 2> &image)
 {
-	using namespace cv;
-
-	Mat cv_image(image.height(), image.width(), CV_8U, const_cast<uint8_t *>(image.raw_pointer()));
-
-	cv::imshow("numcpp::imshow", cv_image);
-	waitKey(0);
+	cv::imshow("numcpp::imshow", to_cv_mat(image));
+	cv::waitKey(0);
 }
 
 } // namespace numcpp
