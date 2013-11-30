@@ -26,7 +26,6 @@ struct Circularize
 			IPPI_INTER_LINEAR);
 	}
 
-private:
 	void buildCircularizeMap(const int WIDTH, const int HEIGHT, const int DIAMETER)
 	{
 		auto X = array<float>(DIAMETER, DIAMETER);
