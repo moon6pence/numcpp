@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	}
 
 	const int DIAMETER = 1024;
-	auto result_image = array<uint8_t>(DIAMETER, DIAMETER);
+	auto result_image = numcpp::array<uint8_t>(DIAMETER, DIAMETER);
 
 	Circularize circularize;
 	circularize(result_image, image, DIAMETER);
