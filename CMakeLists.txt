@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8.8)
 project(numcpp2)
 
 # Conditional build with external dependencies
+set(BUILD_TESTS ON CACHE BOOL "Build tests")
+set(BUILD_EXAMPLES ON CACHE BOOL "Build examples")
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
 set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
 set(USE_CUDA OFF CACHE BOOL "Use NVIDIA CUDA")
@@ -69,32 +71,37 @@ if (USE_CUDA)
 	endif (${UNIX})
 endif (USE_CUDA)
 
-# Executable: test
-add_executable(test test_main.cpp)
-target_link_libraries(test numcpp)
+## Tests ##
+if (BUILD_TESTS)
+	# Executable: test
+	add_executable(test test_main.cpp)
+	target_link_libraries(test numcpp)
 
-# Testcase: OpenCV
+	# Testcase: OpenCV
+	if (USE_OPENCV)
+		add_executable(opencv test_opencv.cpp)
+		target_link_libraries(opencv numcpp)
+	endif (USE_OPENCV)
 
-if (USE_OPENCV)
-	add_executable(opencv test_opencv.cpp)
-	target_link_libraries(opencv numcpp)
-endif (USE_OPENCV)
+	# Testcase: ipp
+	if (USE_IPP)
+		add_executable(ipp test_ipp.cpp)
+		target_link_libraries(ipp numcpp)
+	endif (USE_IPP)
 
-# Testcase: ipp
-if (USE_IPP)
-	add_executable(ipp test_ipp.cpp)
-	target_link_libraries(ipp numcpp)
-endif (USE_IPP)
+	# Testcase: cuda
+	if (USE_CUDA)
+		cuda_compile(TEST_CUDA_KERNEL_O test_cuda_kernel.cu)
+		cuda_add_executable(cuda test_cuda.cpp ${TEST_CUDA_KERNEL_O})
+		target_link_libraries(cuda numcpp)	
+	endif (USE_CUDA)
+endif (BUILD_TESTS)
 
-# Testcase: cuda
-if (USE_CUDA)
-	cuda_compile(TEST_CUDA_KERNEL_O test_cuda_kernel.cu)
-	cuda_add_executable(cuda test_cuda.cpp ${TEST_CUDA_KERNEL_O})
-	target_link_libraries(cuda numcpp)	
-endif (USE_CUDA)
-
-# Example: circularize
-if (USE_OPENCV)
-	add_executable(circularize example/circularize.h example/circularize.cpp)
-	target_link_libraries(circularize numcpp)
-endif (USE_OPENCV)
+## Examples ##
+if (BUILD_EXAMPLES)
+	# Example: circularize
+	if (USE_OPENCV)
+		add_executable(circularize example/circularize.h example/circularize.cpp)
+		target_link_libraries(circularize numcpp)
+	endif (USE_OPENCV)
+endif (BUILD_EXAMPLES)
