@@ -37,7 +37,7 @@ public:
 
 private:
 	array_t(array_t &) { }
-	const array_t &operator=(const array_t &) { }
+	const array_t &operator=(const array_t &) { return *this; }
 
 public:
 	// Move constructor
