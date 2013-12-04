@@ -1,2 +1,5 @@
-# default cmake build directory
+# Default cmake build directory
 build/
+
+# Generated configuration file
+config.h
