@@ -73,26 +73,26 @@ endif (USE_CUDA)
 
 ## Tests ##
 if (BUILD_TESTS)
-	# Executable: test
-	add_executable(test test_main.cpp)
+	# Testcase: numcpp
+	add_executable(test testcase/test_numcpp.cpp)
 	target_link_libraries(test numcpp)
 
 	# Testcase: OpenCV
 	if (USE_OPENCV)
-		add_executable(opencv test_opencv.cpp)
+		add_executable(opencv testcase/test_opencv.cpp)
 		target_link_libraries(opencv numcpp)
 	endif (USE_OPENCV)
 
 	# Testcase: ipp
 	if (USE_IPP)
-		add_executable(ipp test_ipp.cpp)
+		add_executable(ipp testcase/test_ipp.cpp)
 		target_link_libraries(ipp numcpp)
 	endif (USE_IPP)
 
 	# Testcase: cuda
 	if (USE_CUDA)
-		cuda_compile(TEST_CUDA_KERNEL_O test_cuda_kernel.cu)
-		cuda_add_executable(cuda test_cuda.cpp ${TEST_CUDA_KERNEL_O})
+		cuda_compile(TEST_CUDA_KERNEL_O testcase/test_cuda_kernel.cu)
+		cuda_add_executable(cuda testcase/test_cuda.cpp ${TEST_CUDA_KERNEL_O})
 		target_link_libraries(cuda numcpp)	
 	endif (USE_CUDA)
 endif (BUILD_TESTS)
