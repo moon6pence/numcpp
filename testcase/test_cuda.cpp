@@ -81,12 +81,8 @@ void test_device_array()
 	cout << endl;
 
 	// Data on the device memory
-	auto a_d = np::device_array<int>(5), b_d = np::device_array<int>(5);
+	auto a_d = np::device_array(a), b_d = np::device_array(b);
 	auto c_d = np::device_array<int>(5);
-
-	// Copy from host to device
-	host_to_device(a_d, a);
-	host_to_device(b_d, b);
 
 	// Run kernel
 	vecAdd(a_d, b_d, c_d, N);

@@ -37,6 +37,7 @@ public:
 	// inherits array_t (private)
 	int size() const { return array_t<T, Dim>::size(); }
 	int size(int dim) const { return array_t<T, Dim>::size(); }
+	int *shape() const { return array_t<T, Dim>::shape(); }
 	T *raw_pointer() { return array_t<T, Dim>::raw_pointer(); }
 	const T *raw_pointer() const { return array_t<T, Dim>::raw_pointer(); }
 
@@ -163,6 +164,31 @@ template <typename T, int Dim>
 void device_to_host(array_t<T, Dim> &dst, const device_array_t<T, Dim> &src_d)
 {
 	cudaMemcpy(dst, src_d, dst.size() * sizeof(T), cudaMemcpyDeviceToHost);
+}
+
+template <typename T, int Dim>
+device_array_t<T, Dim> device_array(const array_t<T, Dim> &host_array)
+{
+	int size = host_array.size();
+
+	// allocate buffer
+	T *buffer = nullptr;
+	cudaMalloc((void **)&buffer, size * sizeof(T));
+
+  	// address
+	std::shared_ptr<void> address(buffer, device_array_deleter<T>);
+
+	// origin
+	T *origin = buffer;
+
+	// shape
+	int *new_shape = new int[Dim];
+	TMP_N<Dim>::copy(new_shape, host_array.shape());
+
+	// copy from host
+	auto result_d = device_array_t<T, Dim>(address, origin, new_shape);
+	host_to_device(result_d, host_array);
+	return std::move(result_d);
 }
 
 } // namespace numcpp

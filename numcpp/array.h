@@ -80,6 +80,12 @@ public:
 		return _shape[dim];
 	}
 
+	/** Returns array contains size in each dimension */
+	int *shape() const
+	{
+		return _shape;
+	}
+
 	/** Returns raw pointer of array */
 	T *raw_pointer() 
 	{ 
