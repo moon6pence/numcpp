@@ -14,4 +14,8 @@
 #include "numcpp/ipp.h"
 #endif
 
+#ifdef USE_CUDA
+#include "numcpp/device_array.h"
+#endif
+
 #endif // __NUMCPP_H__

@@ -61,6 +61,7 @@ endif (USE_IPP)
 # External library: NVIDIA CUDA
 if (USE_CUDA)
 	find_package(CUDA REQUIRED)
+	include_directories(${CUDA_INCLUDE_DIRS})
 
 	# Generate 2.0 code
 	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
