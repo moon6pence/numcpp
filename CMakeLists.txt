@@ -6,9 +6,9 @@ set(BUILD_TESTS ON CACHE BOOL "Build tests")
 set(BUILD_EXAMPLES ON CACHE BOOL "Build examples")
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
 set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
-set(USE_CUDA OFF CACHE BOOL "Use NVIDIA CUDA")
-set(VARIADIC_TEMPLATE ON CACHE BOOL "Supports C++11 variadic template")
-set(INITIALIZER_LIST ON CACHE BOOL "Supports C++11 initializer_list")
+set(USE_CUDA ON CACHE BOOL "Use NVIDIA CUDA")
+set(VARIADIC_TEMPLATE OFF CACHE BOOL "Supports C++11 variadic template")
+set(INITIALIZER_LIST OFF CACHE BOOL "Supports C++11 initializer_list")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 # Project header directory
