@@ -62,8 +62,8 @@ inline array_t<uint8_t, 2> from_cv_mat(cv::Mat &cv_mat)
 
 	// shape
 	int *new_shape = new int[2];
-	new_shape[0] = cv_mat.rows;
-	new_shape[1] = cv_mat.cols;
+	new_shape[0] = cv_mat.cols;
+	new_shape[1] = cv_mat.rows;
 
 	return array_t<uint8_t, 2>(address, origin, new_shape);
 }

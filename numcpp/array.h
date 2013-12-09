@@ -157,15 +157,15 @@ public:
 		return size(0);
 	}
 
-	/** Returns height of 2 dimension array(=matrix, image) */
-	int height() const
+	/** Returns width of 2 dimension array(=matrix, image) */
+	int width() const
 	{
 		static_assert(Dim == 2, "This function is only for array_t<T, 2>");
 		return size(0);
 	}
 
-	/** Returns width of 2 dimension array(=matrix, image) */
-	int width() const
+	/** Returns height of 2 dimension array(=matrix, image) */
+	int height() const
 	{
 		static_assert(Dim == 2, "This function is only for array_t<T, 2>");
 		return size(1);
