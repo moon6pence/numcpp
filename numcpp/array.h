@@ -19,6 +19,11 @@ struct array_t
 		return _size == 0;
 	}
 
+	int size()
+	{
+		return _size;
+	}
+
 private:
 	int _size;
 };

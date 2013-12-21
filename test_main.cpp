@@ -22,6 +22,7 @@ TEST(ArrayType, DeclareArrayWithSize)
 	np::array_t<int> a1(5);
 
 	ASSERT_FALSE(a1.empty());
+	ASSERT_EQ(a1.size(), 5);
 }
 
 int main(int argc, char **argv)
