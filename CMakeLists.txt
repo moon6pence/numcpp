@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.8)
+cmake_minimum_required(VERSION 2.8.11)
 project(numcpp2)
 
 # Conditional build with external dependencies
@@ -72,11 +72,18 @@ if (USE_CUDA)
 	endif (${UNIX})
 endif (USE_CUDA)
 
+## Unit tests with Google Test
+link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
+
+add_executable(test test_main.cpp)
+target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
+target_link_libraries(test gtest pthread)
+
 ## Tests ##
 if (BUILD_TESTS)
 	# Testcase: numcpp
-	add_executable(test testcase/test_numcpp.cpp)
-	target_link_libraries(test numcpp)
+	add_executable(test_numcpp testcase/test_numcpp.cpp)
+	target_link_libraries(test_numcpp numcpp)
 
 	# Testcase: OpenCV
 	if (USE_OPENCV)
