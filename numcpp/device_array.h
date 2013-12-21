@@ -40,6 +40,21 @@ public:
 	int *shape() const { return array_t<T, Dim>::shape(); }
 	T *raw_pointer() { return array_t<T, Dim>::raw_pointer(); }
 	const T *raw_pointer() const { return array_t<T, Dim>::raw_pointer(); }
+#ifdef VARIADIC_TEMPLATE
+	template <typename... Index>
+	T &at(Index... index) { return array_t<T, Dim>::at(index...); }
+
+	template <typename... Index>
+	const T &at(Index... index) const { return array_t<T, Dim>::at(index...); }
+#else // ifndef VARIADIC_TEMPLATE
+	T &at(int index0) {	return array_t<T, Dim>::at(index0); }
+	T &at(int index0, int index1) {	return array_t<T, Dim>::at(index0, index1); }
+	T &at(int index0, int index1, int index2) { return array_t<T, Dim>::at(index0, index1, index2); }
+
+	const T &at(int index0) const { return array_t<T, Dim>::at(index0); }
+	const T &at(int index0, int index1) const {	return array_t<T, Dim>::at(index0, index1); }
+	const T &at(int index0, int index1, int index2) const {	return array_t<T, Dim>::at(index0, index1, index2); }
+#endif // VARIADIC_TEMPLATE
 
 	bool empty() const { return array_t<T, Dim>::empty(); }
 	int length() const { return array_t<T, Dim>::length(); }
@@ -47,6 +62,21 @@ public:
 	int width() const { return array_t<T, Dim>::width(); }
 	operator T *() { return array_t<T, Dim>::operator T *(); }
 	operator const T *() const { return array_t<T, Dim>::operator const T*(); }
+#ifdef VARIADIC_TEMPLATE
+	template <typename... Index>
+	T &operator() (Index... index) { return at(index...); }
+	
+	template <typename... Index>
+	const T &operator() (Index... index) const { return at(index...); }
+#else
+	T &operator() (int index0) { return at(index0); }
+	T &operator() (int index0, int index1) { return at(index0, index1); }
+	T &operator() (int index0, int index1, int index2) { return at(index0, index1, index2); }
+
+	const T &operator() (int index0) const { return at(index0); }
+	const T &operator() (int index0, int index1) const { return at(index0, index1); }
+	const T &operator() (int index0, int index1, int index2) const { return at(index0, index1, index2); }
+#endif
 };
 
 template <typename T>
@@ -84,7 +114,7 @@ device_array_t<T, sizeof...(Shape)> device_array(Shape... shape)
 
 /** Allocate device array */
 template <typename T>
-array_t<T, 1> device_array(int shape0)
+device_array_t<T, 1> device_array(int shape0)
 {
 	int size = shape0;
 
@@ -106,7 +136,7 @@ array_t<T, 1> device_array(int shape0)
 }
 
 template <typename T>
-array_t<T, 2> device_array(int shape0, int shape1)
+device_array_t<T, 2> device_array(int shape0, int shape1)
 {
 	int size = shape0 * shape1;
 
@@ -129,7 +159,7 @@ array_t<T, 2> device_array(int shape0, int shape1)
 }
 
 template <typename T>
-array_t<T, 3> device_array(int shape0, int shape1, int shape2)
+device_array_t<T, 3> device_array(int shape0, int shape1, int shape2)
 {
 	int size = shape0 * shape1 * shape2;
 

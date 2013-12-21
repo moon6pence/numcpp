@@ -157,18 +157,25 @@ public:
 		return size(0);
 	}
 
-	/** Returns height of 2 dimension array(=matrix, image) */
-	int height() const
+	/** Returns width of 2 or 3 dimension array */
+	int width() const
 	{
-		static_assert(Dim == 2, "This function is only for array_t<T, 2>");
+		static_assert(Dim == 2 || Dim == 3, "This function is only for array_t<T, 2> or array_t<T, 3>");
 		return size(0);
 	}
 
-	/** Returns width of 2 dimension array(=matrix, image) */
-	int width() const
+	/** Returns height of 2 or 3 dimension array */
+	int height() const
 	{
-		static_assert(Dim == 2, "This function is only for array_t<T, 2>");
+		static_assert(Dim == 2 || Dim == 3, "This function is only for array_t<T, 2> or array_t<T, 3>");
 		return size(1);
+	}
+
+	/** Returns depth of 3 dimension array */
+	int depth() const
+	{
+		static_assert(Dim == 3, "This function is only for array_t<T, 3>");
+		return size(2);
 	}
 
 	/** Auto conversion to raw pointer */

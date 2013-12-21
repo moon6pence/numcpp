@@ -8,6 +8,11 @@
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
+#ifdef USE_CUDA
+#include "device_array.h"
+#include <opencv2/gpu/gpu.hpp>
+#endif
+
 namespace numcpp {
 
 template <typename T>
@@ -21,6 +26,22 @@ inline const cv::Mat to_cv_mat(const array_t<T, 2> &array)
 {
 	return cv::Mat(array.height(), array.width(), cv::DataType<T>::type, const_cast<T *>(array.raw_pointer()));
 }
+
+#ifdef USE_CUDA
+
+template <typename T>
+inline cv::gpu::GpuMat to_cv_gpu_mat(device_array_t<T, 2> &array_d)
+{
+	return cv::gpu::GpuMat(array_d.height(), array_d.width(), cv::DataType<T>::type, array_d.raw_pointer());
+}
+
+template <typename T>
+inline const cv::gpu::GpuMat to_cv_gpu_mat(const device_array_t<T, 2> &array_d)
+{
+	return cv::gpu::GpuMat(array_d.height(), array_d.width(), cv::DataType<T>::type, const_cast<T *>(array_d.raw_pointer()));
+}
+
+#endif // USE_CUDA
 
 inline void cv_mat_deleter(cv::Mat *cv_mat)
 {
