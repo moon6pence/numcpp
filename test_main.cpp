@@ -12,7 +12,9 @@ namespace np = numcpp;
 
 TEST(ArrayType, DeclareEmptyArray)
 {
-	np::array_t<int> array;
+	np::array_t<int> a1;
+	np::array_t<int, 2> a2;
+	np::array_t<int, 3> a3;
 }
 
 int main(int argc, char **argv)
