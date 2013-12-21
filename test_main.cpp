@@ -6,6 +6,15 @@ TEST(Main, HelloGoogleTest)
 	EXPECT_EQ(1 + 1, 2);
 }
 
+#include <numcpp/array.h>
+
+namespace np = numcpp;
+
+TEST(ArrayType, DeclareEmptyArray)
+{
+	np::array_t<int> array;
+}
+
 int main(int argc, char **argv)
 {
 	puts("Hello Tests!");
