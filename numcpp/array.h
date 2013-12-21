@@ -3,7 +3,7 @@
 
 namespace numcpp {
 
-template <typename T, int Dim = 1>
+template <typename T>
 struct array_t
 {
 	bool empty()
