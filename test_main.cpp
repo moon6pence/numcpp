@@ -15,6 +15,10 @@ TEST(ArrayType, DeclareEmptyArray)
 	np::array_t<int> a1;
 	np::array_t<int, 2> a2;
 	np::array_t<int, 3> a3;
+
+	ASSERT_TRUE(a1.empty());
+	ASSERT_TRUE(a2.empty());
+	ASSERT_TRUE(a3.empty());
 }
 
 int main(int argc, char **argv)
