@@ -17,6 +17,13 @@ TEST(ArrayType, DeclareEmptyArray)
 	ASSERT_TRUE(a1.empty());
 }
 
+TEST(ArrayType, DeclareArrayWithSize)
+{
+	np::array_t<int> a1(5);
+
+	ASSERT_FALSE(a1.empty());
+}
+
 int main(int argc, char **argv)
 {
 	puts("Hello Tests!");
