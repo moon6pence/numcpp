@@ -135,9 +135,13 @@ TEST_F(ArrayTypeF, AccessElements)
 	EXPECT_EQ(a3.at(0, 2, 3), 99);
 }
 
-#include <numcpp/array_function.h>
+#include <numcpp/stl.h>
 
-TEST_F(ArrayTypeF, DenseIterator)
+class NumcppSTL : public ArrayTypeF
+{
+};
+
+TEST_F(NumcppSTL, DenseIterator)
 {
 	const int *p1 = data1;
 	for (auto i = begin(a1); i != end(a1); ++i)
@@ -152,7 +156,7 @@ TEST_F(ArrayTypeF, DenseIterator)
 		EXPECT_EQ(*i, *p3++);
 }
 
-TEST_F(ArrayTypeF, ForEach)
+TEST_F(NumcppSTL, ForEach)
 {
 	using namespace std;
 
@@ -160,7 +164,7 @@ TEST_F(ArrayTypeF, ForEach)
 	cout << endl;
 }
 
-TEST_F(ArrayTypeF, Fill)
+TEST_F(NumcppSTL, Fill)
 {
 	fill(a1, 927);
 	for (auto i = begin(a1); i != end(a1); ++i)

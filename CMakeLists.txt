@@ -15,7 +15,7 @@ add_library(
 	numcpp.cpp
 
 	numcpp/array.h
-	numcpp/array_function.h
+	numcpp/stl.h
 )
 
 # Unit tests with Google Test
