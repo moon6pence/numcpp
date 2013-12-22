@@ -78,14 +78,29 @@ struct array_t
 		return _ptr[index0];
 	}
 
+	T& at(int index0, int index1)
+	{
+		return _ptr[index1 + _shape[1] * index0];
+	}
+
+	T& at(int index0, int index1, int index2)
+	{
+		return _ptr[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+	}
+
 	T& operator() (int index0)
 	{
 		return at(index0);
 	}
 
-	T& at(int index0, int index1)
+	T& operator() (int index0, int index1)
 	{
-		return _ptr[0];
+		return at(index0, index1);
+	}
+
+	T& operator() (int index0, int index1, int index2)
+	{
+		return at(index0, index1, index2);
 	}
 
 private:
