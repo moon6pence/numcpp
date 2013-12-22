@@ -28,6 +28,20 @@ TEST(ArrayType, DeclareArrayWithSize)
 	EXPECT_EQ(a1.ndims(), 1);
 	EXPECT_EQ(a1.size(), 5);
 	EXPECT_NE(a1.raw_ptr(), nullptr);
+
+	array_t<int> a2(3, 2);
+
+	EXPECT_FALSE(a2.empty());
+	EXPECT_EQ(a2.ndims(), 2);
+	EXPECT_EQ(a2.size(), 3 * 2);
+	EXPECT_NE(a2.raw_ptr(), nullptr);
+
+	array_t<int> a3(2, 3, 4);
+
+	EXPECT_FALSE(a3.empty());
+	EXPECT_EQ(a3.ndims(), 3);
+	EXPECT_EQ(a3.size(), 2 * 3 * 4);
+	EXPECT_NE(a3.raw_ptr(), nullptr);
 }
 
 TEST(ArrayType, AccessElements)

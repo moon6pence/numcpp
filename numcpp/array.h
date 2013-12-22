@@ -6,13 +6,27 @@ namespace numcpp {
 template <typename T>
 struct array_t
 {
-	array_t() : _size(0), _ptr(nullptr)
+	array_t() : 
+		_ndims(1), _size(0), _ptr(nullptr)
 	{
 	}
 
-	array_t(int size) : _size(size), _ptr(nullptr)
+	array_t(int size) : 
+		_ndims(1), _size(size), _ptr(nullptr)
 	{
 		_ptr = new T[_size];
+	}
+
+	array_t(int size0, int size1) : 
+		_ndims(2), _size(size0 * size1), _ptr(nullptr)
+	{
+		_ptr = new T[_size];	
+	}
+
+	array_t(int size0, int size1, int size2) : 
+		_ndims(3), _size(size0 * size1 * size2), _ptr(nullptr)
+	{
+		_ptr = new T[_size];	
 	}
 
 	bool empty()
@@ -22,7 +36,7 @@ struct array_t
 
 	int ndims()
 	{
-		return 1;
+		return _ndims;
 	}
 
 	int size()
@@ -51,6 +65,7 @@ struct array_t
 	}
 
 private:
+	int _ndims;
 	int _size;
 	T *_ptr;
 };
