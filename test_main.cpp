@@ -51,10 +51,10 @@ TEST(ArrayType, DeclareArrayWithSize)
 	EXPECT_NE(a3.raw_ptr(), nullptr);
 }
 
-class ArrayTypeF : public ::testing::Test
+class ArrayTypeFixture : public ::testing::Test
 {
 public:
-	ArrayTypeF() : a1(5), a2(2, 3), a3(2, 3, 4)
+	ArrayTypeFixture() : a1(5), a2(2, 3), a3(2, 3, 4)
 	{
 	}
 
@@ -70,7 +70,10 @@ protected:
 
 	array_t<int> a1, a2, a3;
 
-	const int data1[5] = { 2, 3, 5, 1, 7 };
+	const int data1[5] = 
+	{ 
+		2, 3, 5, 1, 7 
+	};
 
 	const int data2[6] = 
 	{ 
@@ -90,7 +93,9 @@ protected:
 	};	
 };
 
-TEST_F(ArrayTypeF, AccessElements)
+typedef ArrayTypeFixture ArrayElements;
+
+TEST_F(ArrayElements, AccessElements)
 {
 	// 1d array
 	EXPECT_EQ(a1.at(0), 2);
@@ -137,9 +142,7 @@ TEST_F(ArrayTypeF, AccessElements)
 
 #include <numcpp/stl.h>
 
-class NumcppSTL : public ArrayTypeF
-{
-};
+typedef ArrayTypeFixture NumcppSTL;
 
 TEST_F(NumcppSTL, DenseIterator)
 {
