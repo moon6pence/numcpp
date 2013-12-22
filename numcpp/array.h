@@ -43,27 +43,34 @@ struct array_t
 		_ptr = new T[_size];	
 	}
 
-	bool empty()
+	bool empty() const
 	{
 		return _size == 0;
 	}
 
-	int ndims()
+	int ndims() const
 	{
 		return _ndims;
 	}
 
-	int size()
+	int size() const
 	{
 		return _size;
 	}
 
-	int size(int dim)
+	int size(int dim) const
 	{
 		return _shape[dim];
 	}
 
+	// raw_ptr(): access raw pointer
+
 	T *raw_ptr()
+	{
+		return _ptr;
+	}
+
+	const T *raw_ptr() const
 	{
 		return _ptr;
 	}
@@ -72,6 +79,13 @@ struct array_t
 	{
 		return raw_ptr();
 	}
+
+	operator const T * () const
+	{
+		return raw_ptr();
+	}
+
+	// at(index0, index...) : access array elements
 
 	T& at(int index0)
 	{
@@ -88,6 +102,21 @@ struct array_t
 		return _ptr[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
+	const T& at(int index0) const
+	{
+		return _ptr[index0];
+	}
+
+	const T& at(int index0, int index1) const
+	{
+		return _ptr[index1 + _shape[1] * index0];
+	}
+
+	const T& at(int index0, int index1, int index2) const
+	{
+		return _ptr[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+	}
+
 	T& operator() (int index0)
 	{
 		return at(index0);
@@ -99,6 +128,21 @@ struct array_t
 	}
 
 	T& operator() (int index0, int index1, int index2)
+	{
+		return at(index0, index1, index2);
+	}
+
+	const T& operator() (int index0) const
+	{
+		return at(index0);
+	}
+
+	const T& operator() (int index0, int index1) const
+	{
+		return at(index0, index1);
+	}
+
+	const T& operator() (int index0, int index1, int index2) const
 	{
 		return at(index0, index1, index2);
 	}

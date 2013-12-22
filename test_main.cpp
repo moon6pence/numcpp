@@ -152,6 +152,14 @@ TEST_F(ArrayTypeF, DenseIterator)
 		EXPECT_EQ(*i, *p3++);
 }
 
+TEST_F(ArrayTypeF, ForEach)
+{
+	using namespace std;
+
+	for_each(a1, [](int value) { cout << value << " "; });
+	cout << endl;
+}
+
 TEST_F(ArrayTypeF, Fill)
 {
 	fill(a1, 927);

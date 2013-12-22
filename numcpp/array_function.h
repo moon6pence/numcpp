@@ -19,6 +19,26 @@ T *end(array_t<T> &array)
 }
 
 template <typename T>
+const T *begin(const array_t<T> &array)
+{
+	return array.raw_ptr();
+}
+
+template <typename T>
+const T *end(const array_t<T> &array)
+{
+	return array.raw_ptr() + array.size();
+}
+
+// std::for_each
+template <typename T, class Function>
+void for_each(const array_t<T> &array, Function fn)
+{
+	std::for_each(begin(array), end(array), fn);
+}
+
+// std::fill
+template <typename T>
 void fill(array_t<T> &dst, const T& value)
 {
 	std::fill(begin(dst), end(dst), value);	
