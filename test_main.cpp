@@ -154,7 +154,17 @@ TEST_F(ArrayTypeF, DenseIterator)
 
 TEST_F(ArrayTypeF, Fill)
 {
-	// fill(a1, 927);
+	fill(a1, 927);
+	for (auto i = begin(a1); i != end(a1); ++i)
+		EXPECT_EQ(*i, 927);
+
+	fill(a2, 264);
+	for (auto i = begin(a2); i != end(a2); ++i)
+		EXPECT_EQ(*i, 264);
+
+	fill(a3, 4979);
+	for (auto i = begin(a3); i != end(a3); ++i)
+		EXPECT_EQ(*i, 4979);
 }
 
 int main(int argc, char **argv)
