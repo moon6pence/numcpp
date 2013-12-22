@@ -34,15 +34,28 @@ TEST(ArrayType, AccessElements)
 
 	a1.at(0) = 2;
 	a1.at(1) = 3;
-	a1.at(2) = 5;
-	a1.at(3) = 1;
+	// a1.at(2) = 5;
+	// a1.at(3) = 1;
+	a1(2) = 5;
+	a1(3) = 1;
 	a1.at(4) = 7;
-	
+
 	ASSERT_EQ(a1.at(0), 2);
 	ASSERT_EQ(a1.at(1), 3);
 	ASSERT_EQ(a1.at(2), 5);
 	ASSERT_EQ(a1.at(3), 1);
 	ASSERT_EQ(a1.at(4), 7);
+
+	int *ptr = a1.raw_ptr();
+	ptr[2] = 8;
+
+	ASSERT_EQ(a1(2), 8);
+
+	int *ptr2 = a1;
+	ptr[3] = 9;
+
+	ASSERT_EQ(a1(3), 9);
+	ASSERT_EQ(ptr, ptr2);
 }
 
 int main(int argc, char **argv)

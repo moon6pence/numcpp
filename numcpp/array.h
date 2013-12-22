@@ -30,9 +30,19 @@ struct array_t
 		return _ptr;
 	}
 
+	operator T * ()
+	{
+		return raw_ptr();
+	}
+
 	T& at(int index)
 	{
 		return _ptr[index];
+	}
+
+	T& operator() (int index)
+	{
+		return at(index);
 	}
 
 private:
