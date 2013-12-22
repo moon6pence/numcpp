@@ -28,16 +28,22 @@ TEST(ArrayType, DeclareArrayWithSize)
 	ASSERT_NE(a1.raw_ptr(), nullptr);
 }
 
-// TEST(ArrayType, AccessElements)
-// {
-// 	np::array_t<int> a1(5);
+TEST(ArrayType, AccessElements)
+{
+	array_t<int> a1(5);
 
-// 	a1.at(0) = 2;
-// 	a1.at(1) = 3;
-// 	a1.at(2) = 1;
-// 	a1.at(3) = 5;
-// 	a1.at(4) = 7;
-// }
+	a1.at(0) = 2;
+	a1.at(1) = 3;
+	a1.at(2) = 5;
+	a1.at(3) = 1;
+	a1.at(4) = 7;
+	
+	ASSERT_EQ(a1.at(0), 2);
+	ASSERT_EQ(a1.at(1), 3);
+	ASSERT_EQ(a1.at(2), 5);
+	ASSERT_EQ(a1.at(3), 1);
+	ASSERT_EQ(a1.at(4), 7);
+}
 
 int main(int argc, char **argv)
 {

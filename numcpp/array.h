@@ -30,6 +30,11 @@ struct array_t
 		return _ptr;
 	}
 
+	T& at(int index)
+	{
+		return _ptr[index];
+	}
+
 private:
 	int _size;
 	T *_ptr;
