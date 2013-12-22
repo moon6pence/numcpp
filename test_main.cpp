@@ -152,6 +152,11 @@ TEST_F(ArrayTypeF, DenseIterator)
 		EXPECT_EQ(*i, *p3++);
 }
 
+TEST_F(ArrayTypeF, Fill)
+{
+	// fill(a1, 927);
+}
+
 int main(int argc, char **argv)
 {
 	puts("Hello Tests!");

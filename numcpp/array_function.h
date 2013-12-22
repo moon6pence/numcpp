@@ -3,6 +3,8 @@
 
 #include "array.h"
 
+namespace numcpp {
+
 template <typename T>
 T *begin(array_t<T> &array)
 {
@@ -14,5 +16,7 @@ T *end(array_t<T> &array)
 {
 	return array.raw_ptr() + array.size();
 }
+
+} // namespace numcpp
 
 #endif // NUMCPP_ARRAY_FUNCTION_H_
