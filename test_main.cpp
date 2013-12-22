@@ -14,7 +14,8 @@ TEST(ArrayType, DeclareEmptyArray)
 {
 	array_t<int> a1;
 
-	ASSERT_TRUE(a1.empty());
+	EXPECT_TRUE(a1.empty());
+	EXPECT_EQ(a1.ndims(), 1);
 	EXPECT_EQ(a1.size(), 0);
 	EXPECT_EQ(a1.raw_ptr(), nullptr);
 }
@@ -23,7 +24,8 @@ TEST(ArrayType, DeclareArrayWithSize)
 {
 	array_t<int> a1(5);
 
-	ASSERT_FALSE(a1.empty());
+	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(a1.ndims(), 1);
 	EXPECT_EQ(a1.size(), 5);
 	EXPECT_NE(a1.raw_ptr(), nullptr);
 }

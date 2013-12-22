@@ -20,6 +20,11 @@ struct array_t
 		return _size == 0;
 	}
 
+	int ndims()
+	{
+		return 1;
+	}
+
 	int size()
 	{
 		return _size;
