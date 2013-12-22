@@ -6,12 +6,13 @@ namespace numcpp {
 template <typename T>
 struct array_t
 {
-	array_t() : _size(0)
+	array_t() : _size(0), _ptr(nullptr)
 	{
 	}
 
-	array_t(int size) : _size(size)
+	array_t(int size) : _size(size), _ptr(nullptr)
 	{
+		_ptr = new T[_size];
 	}
 
 	bool empty()
@@ -24,8 +25,14 @@ struct array_t
 		return _size;
 	}
 
+	T *raw_ptr()
+	{
+		return _ptr;
+	}
+
 private:
 	int _size;
+	T *_ptr;
 };
 
 } // namespace numcpp

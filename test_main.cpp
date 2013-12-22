@@ -15,6 +15,8 @@ TEST(ArrayType, DeclareEmptyArray)
 	np::array_t<int> a1;
 
 	ASSERT_TRUE(a1.empty());
+	ASSERT_EQ(a1.size(), 0);
+	ASSERT_EQ(a1.raw_ptr(), nullptr);
 }
 
 TEST(ArrayType, DeclareArrayWithSize)
@@ -23,7 +25,19 @@ TEST(ArrayType, DeclareArrayWithSize)
 
 	ASSERT_FALSE(a1.empty());
 	ASSERT_EQ(a1.size(), 5);
+	ASSERT_NE(a1.raw_ptr(), nullptr);
 }
+
+// TEST(ArrayType, AccessElements)
+// {
+// 	np::array_t<int> a1(5);
+
+// 	a1.at(0) = 2;
+// 	a1.at(1) = 3;
+// 	a1.at(2) = 1;
+// 	a1.at(3) = 5;
+// 	a1.at(4) = 7;
+// }
 
 int main(int argc, char **argv)
 {

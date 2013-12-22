@@ -4,6 +4,11 @@ project(numcpp)
 # Project header directory
 include_directories("${PROJECT_SOURCE_DIR}")
 
+# Compiler option for gcc: C++11
+if (${CMAKE_COMPILER_IS_GNUCXX})
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
+endif (${CMAKE_COMPILER_IS_GNUCXX})
+
 ## Unit tests with Google Test
 link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
 
