@@ -59,8 +59,10 @@ TEST(ArrayType, AccessElements)
 	EXPECT_EQ(a1.at(0), 2);
 	EXPECT_EQ(a1.at(1), 3);
 	EXPECT_EQ(a1.at(2), 5);
-	EXPECT_EQ(a1.at(3), 1);
-	EXPECT_EQ(a1.at(4), 7);
+	// EXPECT_EQ(a1.at(3), 1);
+	// EXPECT_EQ(a1.at(4), 7);
+	EXPECT_EQ(a1(3), 1);
+	EXPECT_EQ(a1(4), 7);
 
 	int *ptr = a1.raw_ptr();
 	ptr[2] = 8;
