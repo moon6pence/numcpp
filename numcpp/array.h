@@ -58,7 +58,7 @@ struct array_t
 		return _size;
 	}
 
-	int shape(int dim)
+	int size(int dim)
 	{
 		return _shape[dim];
 	}
