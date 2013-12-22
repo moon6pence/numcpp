@@ -162,6 +162,10 @@ TEST_F(NumcppSTL, ForEach)
 
 	for_each(a1, [](int value) { cout << value << " "; });
 	cout << endl;
+
+	print(a1);
+	print(a2);
+	print(a3);
 }
 
 TEST_F(NumcppSTL, Fill)
@@ -177,6 +181,16 @@ TEST_F(NumcppSTL, Fill)
 	fill(a3, 4979);
 	for (auto i = begin(a3); i != end(a3); ++i)
 		EXPECT_EQ(*i, 4979);
+}
+
+TEST_F(NumcppSTL, Transform)
+{
+	array_t<int> result1(a1.size(0));
+	transform(result1, a1, [](int _a1) { return _a1 + 1; });
+
+	const int *p1 = data1;
+	for (auto i = begin(result1); i != end(result1); ++i)
+		EXPECT_EQ(*i, *(p1++) + 1);
 }
 
 int main(int argc, char **argv)

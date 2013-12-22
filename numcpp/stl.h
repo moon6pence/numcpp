@@ -2,7 +2,9 @@
 #define NUMCPP_ARRAY_FUNCTION_H_
 
 #include "array.h"
+
 #include <algorithm>
+#include <iostream>
 
 namespace numcpp {
 
@@ -37,11 +39,27 @@ void for_each(const array_t<T> &array, Function fn)
 	std::for_each(begin(array), end(array), fn);
 }
 
+template <typename T>
+void print(const array_t<T> &array)
+{
+	using namespace std;
+
+	for_each(array, [](const T& value) { cout << value << " "; });
+	cout << endl;
+}
+
 // std::fill
 template <typename T>
 void fill(array_t<T> &dst, const T& value)
 {
 	std::fill(begin(dst), end(dst), value);	
+}
+
+// std::transform
+template <typename T, class Function>
+void transform(array_t<T> &dst, const array_t<T> &src, Function fn)
+{
+	std::transform(begin(src), end(src), begin(dst), fn);
 }
 
 } // namespace numcpp
