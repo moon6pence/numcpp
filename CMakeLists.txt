@@ -21,6 +21,14 @@ add_library(
 # Unit tests with Google Test
 link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
 
-add_executable(test test_main.cpp)
+# test executable
+add_executable(
+	test 
+	test_main.cpp
+
+	numcpp/array.test.inl
+	numcpp/stl.test.inl
+)
+
 target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
 target_link_libraries(test numcpp gtest pthread)
