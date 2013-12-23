@@ -8,6 +8,7 @@ TEST(Main, HelloGoogleTest)
 
 #include "numcpp/array.test.inl"
 #include "numcpp/stl.test.inl"
+#include "numcpp/functions.test.inl"
 
 int main(int argc, char **argv)
 {

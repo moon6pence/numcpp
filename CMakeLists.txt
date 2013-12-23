@@ -16,6 +16,7 @@ add_library(
 
 	numcpp/array.h
 	numcpp/stl.h
+	numcpp/functions.h
 )
 
 # Unit tests with Google Test
@@ -28,6 +29,7 @@ add_executable(
 
 	numcpp/array.test.inl
 	numcpp/stl.test.inl
+	numcpp/functions.test.inl
 )
 
 target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
