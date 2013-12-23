@@ -17,7 +17,13 @@ add_library(
 	numcpp/array.h
 	numcpp/stl.h
 	numcpp/functions.h
+	numcpp/opencv.h
 )
+
+# External library: OpenCV
+find_package(OpenCV REQUIRED)
+target_link_libraries(numcpp ${OpenCV_LIBS})
+file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 
 # Unit tests with Google Test
 link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
@@ -30,6 +36,7 @@ add_executable(
 	numcpp/array.test.inl
 	numcpp/stl.test.inl
 	numcpp/functions.test.inl
+	numcpp/opencv.test.inl
 )
 
 target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
