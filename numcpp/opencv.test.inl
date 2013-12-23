@@ -3,6 +3,8 @@
 
 namespace {
 
+using namespace numcpp;
+
 TEST(OpenCV, HelloOpenCV)
 {
 	cv::Mat image = cv::imread("Lena.bmp");
@@ -33,6 +35,31 @@ TEST(OpenCV, ToCvMat)
 	mat(1, 4) = 0.0f;
 
 	cv::Mat cv_mat2 = to_cv_mat(mat2);
+	ASSERT_EQ(cv_mat2.rows, mat2.size(0));
+	ASSERT_EQ(cv_mat2.cols, mat2.size(1));
+	for (int y = 0; y < mat2.size(0); y++)
+		for (int x = 0; x < mat2.size(1); x++)
+			ASSERT_EQ(mat2(y, x), cv_mat2.at<float>(y, x));
+}
+
+TEST(OpenCV, FromCvMat)
+{
+	cv::Mat cv_mat(5, 5, CV_8U, cvScalar(128));
+	cv_mat.at<uint8_t>(3, 2) = 255;
+	cv_mat.at<uint8_t>(1, 4) = 0;
+
+	auto mat = from_cv_mat<uint8_t>(cv_mat);
+	ASSERT_EQ(cv_mat.rows, mat.size(0));
+	ASSERT_EQ(cv_mat.cols, mat.size(1));
+	for (int y = 0; y < mat.size(0); y++)
+		for (int x = 0; x < mat.size(1); x++)
+			ASSERT_EQ(mat(y, x), cv_mat.at<uint8_t>(y, x));
+
+	cv::Mat cv_mat2(5, 5, CV_32F, cvScalar(0.5f));
+	cv_mat2.at<float>(3, 2) = 1.0f;
+	cv_mat2.at<float>(1, 4) = 0.0f;
+
+	auto mat2 = from_cv_mat<float>(cv_mat2);
 	ASSERT_EQ(cv_mat2.rows, mat2.size(0));
 	ASSERT_EQ(cv_mat2.cols, mat2.size(1));
 	for (int y = 0; y < mat2.size(0); y++)
