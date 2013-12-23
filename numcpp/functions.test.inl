@@ -34,4 +34,19 @@ TEST(Functions, Colon)
 		EXPECT_EQ(a5(i), value5);
 }
 
+TEST(Functions, MeshGrid)
+{
+	array_t<int> xgv = colon(1, 5), ygv = colon(2, 6);
+	array_t<int> X(5, 5), Y(5, 5);
+
+	meshgrid(X, Y, xgv, ygv);
+
+	for (int y = 0; y < X.size(0); y++)
+		for (int x = 0; x < X.size(1); x++)
+		{
+			ASSERT_EQ(X(x, y), xgv(x));
+			ASSERT_EQ(Y(x, y), ygv(y));
+		}
+}
+
 } // anonymous namespace

@@ -29,4 +29,19 @@ array_t<T> colon(T j, T i, T k)
 	return result;
 }
 
+template <typename T>
+void meshgrid(
+	array_t<T> &X, array_t<T> &Y, 
+	const array_t<T> &xgv, const array_t<T> &ygv)
+{
+	// TODO: assert array dimension, size
+	
+	for (int y = 0; y < ygv.size(0); y++)
+		for (int x = 0; x < xgv.size(0); x++)
+		{
+			X(x, y) = xgv(x);
+			Y(x, y) = ygv(y);
+		}
+}
+
 #endif // NUMCPP_FUNCTIONS_H_
