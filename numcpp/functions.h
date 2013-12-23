@@ -1,6 +1,10 @@
 #ifndef NUMCPP_FUNCTIONS_H_
 #define NUMCPP_FUNCTIONS_H_
 
+#include "array.h"
+
+namespace numcpp {
+
 /** One-dimensional array from j to k, such as {j, j+1, ..., k} */
 template <typename T>
 array_t<T> colon(T j, T k)
@@ -43,5 +47,7 @@ void meshgrid(
 			Y(x, y) = ygv(y);
 		}
 }
+
+} // namespace numcpp
 
 #endif // NUMCPP_FUNCTIONS_H_
