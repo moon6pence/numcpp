@@ -48,6 +48,15 @@ void print(const array_t<T> &array)
 	cout << endl;
 }
 
+template <>
+void print(const array_t<uint8_t> &array)
+{
+	using namespace std;
+
+	for_each(array, [](const uint8_t& value) { cout << (int)value << " "; });
+	cout << endl;
+}
+
 // std::fill
 template <typename T>
 void fill(array_t<T> &dst, const T& value)

@@ -1,7 +1,7 @@
 #ifndef NUMCPP_OPENCV_H_
 #define NUMCPP_OPENCV_H_
 
-#include <opencv2/core/core.hpp>
+#include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
 namespace numcpp {
@@ -19,8 +19,18 @@ array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 {
 	// TODO: Do not copy
 	array_t<T> result(cv_mat.rows, cv_mat.cols);
-	memcpy(cv_mat.data, result.raw_ptr(), result.size() * sizeof(T));
+	memcpy(result.raw_ptr(), cv_mat.data, result.size() * sizeof(T));
 	return result;
+}
+
+array_t<uint8_t> imread(const std::string &file_name)
+{
+	cv::Mat cv_image = cv::imread(file_name);
+
+	cv::Mat cv_grayscale;
+	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
+
+	return from_cv_mat<uint8_t>(cv_grayscale);
 }
 
 } // namespace numcpp
