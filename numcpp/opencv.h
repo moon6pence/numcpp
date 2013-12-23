@@ -23,9 +23,9 @@ array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 	return result;
 }
 
-array_t<uint8_t> imread(const std::string &file_name)
+array_t<uint8_t> imread(const std::string &file_path)
 {
-	cv::Mat cv_image = cv::imread(file_name);
+	cv::Mat cv_image = cv::imread(file_path);
 
 	cv::Mat cv_grayscale;
 	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);

@@ -69,26 +69,23 @@ TEST(OpenCV, FromCvMat)
 			ASSERT_EQ(mat2(y, x), cv_mat2.at<float>(y, x));
 }
 
-// TEST(OpenCV, ImRead)
-// {
-// 	cv::Mat cv_image = cv::imread("Lena.bmp");
-// 	ASSERT_EQ(cv_image.rows, 512);
-// 	ASSERT_EQ(cv_image.cols, 512);
+TEST(OpenCV, ImRead)
+{
+	cv::Mat cv_image = cv::imread("Lena.bmp");
+	ASSERT_EQ(cv_image.rows, 512);
+	ASSERT_EQ(cv_image.cols, 512);
 
-// 	cv::Mat cv_grayscale;
-// 	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
+	cv::Mat cv_grayscale;
+	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
 
-// 	// cv::imshow("", cv_grayscale);
-// 	// cv::waitKey(0);
+	auto image = imread("Lena.bmp");
+	ASSERT_EQ(image.size(0), cv_image.rows);
+	ASSERT_EQ(image.size(1), cv_image.cols);
 
-// 	auto image = imread("Lena.bmp");
-// 	ASSERT_EQ(image.size(0), cv_image.rows);
-// 	ASSERT_EQ(image.size(1), cv_image.cols);
-
-// 	EXPECT_EQ(image(43, 412), cv_grayscale.at<uint8_t>(43, 412));
-// 	EXPECT_EQ(image(360, 240), cv_grayscale.at<uint8_t>(360, 240));
-// 	EXPECT_EQ(image(0, 0), cv_grayscale.at<uint8_t>(0, 0));
-// 	EXPECT_EQ(image(511, 511), cv_grayscale.at<uint8_t>(511, 511));
-// }
+	EXPECT_EQ(image(43, 412), cv_grayscale.at<uint8_t>(43, 412));
+	EXPECT_EQ(image(360, 240), cv_grayscale.at<uint8_t>(360, 240));
+	EXPECT_EQ(image(0, 0), cv_grayscale.at<uint8_t>(0, 0));
+	EXPECT_EQ(image(511, 511), cv_grayscale.at<uint8_t>(511, 511));
+}
 
 } // anonymous namespace
