@@ -6,6 +6,13 @@ namespace numcpp {
 template <typename T>
 struct array_t
 {
+private:
+	int _ndims;
+	int _size;
+	int *_shape;
+	T *_ptr;
+
+public:
 	array_t() : 
 		_ndims(1), _size(0), _shape(nullptr), _ptr(nullptr)
 	{
@@ -41,6 +48,31 @@ struct array_t
 		_shape[2] = size2;
 
 		_ptr = new T[_size];	
+	}
+
+private:
+	// disable copy constructor, assign
+	array_t(array_t &) { }
+	const array_t &operator=(const array_t &) { return *this; }
+
+public:
+	// move constructor
+	array_t(array_t &&other) :
+		_ndims(other._ndims), 
+		_size(other._size), 
+		_shape(other._shape), 
+		_ptr(other._ptr)
+	{
+		other._ndims = 1;
+		other._size = 0;
+		other._shape = nullptr;
+		other._ptr = nullptr;
+	}
+
+	~array_t()
+	{
+		if (_shape) { delete _shape; _shape = nullptr; }
+		if (_ptr) { delete _ptr; _ptr = nullptr; }
 	}
 
 	bool empty() const
@@ -146,12 +178,6 @@ struct array_t
 	{
 		return at(index0, index1, index2);
 	}
-
-private:
-	int _ndims;
-	int _size;
-	int *_shape;
-	T *_ptr;
 };
 
 } // namespace numcpp
