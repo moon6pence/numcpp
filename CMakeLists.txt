@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8.11)
 project(numcpp)
 
+# Conditional build with external dependencies
+set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
+
 # Project header directory
 include_directories("${PROJECT_SOURCE_DIR}")
 
@@ -17,13 +21,18 @@ add_library(
 	numcpp/array.h
 	numcpp/stl.h
 	numcpp/functions.h
+
+	# TODO: conditional include?
 	numcpp/opencv.h
 )
 
 # External library: OpenCV
-find_package(OpenCV REQUIRED)
-target_link_libraries(numcpp ${OpenCV_LIBS})
-file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+if (USE_OPENCV)
+	find_package(OpenCV REQUIRED)
+	target_link_libraries(numcpp ${OpenCV_LIBS})
+
+	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+endif (USE_OPENCV)
 
 # Unit tests with Google Test
 link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
@@ -43,5 +52,7 @@ target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
 target_link_libraries(test numcpp gtest pthread)
 
 # Example: circularize
-add_executable(circularize example/circularize.h example/circularize.cpp)
-target_link_libraries(circularize numcpp)
+if (USE_OPENCV)
+	add_executable(circularize example/circularize.h example/circularize.cpp)
+	target_link_libraries(circularize numcpp)
+endif (USE_OPENCV)
