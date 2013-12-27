@@ -65,8 +65,29 @@ public:
 	{
 		other._ndims = 1;
 		other._size = 0;
-		other._shape = nullptr;
+		other._shape = new int[1];
+		other._shape[0] = 0;
 		other._ptr = nullptr;
+	}
+
+	// move assign
+	const array_t &operator=(array_t &&other)
+	{
+		if (_shape) { delete _shape; _shape = nullptr; }
+		if (_ptr) { delete _ptr; _ptr = nullptr; }
+
+		_ndims = other._ndims;
+		_size = other._size;
+		_shape = other._shape;
+		_ptr = other._ptr;
+
+		other._ndims = 1;
+		other._size = 0;
+		other._shape = new int[1];
+		other._shape[0] = 0;
+		other._ptr = nullptr;
+
+		return *this;
 	}
 
 	~array_t()
