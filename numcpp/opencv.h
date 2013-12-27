@@ -15,6 +15,14 @@ cv::Mat to_cv_mat(array_t<T> &array)
 }
 
 template <typename T>
+const cv::Mat to_cv_mat(const array_t<T> &array)
+{
+	return cv::Mat(
+		array.size(0), array.size(1), 
+		cv::DataType<T>::type, const_cast<uint8_t *>(array.raw_ptr()));
+}
+
+template <typename T>
 array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 {
 	// TODO: Do not copy
@@ -31,6 +39,12 @@ array_t<uint8_t> imread(const std::string &file_path)
 	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
 
 	return from_cv_mat<uint8_t>(cv_grayscale);
+}
+
+bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
+{
+	cv::Mat cv_image = to_cv_mat(image);
+	return cv::imwrite(filename, cv_image);
 }
 
 } // namespace numcpp

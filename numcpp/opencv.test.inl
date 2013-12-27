@@ -88,4 +88,10 @@ TEST(OpenCV, ImRead)
 	EXPECT_EQ(image(511, 511), cv_grayscale.at<uint8_t>(511, 511));
 }
 
+TEST(OpenCV, ImWrite)
+{
+	auto image = imread("Lena.bmp");
+	ASSERT_TRUE(imwrite(image, "result_imwrite.bmp"));
+}
+
 } // anonymous namespace
