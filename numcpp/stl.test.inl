@@ -57,6 +57,9 @@ TEST_F(NumcppSTL, Transform)
 	const int *p1 = data1;
 	for (auto i = begin(result1); i != end(result1); ++i)
 		EXPECT_EQ(*i, *(p1++) + 1);
+
+	array_t<int> result2(a1.size(0));
+	transform(result2, a1, a1, [](int _a1, int _a2) { return _a1 + _a2; });
 }
 
 } // anonymous namespace

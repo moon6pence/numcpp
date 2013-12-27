@@ -65,10 +65,21 @@ void fill(array_t<T> &dst, const T& value)
 }
 
 // std::transform
-template <typename T, class Function>
-void transform(array_t<T> &dst, const array_t<T> &src, Function fn)
+template <typename T, typename U, class UnaryFunction>
+void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
 {
 	std::transform(begin(src), end(src), begin(dst), fn);
+}
+
+// std::transform
+template <typename T, typename U, typename V, class BinaryFunction>
+void transform(
+	array_t<T> &dst, 
+	const array_t<U> &src1, 
+	const array_t<V> &src2, 
+	BinaryFunction fn)
+{
+	std::transform(begin(src1), end(src1), begin(src2), begin(dst), fn);
 }
 
 } // namespace numcpp
