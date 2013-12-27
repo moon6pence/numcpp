@@ -1,108 +1,58 @@
-cmake_minimum_required(VERSION 2.8.8)
-project(numcpp2)
+cmake_minimum_required(VERSION 2.8.11)
+project(numcpp)
 
 # Conditional build with external dependencies
-set(BUILD_TESTS ON CACHE BOOL "Build tests")
-set(BUILD_EXAMPLES ON CACHE BOOL "Build examples")
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
-set(USE_IPP ON CACHE BOOL "Use Intel IPP library")
-set(USE_CUDA ON CACHE BOOL "Use NVIDIA CUDA")
-set(VARIADIC_TEMPLATE OFF CACHE BOOL "Supports C++11 variadic template")
-set(INITIALIZER_LIST OFF CACHE BOOL "Supports C++11 initializer_list")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 # Project header directory
-include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}")
 
 # Compiler option for gcc: C++11
 if (${CMAKE_COMPILER_IS_GNUCXX})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 endif (${CMAKE_COMPILER_IS_GNUCXX})
 
-# Compiler options for VC++
-if (${MSVC})
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS /wd4819")
-endif (${MSVC})
-
-# Library: numcpp
+# numcpp library
 add_library(
 	numcpp
 	numcpp.cpp
-	numcpp.h
-	numcpp/array.h
-	numcpp/array_function.h
-	numcpp/tmp.h
 
-	# TODO: conditional add?
+	numcpp/array.h
+	numcpp/stl.h
+	numcpp/functions.h
+
+	# TODO: conditional include?
 	numcpp/opencv.h
-	numcpp/ipp.h
-	numcpp/device_array.h
 )
 
 # External library: OpenCV
 if (USE_OPENCV)
 	find_package(OpenCV REQUIRED)
 	target_link_libraries(numcpp ${OpenCV_LIBS})
+
+	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 endif (USE_OPENCV)
 
-# External library: Intel IPP
-if (USE_IPP)
-	if (${UNIX})
-		include_directories("/opt/intel/ipp/include")
-		link_directories("/opt/intel/ipp/lib/intel64")
-		target_link_libraries(numcpp ippcore ipps ippi)
-	elseif (${WIN32})
-		include_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/include")
-		link_directories("$ENV{ProgramFiles}/Intel/Composer XE/ipp/lib/ia32")
-		target_link_libraries(numcpp ippcore ipps ippi)
-	endif (${UNIX})
-endif (USE_IPP)
+# Unit tests with Google Test
+link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
 
-# External library: NVIDIA CUDA
-if (USE_CUDA)
-	find_package(CUDA REQUIRED)
-	include_directories(${CUDA_INCLUDE_DIRS})
+# test executable
+add_executable(
+	test 
+	test_main.cpp
 
-	# Generate 2.0 code
-	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
+	numcpp/array.test.inl
+	numcpp/stl.test.inl
+	numcpp/functions.test.inl
+	numcpp/opencv.test.inl
+)
 
-	if (${UNIX})
-		# Use C++03 compiler, not C++11
-		set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
-	endif (${UNIX})
-endif (USE_CUDA)
+target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
+target_link_libraries(test numcpp gtest pthread)
 
-## Tests ##
-if (BUILD_TESTS)
-	# Testcase: numcpp
-	add_executable(test testcase/test_numcpp.cpp)
-	target_link_libraries(test numcpp)
-
-	# Testcase: OpenCV
-	if (USE_OPENCV)
-		add_executable(opencv testcase/test_opencv.cpp)
-		target_link_libraries(opencv numcpp)
-	endif (USE_OPENCV)
-
-	# Testcase: ipp
-	if (USE_IPP)
-		add_executable(ipp testcase/test_ipp.cpp)
-		target_link_libraries(ipp numcpp)
-	endif (USE_IPP)
-
-	# Testcase: cuda
-	if (USE_CUDA)
-		cuda_compile(TEST_CUDA_KERNEL_O testcase/test_cuda_kernel.cu)
-		cuda_add_executable(cuda testcase/test_cuda.cpp ${TEST_CUDA_KERNEL_O})
-		target_link_libraries(cuda numcpp)	
-	endif (USE_CUDA)
-endif (BUILD_TESTS)
-
-## Examples ##
-if (BUILD_EXAMPLES)
-	# Example: circularize
-	if (USE_OPENCV)
-		add_executable(circularize example/circularize.h example/circularize.cpp)
-		target_link_libraries(circularize numcpp)
-	endif (USE_OPENCV)
-endif (BUILD_EXAMPLES)
+# Example: circularize
+if (USE_OPENCV)
+	add_executable(circularize example/circularize.h example/circularize.cpp)
+	target_link_libraries(circularize numcpp)
+endif (USE_OPENCV)

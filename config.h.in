@@ -1,10 +1,6 @@
-#ifndef __NUMCPP_CONFIG_H__
-#define __NUMCPP_CONFIG_H__
+#ifndef NUMCPP_CONFIG_H_
+#define NUMCPP_CONFIG_H_
 
 #cmakedefine USE_OPENCV
-#cmakedefine USE_IPP
-#cmakedefine USE_CUDA
-#cmakedefine VARIADIC_TEMPLATE
-#cmakedefine INITIALIZER_LIST
 
-#endif // __NUMCPP_CONFIG_H__
+#endif // NUMCPP_CONFIG_H_
