@@ -43,8 +43,13 @@ array_t<uint8_t> imread(const std::string &filename)
 
 bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
 {
-	cv::Mat cv_image = to_cv_mat(image);
-	return cv::imwrite(filename, cv_image);
+	return cv::imwrite(filename, to_cv_mat(image));
+}
+
+void imshow(const array_t<uint8_t> &image)
+{
+	cv::imshow("image", to_cv_mat(image));
+	cv::waitKey(0);
 }
 
 } // namespace numcpp

@@ -91,6 +91,7 @@ TEST(OpenCV, ImRead)
 TEST(OpenCV, ImWrite)
 {
 	auto image = imread("Lena.bmp");
+	// imshow(image);
 	ASSERT_TRUE(imwrite(image, "result_imwrite.bmp"));
 }
 
