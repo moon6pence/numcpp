@@ -41,3 +41,7 @@ add_executable(
 
 target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
 target_link_libraries(test numcpp gtest pthread)
+
+# Example: circularize
+add_executable(circularize example/circularize.h example/circularize.cpp)
+target_link_libraries(circularize numcpp)
