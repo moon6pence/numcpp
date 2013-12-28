@@ -30,7 +30,7 @@ add_library(
 
 	# TODO: conditional include?
 	numcpp/opencv.h
-	numcpp/cuda.h
+	numcpp/device_array.h
 )
 
 # External library: OpenCV
@@ -77,7 +77,7 @@ add_executable(
 	numcpp/stl.test.inl
 	numcpp/functions.test.inl
 	numcpp/opencv.test.inl
-	numcpp/cuda.test.inl
+	numcpp/device_array.test.inl
 	${TEST_CUDA_KERNEL_O}
 )
 
