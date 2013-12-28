@@ -3,6 +3,7 @@ project(numcpp)
 
 # Conditional build with external dependencies
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
+set(USE_CUDA OFF CACHE BOOL "Use CUDA")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 # Project header directory
@@ -29,6 +30,7 @@ add_library(
 
 	# TODO: conditional include?
 	numcpp/opencv.h
+	numcpp/cuda.h
 )
 
 # External library: OpenCV
@@ -38,6 +40,21 @@ if (USE_OPENCV)
 
 	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 endif (USE_OPENCV)
+
+# External library: NVIDIA CUDA
+if (USE_CUDA)
+	find_package(CUDA REQUIRED)
+	include_directories(${CUDA_INCLUDE_DIRS})
+	target_link_libraries(numcpp ${CUDA_LIBRARIES})
+
+	# Generate 2.0 code
+	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
+
+	# if (${UNIX})
+	# 	# Use C++03 compiler, not C++11
+	# 	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
+	# endif (${UNIX})
+endif (USE_CUDA)
 
 # Unit tests with Google Test
 if (${CMAKE_COMPILER_IS_GNUCXX})
@@ -56,6 +73,7 @@ add_executable(
 	numcpp/stl.test.inl
 	numcpp/functions.test.inl
 	numcpp/opencv.test.inl
+	numcpp/cuda.test.inl
 )
 
 find_package(Threads)
