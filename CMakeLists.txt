@@ -24,6 +24,7 @@ add_library(
 	numcpp
 	numcpp.cpp
 
+	numcpp/abstract_array.h
 	numcpp/array.h
 	numcpp/stl.h
 	numcpp/functions.h
