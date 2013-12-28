@@ -123,4 +123,38 @@ TEST_F(CUDA_F, HostToDevice)
 	host_to_device(a3_d, a3);
 }
 
+TEST(CUDA, RunKernel2)
+{
+	using namespace std;
+
+	const int N = 5;
+
+	// Data on the host memory
+	array_t<int> a(N), b(N), c(N);
+
+	// TODO: initialize in better way
+	a(0) = 1; a(1) = 2; a(2) = 3; a(3) = 4; a(4) = 5;
+	b(0) = 3; b(1) = 3; b(2) = 3; b(3) = 3; b(4) = 3;
+
+	// Data on the device memory
+	device_array_t<int> a_d(N), b_d(5), c_d(5);
+
+	// Copy from host to device
+	host_to_device(a_d, a);
+	host_to_device(b_d, b);
+
+	// Run kernel
+	vecAdd(a_d, b_d, c_d, N);
+
+	// Blocks until the device has completed all preceding requested tasks
+	cudaThreadSynchronize();
+
+	// Copy from device to host
+	device_to_host(c, c_d);
+
+	// Verify result
+	for (int i = 0; i < N; i++)
+		EXPECT_EQ(c[i], a[i] + b[i]);
+}
+
 } // anonymous namespace
