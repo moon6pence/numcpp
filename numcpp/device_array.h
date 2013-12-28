@@ -95,6 +95,18 @@ public:
 	}
 };
 
+template <typename T>
+void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
+{
+	cudaMemcpy(dst_d, src, dst_d.size() * sizeof(T), cudaMemcpyHostToDevice);
+}
+
+template <typename T>
+void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
+{
+	cudaMemcpy(dst, src_d, dst.size() * sizeof(T), cudaMemcpyDeviceToHost);
+}
+
 } // namespace numcpp
 
 #endif // NUMCPP_DEVICE_ARRAY_H_

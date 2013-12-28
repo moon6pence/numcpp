@@ -1,5 +1,4 @@
 #include <numcpp/device_array.h>
-#include <iostream>
 
 // function declared in cu file
 void vecAdd(const int *A, const int *B, int *C, int N);
@@ -12,7 +11,6 @@ TEST(CUDA, HelloCUDA)
 
 	int deviceCount;
 	cudaGetDeviceCount(&deviceCount);
-	cout << "Device count: " << deviceCount << endl;
 
 	ASSERT_TRUE(deviceCount > 0);
 }
@@ -25,16 +23,6 @@ TEST(CUDA, RunKernel)
 
 	// Data on the host memory
 	int a[N] = { 1, 2, 3, 4, 5 }, b[N] = { 3, 3, 3, 3, 3 }, c[N];
-
-	// Print A
-	for (int i = 0; i < N; i++)
-		cout << a[i] << " ";
-	cout << endl;
-
-	// Print B
-	for (int i = 0; i < N; i++)
-		cout << b[i] << " ";
-	cout << endl;
 
 	// Data on the device memory
 	int *a_d, *b_d, *c_d;
@@ -59,11 +47,6 @@ TEST(CUDA, RunKernel)
 
 	// Copy from device to host
 	cudaMemcpy(c, c_d, N * sizeof(int), cudaMemcpyDeviceToHost);
-
-	// Print C
-	for (int i = 0; i < N; i++)
-		cout << c[i] << " ";
-	cout << endl;
 
 	// Verify result
 	for (int i = 0; i < N; i++)
@@ -117,6 +100,27 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	cudaPointerAttributes attr;
 	cudaPointerGetAttributes(&attr, a1.raw_ptr());
 	EXPECT_EQ(attr.memoryType, cudaMemoryTypeDevice);
+}
+
+typedef ArrayFixture CUDA_F;
+
+TEST_F(CUDA_F, HostToDevice)
+{
+	device_array_t<int> a1_d(5);
+	host_to_device(a1_d, a1);
+
+	array_t<int> a1_h(5);
+	device_to_host(a1_h, a1_d);
+
+	int *ptr1 = data1;
+	for (auto i = begin(a1_h); i != end(a1_h); ++i, ++ptr1)
+		EXPECT_EQ(*i, *ptr1);
+
+	device_array_t<int> a2_d(2, 3);
+	host_to_device(a2_d, a2);
+
+	device_array_t<int> a3_d(2, 3, 4);
+	host_to_device(a3_d, a3);
 }
 
 } // anonymous namespace
