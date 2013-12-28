@@ -1,7 +1,7 @@
 #ifndef NUMCPP_DEVICE_ARRAY_H_
 #define NUMCPP_DEVICE_ARRAY_H_
 
-#include "abstract_array.h"
+#include "base_array.h"
 #include <cuda_runtime.h>
 
 namespace numcpp {
@@ -21,12 +21,12 @@ void device_array_deallocator(T *ptr)
 }
 
 template <typename T>
-struct device_array_t : public abstract_array_t<T>
+struct device_array_t : public base_array_t<T>
 {
 public:
 	device_array_t()
 	{
-		abstract_array_t<T>::init();
+		base_array_t<T>::init();
 	}
 
 	device_array_t(int size0)
@@ -39,7 +39,7 @@ public:
 		auto ptr = std::shared_ptr<T>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);
 
-		abstract_array_t<T>::init(1, size, shape, ptr);
+		base_array_t<T>::init(1, size, shape, ptr);
 	}
 
 	device_array_t(int size0, int size1)
@@ -53,7 +53,7 @@ public:
 		auto ptr = std::shared_ptr<T>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);	
 
-		abstract_array_t<T>::init(2, size, shape, ptr);
+		base_array_t<T>::init(2, size, shape, ptr);
 	}
 
 	device_array_t(int size0, int size1, int size2)
@@ -68,12 +68,12 @@ public:
 		auto ptr = std::shared_ptr<T>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);	
 
-		abstract_array_t<T>::init(3, size, shape, ptr);
+		base_array_t<T>::init(3, size, shape, ptr);
 	}
 
 	~device_array_t()
 	{
-		abstract_array_t<T>::free();
+		base_array_t<T>::free();
 	}
 
 private:
@@ -85,7 +85,7 @@ public:
 	// move constructor
 	device_array_t(device_array_t &&other)
 	{
-		abstract_array_t<T>::init(
+		base_array_t<T>::init(
 			other._ndims, other._size, other._shape, std::move(other._ptr));
 
 		other.init();
@@ -94,9 +94,9 @@ public:
 	// move assign
 	const device_array_t &operator=(device_array_t &&other)
 	{
-		abstract_array_t<T>::free();
+		base_array_t<T>::free();
 
-		abstract_array_t<T>::init(
+		base_array_t<T>::init(
 			other._ndims, other._size, other._shape, std::move(other._ptr));
 
 		other.init();

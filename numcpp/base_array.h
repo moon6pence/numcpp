@@ -1,12 +1,12 @@
-#ifndef NUMCPP_ABSTRACT_ARRAY_H_
-#define NUMCPP_ABSTRACT_ARRAY_H_
+#ifndef NUMCPP_BASE_ARRAY_H_
+#define NUMCPP_BASE_ARRAY_H_
 
 #include <memory>
 
 namespace numcpp {
 
 template <typename T>
-struct abstract_array_t
+struct base_array_t
 {
 protected:
 	int _ndims;
