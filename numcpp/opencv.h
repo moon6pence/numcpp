@@ -28,7 +28,8 @@ array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 	// TODO: Do not copy
 	array_t<T> result(cv_mat.rows, cv_mat.cols);
 	memcpy(result.raw_ptr(), cv_mat.data, result.size() * sizeof(T));
-	return result;
+
+	return std::move(result);
 }
 
 array_t<uint8_t> imread(const std::string &filename)

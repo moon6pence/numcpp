@@ -16,7 +16,7 @@ array_t<T> colon(T j, T k)
 	for (int index = 0; index < result.size(0); index++)
 		result(index) = j + index;
 
-	return result;
+	return std::move(result);
 }
 
 /** One-dimensional array from j to k step i, such as {j, j+i, j+2i, ... } */
@@ -30,7 +30,7 @@ array_t<T> colon(T j, T i, T k)
 	for (int index = 0; index < result.size(0); index++)
 		result(index) = j + index * i;
 
-	return result;
+	return std::move(result);
 }
 
 template <typename T>

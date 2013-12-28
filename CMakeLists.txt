@@ -35,7 +35,12 @@ if (USE_OPENCV)
 endif (USE_OPENCV)
 
 # Unit tests with Google Test
-link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
+if (${CMAKE_COMPILER_IS_GNUCXX})
+	link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
+elseif (${MSVC})
+	link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+	add_definitions(-D_VARIADIC_MAX=10)
+endif()
 
 # test executable
 add_executable(
@@ -48,8 +53,9 @@ add_executable(
 	numcpp/opencv.test.inl
 )
 
+find_package(Threads)
 target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
-target_link_libraries(test numcpp gtest pthread)
+target_link_libraries(test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
 
 # Example: circularize
 if (USE_OPENCV)
