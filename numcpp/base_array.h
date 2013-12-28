@@ -12,29 +12,37 @@ protected:
 	int _ndims;
 	int _size;
 	int *_shape;
-	std::shared_ptr<T> _ptr;
+	std::shared_ptr<void> _address;
+	T *_origin;
 
 	void init()
 	{
-		_ndims = 1;
-		_size = 0;
-		_shape = new int[1];
-		_shape[0] = 0;
-		_ptr = nullptr;	
+		int *shape = new int[1];
+		shape[0] = 0;
+
+		init(1, 0, shape, nullptr);
 	}
 
-	void init(int ndims, int size, int *shape, std::shared_ptr<T> ptr)
+	void init(int ndims, int size, int *shape, std::shared_ptr<void> address)
+	{
+		init(ndims, size, shape, address, (T *)address.get());
+	}
+
+	void init(
+		int ndims, int size, int *shape, 
+		std::shared_ptr<void> address, T *origin)
 	{
 		_ndims = ndims;
 		_size = size;
 		_shape = shape;
-		_ptr = ptr;
+		_address = address;
+		_origin = origin;
 	}
 
 	void free()
 	{
 		if (_shape) { delete[] _shape; _shape = nullptr; }
-		_ptr = nullptr;
+		_address = nullptr;
 	}
 
 public:
@@ -62,12 +70,12 @@ public:
 
 	T *raw_ptr()
 	{
-		return _ptr.get();
+		return _origin;
 	}
 
 	const T *raw_ptr() const
 	{
-		return _ptr.get();
+		return _origin;
 	}
 
 	operator T * ()
@@ -84,32 +92,32 @@ public:
 
 	T& at(int index0)
 	{
-		return raw_ptr()[index0];
+		return _origin[index0];
 	}
 
 	T& at(int index0, int index1)
 	{
-		return raw_ptr()[index1 + _shape[1] * index0];
+		return _origin[index1 + _shape[1] * index0];
 	}
 
 	T& at(int index0, int index1, int index2)
 	{
-		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return _origin[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
 	const T& at(int index0) const
 	{
-		return raw_ptr()[index0];
+		return _origin[index0];
 	}
 
 	const T& at(int index0, int index1) const
 	{
-		return raw_ptr()[index1 + _shape[1] * index0];
+		return _origin[index1 + _shape[1] * index0];
 	}
 
 	const T& at(int index0, int index1, int index2) const
 	{
-		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return _origin[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
 	T& operator() (int index0)

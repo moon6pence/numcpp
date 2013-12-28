@@ -36,7 +36,7 @@ public:
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		auto ptr = std::shared_ptr<T>(
+		auto ptr = std::shared_ptr<void>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);
 
 		base_array_t<T>::init(1, size, shape, ptr);
@@ -50,7 +50,7 @@ public:
 		shape[0] = size0;
 		shape[1] = size1;
 
-		auto ptr = std::shared_ptr<T>(
+		auto ptr = std::shared_ptr<void>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);	
 
 		base_array_t<T>::init(2, size, shape, ptr);
@@ -65,7 +65,7 @@ public:
 		shape[1] = size1;
 		shape[2] = size2;
 
-		auto ptr = std::shared_ptr<T>(
+		auto ptr = std::shared_ptr<void>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);	
 
 		base_array_t<T>::init(3, size, shape, ptr);

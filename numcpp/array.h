@@ -27,7 +27,7 @@ public:
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		auto ptr = std::shared_ptr<T>(new T[size], array_deleter<T>);
+		auto ptr = std::shared_ptr<void>(new T[size], array_deleter<T>);
 
 		base_array_t<T>::init(1, size, shape, ptr);
 	}
@@ -40,7 +40,7 @@ public:
 		shape[0] = size0;
 		shape[1] = size1;
 
-		auto ptr = std::shared_ptr<T>(new T[size], array_deleter<T>);	
+		auto ptr = std::shared_ptr<void>(new T[size], array_deleter<T>);	
 
 		base_array_t<T>::init(2, size, shape, ptr);
 	}
@@ -54,7 +54,7 @@ public:
 		shape[1] = size1;
 		shape[2] = size2;
 
-		auto ptr = std::shared_ptr<T>(new T[size], array_deleter<T>);	
+		auto ptr = std::shared_ptr<void>(new T[size], array_deleter<T>);	
 
 		base_array_t<T>::init(3, size, shape, ptr);
 	}
@@ -74,7 +74,7 @@ public:
 	array_t(array_t &&other)
 	{
 		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._ptr));
+			other._ndims, other._size, other._shape, std::move(other._address));
 
 		other.init();
 	}
@@ -85,7 +85,7 @@ public:
 		base_array_t<T>::free();
 
 		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._ptr));
+			other._ndims, other._size, other._shape, std::move(other._address));
 
 		other.init();
 
