@@ -1,7 +1,15 @@
 #ifndef NUMCPP_ARRAY_H_
 #define NUMCPP_ARRAY_H_
 
+#include <memory>
+
 namespace numcpp {
+
+template <typename T>
+void array_deleter(T *ptr)
+{
+	delete[] ptr;
+}
 
 template <typename T>
 struct array_t
@@ -10,44 +18,50 @@ private:
 	int _ndims;
 	int _size;
 	int *_shape;
-	T *_ptr;
+	std::shared_ptr<T> _ptr;
 
 public:
 	array_t() : 
-		_ndims(1), _size(0), _shape(nullptr), _ptr(nullptr)
+		_ndims(1), _size(0), _shape(nullptr)
 	{
 		_shape = new int[1];
 		_shape[0] = 0;
 	}
 
 	array_t(int size0) : 
-		_ndims(1), _size(size0), _shape(nullptr), _ptr(nullptr)
+		_ndims(1), _size(size0), _shape(nullptr)
 	{
 		_shape = new int[1];
 		_shape[0] = size0;
 
-		_ptr = new T[_size];
+		_ptr = std::shared_ptr<T>(new T[_size], array_deleter<T>);
 	}
 
 	array_t(int size0, int size1) : 
-		_ndims(2), _size(size0 * size1), _shape(nullptr), _ptr(nullptr)
+		_ndims(2), _size(size0 * size1), _shape(nullptr)
 	{
 		_shape = new int[2];
 		_shape[0] = size0;
 		_shape[1] = size1;
 
-		_ptr = new T[_size];	
+		_ptr = std::shared_ptr<T>(new T[_size], array_deleter<T>);	
 	}
 
 	array_t(int size0, int size1, int size2) : 
-		_ndims(3), _size(size0 * size1 * size2), _shape(nullptr), _ptr(nullptr)
+		_ndims(3), _size(size0 * size1 * size2), _shape(nullptr)
 	{
 		_shape = new int[3];
 		_shape[0] = size0;
 		_shape[1] = size1;
 		_shape[2] = size2;
 
-		_ptr = new T[_size];	
+		_ptr = std::shared_ptr<T>(new T[_size], array_deleter<T>);	
+	}
+
+	~array_t()
+	{
+		if (_shape) { delete[] _shape; _shape = nullptr; }
+		_ptr = nullptr;
 	}
 
 private:
@@ -61,7 +75,7 @@ public:
 		_ndims(other._ndims), 
 		_size(other._size), 
 		_shape(other._shape), 
-		_ptr(other._ptr)
+		_ptr(std::move(other._ptr))
 	{
 		other._ndims = 1;
 		other._size = 0;
@@ -74,12 +88,12 @@ public:
 	const array_t &operator=(array_t &&other)
 	{
 		if (_shape) { delete _shape; _shape = nullptr; }
-		if (_ptr) { delete _ptr; _ptr = nullptr; }
+		_ptr = nullptr;
 
 		_ndims = other._ndims;
 		_size = other._size;
 		_shape = other._shape;
-		_ptr = other._ptr;
+		_ptr = std::move(other._ptr);
 
 		other._ndims = 1;
 		other._size = 0;
@@ -88,12 +102,6 @@ public:
 		other._ptr = nullptr;
 
 		return *this;
-	}
-
-	~array_t()
-	{
-		if (_shape) { delete _shape; _shape = nullptr; }
-		if (_ptr) { delete _ptr; _ptr = nullptr; }
 	}
 
 	bool empty() const
@@ -120,12 +128,12 @@ public:
 
 	T *raw_ptr()
 	{
-		return _ptr;
+		return _ptr.get();
 	}
 
 	const T *raw_ptr() const
 	{
-		return _ptr;
+		return _ptr.get();
 	}
 
 	operator T * ()
@@ -142,32 +150,32 @@ public:
 
 	T& at(int index0)
 	{
-		return _ptr[index0];
+		return raw_ptr()[index0];
 	}
 
 	T& at(int index0, int index1)
 	{
-		return _ptr[index1 + _shape[1] * index0];
+		return raw_ptr()[index1 + _shape[1] * index0];
 	}
 
 	T& at(int index0, int index1, int index2)
 	{
-		return _ptr[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
 	const T& at(int index0) const
 	{
-		return _ptr[index0];
+		return raw_ptr()[index0];
 	}
 
 	const T& at(int index0, int index1) const
 	{
-		return _ptr[index1 + _shape[1] * index0];
+		return raw_ptr()[index1 + _shape[1] * index0];
 	}
 
 	const T& at(int index0, int index1, int index2) const
 	{
-		return _ptr[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
 	T& operator() (int index0)
