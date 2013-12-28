@@ -25,18 +25,22 @@ TEST(OpenCV, ToCvMat)
 	cv::Mat cv_mat = to_cv_mat(mat);
 	ASSERT_EQ(cv_mat.rows, mat.size(0));
 	ASSERT_EQ(cv_mat.cols, mat.size(1));
+	EXPECT_EQ(cv_mat.at<uint8_t>(3, 2), 255);
+	EXPECT_EQ(cv_mat.at<uint8_t>(1, 4), 0);
 	for (int y = 0; y < mat.size(0); y++)
 		for (int x = 0; x < mat.size(1); x++)
 			ASSERT_EQ(mat(y, x), cv_mat.at<uint8_t>(y, x));
 
 	array_t<float> mat2(5, 5);
 	fill(mat2, 0.5f);
-	mat(3, 2) = 1.0f;
-	mat(1, 4) = 0.0f;
+	mat2(3, 2) = 1.0f;
+	mat2(1, 4) = 0.0f;
 
 	cv::Mat cv_mat2 = to_cv_mat(mat2);
 	ASSERT_EQ(cv_mat2.rows, mat2.size(0));
 	ASSERT_EQ(cv_mat2.cols, mat2.size(1));
+	EXPECT_EQ(cv_mat2.at<float>(3, 2), 1.0f);
+	EXPECT_EQ(cv_mat2.at<float>(1, 4), 0.0f);
 	for (int y = 0; y < mat2.size(0); y++)
 		for (int x = 0; x < mat2.size(1); x++)
 			ASSERT_EQ(mat2(y, x), cv_mat2.at<float>(y, x));

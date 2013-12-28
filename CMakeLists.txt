@@ -8,10 +8,15 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DI
 # Project header directory
 include_directories("${PROJECT_SOURCE_DIR}")
 
-# Compiler option for gcc: C++11
+# Compiler option for gcc
 if (${CMAKE_COMPILER_IS_GNUCXX})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 endif (${CMAKE_COMPILER_IS_GNUCXX})
+
+# Compiler options for VC++
+if (${MSVC})
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS /wd4819")
+endif (${MSVC})
 
 # numcpp library
 add_library(
