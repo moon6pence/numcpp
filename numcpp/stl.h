@@ -50,7 +50,7 @@ void print(const array_t<T> &array)
 }
 
 template <>
-void print(const array_t<uint8_t> &array)
+inline void print(const array_t<uint8_t> &array)
 {
 	using namespace std;
 

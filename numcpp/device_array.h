@@ -2,6 +2,8 @@
 #define NUMCPP_DEVICE_ARRAY_H_
 
 #include "base_array.h"
+#include "array.h"
+
 #include <cuda_runtime.h>
 
 namespace numcpp {

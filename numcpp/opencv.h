@@ -32,7 +32,7 @@ array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 	return std::move(result);
 }
 
-array_t<uint8_t> imread(const std::string &filename)
+inline array_t<uint8_t> imread(const std::string &filename)
 {
 	cv::Mat cv_image = cv::imread(filename);
 
@@ -42,12 +42,12 @@ array_t<uint8_t> imread(const std::string &filename)
 	return from_cv_mat<uint8_t>(cv_grayscale);
 }
 
-bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
+inline bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
 {
 	return cv::imwrite(filename, to_cv_mat(image));
 }
 
-void imshow(const array_t<uint8_t> &image)
+inline void imshow(const array_t<uint8_t> &image)
 {
 	cv::imshow("image", to_cv_mat(image));
 	cv::waitKey(0);
