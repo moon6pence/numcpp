@@ -7,13 +7,13 @@ using namespace numcpp;
 
 TEST(ArrayType, DeclareEmptyArray)
 {
-	array_t<int> a1;
+	array_t<int> a0;
 
-	EXPECT_TRUE(a1.empty());
-	EXPECT_EQ(a1.ndims(), 1);
-	EXPECT_EQ(a1.size(0), 0);
-	EXPECT_EQ(a1.size(), 0);
-	EXPECT_EQ(a1.raw_ptr(), nullptr);
+	EXPECT_TRUE(a0.empty());
+	EXPECT_EQ(a0.ndims(), 1);
+	EXPECT_EQ(a0.size(0), 0);
+	EXPECT_EQ(a0.size(), 0);
+	EXPECT_EQ(a0.raw_ptr(), nullptr);
 }
 
 TEST(ArrayType, DeclareArrayWithSize)

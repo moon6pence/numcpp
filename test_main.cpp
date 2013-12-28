@@ -16,6 +16,10 @@ TEST(Main, HelloGoogleTest)
 #include "numcpp/opencv.test.inl"
 #endif
 
+#ifdef USE_CUDA
+#include "numcpp/device_array.test.inl"
+#endif
+
 int main(int argc, char **argv)
 {
 	puts("Hello Tests!");
