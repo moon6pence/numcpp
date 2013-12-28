@@ -4,6 +4,8 @@ project(numcpp)
 # Conditional build with external dependencies
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
 set(USE_CUDA OFF CACHE BOOL "Use CUDA")
+set(BUILD_TEST ON CACHE BOOL "Build unit tests")
+set(BUILD_EXAMPLE OFF CACHE BOOL "Build examples")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 # Project header directory
@@ -57,37 +59,41 @@ if (USE_CUDA)
 	endif (${UNIX})
 endif (USE_CUDA)
 
-# Unit tests with Google Test
-if (${CMAKE_COMPILER_IS_GNUCXX})
-	link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
-elseif (${MSVC})
-	link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
-	add_definitions(-D_VARIADIC_MAX=10)
-endif()
+if (BUILD_TEST)
+	# Unit tests with Google Test
+	if (${CMAKE_COMPILER_IS_GNUCXX})
+		link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
+	elseif (${MSVC})
+		link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+		add_definitions(-D_VARIADIC_MAX=10)
+	endif()
 
-if (USE_CUDA)
-	cuda_compile(TEST_CUDA_KERNEL_O numcpp/test_cuda_kernel.cu)
-endif (USE_CUDA)
+	if (USE_CUDA)
+		cuda_compile(TEST_CUDA_KERNEL_O numcpp/test_cuda_kernel.cu)
+	endif (USE_CUDA)
 
-# test executable
-add_executable(
-	test 
-	test_main.cpp
+	# test executable
+	add_executable(
+		test 
+		test_main.cpp
 
-	numcpp/array.test.inl
-	numcpp/stl.test.inl
-	numcpp/functions.test.inl
-	numcpp/opencv.test.inl
-	numcpp/device_array.test.inl
-	${TEST_CUDA_KERNEL_O}
-)
+		numcpp/array.test.inl
+		numcpp/stl.test.inl
+		numcpp/functions.test.inl
+		numcpp/opencv.test.inl
+		numcpp/device_array.test.inl
+		${TEST_CUDA_KERNEL_O}
+	)
 
-find_package(Threads)
-target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
-target_link_libraries(test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
+	find_package(Threads)
+	target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
+	target_link_libraries(test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
+endif (BUILD_TEST)
 
-# Example: circularize
-if (USE_OPENCV)
-	add_executable(circularize example/circularize.h example/circularize.cpp)
-	target_link_libraries(circularize numcpp)
-endif (USE_OPENCV)
+if (BUILD_EXAMPLE)
+	# Example: circularize
+	if (USE_OPENCV)
+		add_executable(circularize example/circularize.h example/circularize.cpp)
+		target_link_libraries(circularize numcpp)
+	endif (USE_OPENCV)
+endif (BUILD_EXAMPLE)
