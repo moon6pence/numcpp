@@ -50,10 +50,10 @@ if (USE_CUDA)
 	# Generate 2.0 code
 	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
 
-	# if (${UNIX})
-	# 	# Use C++03 compiler, not C++11
-	# 	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
-	# endif (${UNIX})
+	if (${UNIX})
+		# Use C++03 compiler, not C++11
+		set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
+	endif (${UNIX})
 endif (USE_CUDA)
 
 # Unit tests with Google Test
@@ -63,6 +63,10 @@ elseif (${MSVC})
 	link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
 	add_definitions(-D_VARIADIC_MAX=10)
 endif()
+
+if (USE_CUDA)
+	cuda_compile(TEST_CUDA_KERNEL_O numcpp/test_cuda_kernel.cu)
+endif (USE_CUDA)
 
 # test executable
 add_executable(
@@ -74,6 +78,7 @@ add_executable(
 	numcpp/functions.test.inl
 	numcpp/opencv.test.inl
 	numcpp/cuda.test.inl
+	${TEST_CUDA_KERNEL_O}
 )
 
 find_package(Threads)
