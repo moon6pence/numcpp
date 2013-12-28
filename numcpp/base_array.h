@@ -15,6 +15,8 @@ protected:
 	std::shared_ptr<void> _address;
 	T *_origin;
 
+	base_array_t() { }
+
 	void init()
 	{
 		int *shape = new int[1];
@@ -43,6 +45,28 @@ protected:
 	{
 		if (_shape) { delete[] _shape; _shape = nullptr; }
 		_address = nullptr;
+	}
+
+	// move constructor
+	base_array_t(base_array_t &&other)
+	{
+		base_array_t<T>::init(
+			other._ndims, other._size, other._shape, std::move(other._address));
+
+		other.init();
+	}
+
+	// move assign
+	const base_array_t &operator=(base_array_t &&other)
+	{
+		base_array_t<T>::free();
+
+		base_array_t<T>::init(
+			other._ndims, other._size, other._shape, std::move(other._address));
+
+		other.init();
+
+		return *this;
 	}
 
 public:

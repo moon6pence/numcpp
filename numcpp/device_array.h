@@ -82,25 +82,15 @@ private:
 	const device_array_t &operator=(const device_array_t &) { return *this; }
 
 public:
-	// move constructor
-	device_array_t(device_array_t &&other)
+	// inherits move constructor
+	device_array_t(device_array_t &&other) : base_array_t<T>(std::move(other))
 	{
-		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._ptr));
-
-		other.init();
 	}
 
-	// move assign
+	// inherits move assign
 	const device_array_t &operator=(device_array_t &&other)
 	{
-		base_array_t<T>::free();
-
-		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._ptr));
-
-		other.init();
-
+		base_array_t<T>::operator=(std::move(other));
 		return *this;
 	}
 };

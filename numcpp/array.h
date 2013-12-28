@@ -70,25 +70,15 @@ private:
 	const array_t &operator=(const array_t &) { return *this; }
 
 public:
-	// move constructor
-	array_t(array_t &&other)
+	// inherits move constructor
+	array_t(array_t &&other) : base_array_t<T>(std::move(other))
 	{
-		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._address));
-
-		other.init();
 	}
 
-	// move assign
+	// inherits move assign
 	const array_t &operator=(array_t &&other)
 	{
-		base_array_t<T>::free();
-
-		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._address));
-
-		other.init();
-
+		base_array_t<T>::operator=(std::move(other));
 		return *this;
 	}
 };
