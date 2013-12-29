@@ -2,7 +2,9 @@
 #define NUMCPP_FUNCTIONS_H_
 
 #include "array.h"
+
 #include <fstream>
+#include <vector>
 
 namespace numcpp {
 
