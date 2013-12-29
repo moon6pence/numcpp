@@ -74,7 +74,7 @@ if (BUILD_TEST)
 	# test executable
 	add_executable(
 		test 
-		test_main.cpp
+		test.cpp
 
 		numcpp/array.test.inl
 		numcpp/stl.test.inl
