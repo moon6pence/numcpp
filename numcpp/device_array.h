@@ -95,6 +95,24 @@ public:
 		base_array_t<T>::operator=(std::move(other));
 		return *this;
 	}
+
+	// Convert from host array
+	explicit device_array_t(const array_t<T> &array_h)
+	{
+		int ndims = array_h.ndims();
+
+		int size = array_h.size();
+
+		int *shape = new int[ndims];
+		for (int i = 0; i < ndims; i++)
+			shape[i] = array_h.size(i);
+
+		auto ptr = std::shared_ptr<void>(
+			device_array_allocator<T>(size), device_array_deallocator<T>);	
+
+		base_array_t<T>::init(ndims, size, shape, ptr);
+		host_to_device(*this, array_h);
+	}
 };
 
 template <typename T>

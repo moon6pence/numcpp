@@ -124,6 +124,24 @@ TEST_F(CUDA_F, HostToDevice)
 	host_to_device(a3_d, a3);
 }
 
+TEST_F(CUDA_F, ConstructorWithHostArray)
+{
+	device_array_t<int> a1_d(a1);
+
+	EXPECT_FALSE(a1_d.empty());
+	EXPECT_EQ(a1_d.ndims(), 1);
+	EXPECT_EQ(a1_d.size(0), 5);
+	EXPECT_EQ(a1_d.size(), 5);
+	EXPECT_NE(a1_d.raw_ptr(), nullptr);
+
+	array_t<int> a1_h(5);
+	device_to_host(a1_h, a1_d);
+
+	int *ptr1 = data1;
+	for (auto i = begin(a1_h); i != end(a1_h); ++i, ++ptr1)
+		EXPECT_EQ(*i, *ptr1);
+}
+
 TEST(CUDA, RunKernel2)
 {
 	using namespace std;
