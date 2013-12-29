@@ -24,6 +24,7 @@ endif (${MSVC})
 # numcpp library
 add_library(
 	numcpp
+	numcpp.h
 	numcpp.cpp
 
 	numcpp/base_array.h
