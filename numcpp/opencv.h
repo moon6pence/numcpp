@@ -1,8 +1,15 @@
 #ifndef NUMCPP_OPENCV_H_
 #define NUMCPP_OPENCV_H_
 
+#include "../config.h"
+
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
+
+#ifdef USE_CUDA
+#include "cuda.h"
+#include <opencv2/gpu/gpu.hpp>
+#endif
 
 namespace numcpp {
 
@@ -32,7 +39,23 @@ array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 	return std::move(result);
 }
 
-array_t<uint8_t> imread(const std::string &filename)
+#ifdef USE_CUDA
+
+template <typename T>
+inline cv::gpu::GpuMat to_cv_gpu_mat(device_array_t<T> &array_d)
+{
+	return cv::gpu::GpuMat(array_d.size(0), array_d.size(1), cv::DataType<T>::type, array_d.raw_ptr());
+}
+
+template <typename T>
+inline const cv::gpu::GpuMat to_cv_gpu_mat(const device_array_t<T> &array_d)
+{
+	return cv::gpu::GpuMat(array_d.size(0), array_d.size(1), cv::DataType<T>::type, const_cast<T *>(array_d.raw_ptr()));
+}
+
+#endif // USE_CUDA
+
+inline array_t<uint8_t> imread(const std::string &filename)
 {
 	cv::Mat cv_image = cv::imread(filename);
 
@@ -42,12 +65,12 @@ array_t<uint8_t> imread(const std::string &filename)
 	return from_cv_mat<uint8_t>(cv_grayscale);
 }
 
-bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
+inline bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
 {
 	return cv::imwrite(filename, to_cv_mat(image));
 }
 
-void imshow(const array_t<uint8_t> &image)
+inline void imshow(const array_t<uint8_t> &image)
 {
 	cv::imshow("image", to_cv_mat(image));
 	cv::waitKey(0);

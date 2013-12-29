@@ -90,6 +90,21 @@ public:
 		return _shape[dim];
 	}
 
+	int width() const
+	{
+		return size(ndims() - 1);
+	}
+
+	int height() const
+	{
+		return size(ndims() - 2);
+	}
+
+	int depth() const
+	{
+		return size(ndims() - 3);
+	}
+
 	// raw_ptr(): access raw pointer
 
 	T *raw_ptr()

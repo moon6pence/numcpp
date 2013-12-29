@@ -1,4 +1,5 @@
 #include <numcpp/functions.h>
+#include <fstream>
 
 namespace {
 
@@ -47,6 +48,36 @@ TEST(Functions, MeshGrid)
 			ASSERT_EQ(X(x, y), xgv(x));
 			ASSERT_EQ(Y(x, y), ygv(y));
 		}
+}
+
+TEST(Functions, FromFile)
+{
+	using namespace std;
+
+	const char *FILENAME_NOTEXISTS = "NOTEXISTS_190283912831";
+	const char *FILENAME_INT = "fromfile_int.txt";
+
+	auto a0 = fromfile<int>(FILENAME_NOTEXISTS);
+	EXPECT_TRUE(a0.empty());
+
+	// Check files exists
+	ifstream file1(FILENAME_INT);
+	ASSERT_TRUE(file1.good());
+
+	auto a1 = fromfile<int>(FILENAME_INT);
+	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(1, a1.ndims());
+	EXPECT_EQ(5, a1.size(0));
+
+	for (auto i = begin(a1); i != end(a1); ++i)
+	{
+		int value;
+		file1 >> value;
+
+		EXPECT_EQ(value, *i);
+	}
+
+	file1.close();
 }
 
 } // anonymous namespace

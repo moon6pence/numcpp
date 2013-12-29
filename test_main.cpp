@@ -17,7 +17,7 @@ TEST(Main, HelloGoogleTest)
 #endif
 
 #ifdef USE_CUDA
-#include "numcpp/device_array.test.inl"
+#include "numcpp/cuda.test.inl"
 #endif
 
 int main(int argc, char **argv)
