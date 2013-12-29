@@ -40,8 +40,6 @@ add_library(
 if (USE_OPENCV)
 	find_package(OpenCV REQUIRED)
 	target_link_libraries(numcpp ${OpenCV_LIBS})
-
-	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 endif (USE_OPENCV)
 
 # External library: NVIDIA CUDA
@@ -83,11 +81,17 @@ if (BUILD_TEST)
 		numcpp/opencv.test.inl
 		numcpp/cuda.test.inl
 		${TEST_CUDA_KERNEL_O}
+
+		numcpp/test_arrayfixture.h
 	)
 
 	find_package(Threads)
 	target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
 	target_link_libraries(test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
+
+	# Copy files for test
+	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
+	file(COPY images/fromfile_int.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 endif (BUILD_TEST)
 
 if (BUILD_EXAMPLE)

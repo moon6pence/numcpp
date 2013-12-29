@@ -2,6 +2,7 @@
 #define NUMCPP_FUNCTIONS_H_
 
 #include "array.h"
+#include <fstream>
 
 namespace numcpp {
 
@@ -46,6 +47,30 @@ void meshgrid(
 			X(x, y) = xgv(x);
 			Y(x, y) = ygv(y);
 		}
+}
+
+template <typename T>
+array_t<T> fromfile(const std::string &filename)
+{
+	using namespace std;
+
+	std::ifstream file(filename);
+	if (!file.is_open())
+		return array_t<T>();
+
+	vector<T> buffer;
+	while (!file.eof())
+	{
+		T value;
+		file >> value;
+
+		if (!file.fail())
+			buffer.push_back(value);
+	}
+
+	array_t<T> result(buffer.size());
+	std::copy(begin(buffer), end(buffer), begin(result));
+	return std::move(result);
 }
 
 } // namespace numcpp
