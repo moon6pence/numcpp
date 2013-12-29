@@ -1,4 +1,4 @@
-#include <numcpp.h>
+#include <numcpp/numcpp.h>
 #include <numcpp/opencv.h>
 
 namespace numcpp {
