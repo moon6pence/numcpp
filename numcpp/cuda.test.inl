@@ -1,4 +1,4 @@
-#include <numcpp/device_array.h>
+#include <numcpp/cuda.h>
 
 // function declared in cu file
 void vecAdd(const int *A, const int *B, int *C, int N);
@@ -156,11 +156,7 @@ TEST(CUDA, RunKernel2)
 	b(0) = 3; b(1) = 3; b(2) = 3; b(3) = 3; b(4) = 3;
 
 	// Data on the device memory
-	device_array_t<int> a_d(N), b_d(5), c_d(5);
-
-	// Copy from host to device
-	host_to_device(a_d, a);
-	host_to_device(b_d, b);
+	device_array_t<int> a_d(a), b_d(b), c_d(N);
 
 	// Run kernel
 	vecAdd(a_d, b_d, c_d, N);

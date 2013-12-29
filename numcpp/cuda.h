@@ -1,5 +1,5 @@
-#ifndef NUMCPP_DEVICE_ARRAY_H_
-#define NUMCPP_DEVICE_ARRAY_H_
+#ifndef NUMCPP_CUDA_H_
+#define NUMCPP_CUDA_H_
 
 #include "base_array.h"
 #include "array.h"
@@ -129,4 +129,4 @@ void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 
 } // namespace numcpp
 
-#endif // NUMCPP_DEVICE_ARRAY_H_
+#endif // NUMCPP_CUDA_H_
