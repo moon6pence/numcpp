@@ -37,7 +37,7 @@ TEST(Functions, Colon)
 
 TEST(Functions, MeshGrid)
 {
-	array_t<int> xgv = colon(1, 5), ygv = colon(2, 6);
+	array_t<int> xgv = colon(1, 5), ygv = colon(2, 10);
 	array_t<int> X(5, 5), Y(5, 5);
 
 	meshgrid(X, Y, xgv, ygv);
@@ -45,8 +45,8 @@ TEST(Functions, MeshGrid)
 	for (int y = 0; y < X.size(0); y++)
 		for (int x = 0; x < X.size(1); x++)
 		{
-			ASSERT_EQ(X(x, y), xgv(x));
-			ASSERT_EQ(Y(x, y), ygv(y));
+			ASSERT_EQ(X(y, x), xgv(x));
+			ASSERT_EQ(Y(y, x), ygv(y));
 		}
 }
 

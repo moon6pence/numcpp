@@ -47,8 +47,8 @@ void meshgrid(
 	for (int y = 0; y < ygv.size(0); y++)
 		for (int x = 0; x < xgv.size(0); x++)
 		{
-			X(x, y) = xgv(x);
-			Y(x, y) = ygv(y);
+			X(y, x) = xgv(x);
+			Y(y, x) = ygv(y);
 		}
 }
 
