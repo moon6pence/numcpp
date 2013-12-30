@@ -10,8 +10,7 @@ struct Circularize
 
 	void buildCircularizeMap(const int HEIGHT, const int WIDTH, const int DIAMETER)
 	{
-		array_t<float> X(DIAMETER, DIAMETER);
-		array_t<float> Y(DIAMETER, DIAMETER);
+		array_t<float> X, Y;
 		meshgrid(X, Y, colon(0.f, DIAMETER - 1.f), colon(0.f, DIAMETER - 1.f));
 
 		const int X0 = DIAMETER / 2, Y0 = DIAMETER / 2;
@@ -47,6 +46,8 @@ struct Circularize
 
 	void operator() (array_t<uint8_t> &dst, const array_t<uint8_t> &src, int DIAMETER)
 	{
+		dst.setSize(DIAMETER, DIAMETER);
+
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
 
@@ -57,6 +58,8 @@ struct Circularize
 
 	void operator() (device_array_t<uint8_t> &dst, const device_array_t<uint8_t> &src, int DIAMETER)
 	{
+		dst.setSize(DIAMETER, DIAMETER);
+
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
 

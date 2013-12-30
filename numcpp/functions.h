@@ -41,8 +41,9 @@ void meshgrid(
 	array_t<T> &X, array_t<T> &Y, 
 	const array_t<T> &xgv, const array_t<T> &ygv)
 {
-	// TODO: assert array dimension, size
-	
+	X.setSize(ygv.size(0), xgv.size(0));
+	Y.setSize(ygv.size(0), xgv.size(0));
+
 	for (int y = 0; y < ygv.size(0); y++)
 		for (int x = 0; x < xgv.size(0); x++)
 		{
