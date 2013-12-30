@@ -66,7 +66,8 @@ struct Circularize
 			y_map_d = device_array_t<float>(y_map);
 		}
 
-		cv::gpu::remap(to_cv_gpu_mat(src), to_cv_gpu_mat(dst), to_cv_gpu_mat(x_map_d), to_cv_gpu_mat(y_map_d), CV_INTER_LINEAR);
+		cv::gpu::GpuMat cv_dst = to_cv_gpu_mat(dst);
+		cv::gpu::remap(to_cv_gpu_mat(src), cv_dst, to_cv_gpu_mat(x_map_d), to_cv_gpu_mat(y_map_d), CV_INTER_LINEAR);
 	}
 };
 
