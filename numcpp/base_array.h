@@ -92,6 +92,11 @@ public:
 		return _shape[dim];
 	}
 
+	int *shape() const
+	{
+		return _shape;
+	}
+
 	int width() const
 	{
 		return size(ndims() - 1);

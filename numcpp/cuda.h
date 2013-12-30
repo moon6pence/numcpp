@@ -111,6 +111,34 @@ public:
 		this->init(3, size, shape, ptr);
 	}
 
+	void setSize(int ndims, int *shape)
+	{
+		if (this->ndims() == ndims)
+		{
+			for (int i = 0; i < ndims; i++)
+				if (shape[i] != this->size(i))
+					goto allocate;
+
+			return;
+		}
+
+allocate:
+		this->free();
+
+		int size = 1;
+		for (int i = 0; i < ndims; i++)
+			size *= shape[i];
+
+		int *new_shape = new int[ndims];
+		for (int i = 0; i < ndims; i++)
+			new_shape[i] = shape[i];
+
+		auto ptr = std::shared_ptr<void>(
+			device_array_allocator<T>(size), device_array_deallocator<T>);	
+
+		this->init(ndims, size, new_shape, ptr);
+	}
+
 private:
 	// disable copy constructor, assign
 	device_array_t(device_array_t &) { }
@@ -132,18 +160,6 @@ public:
 	// Convert from host array
 	explicit device_array_t(const array_t<T> &array_h)
 	{
-		int ndims = array_h.ndims();
-
-		int size = array_h.size();
-
-		int *shape = new int[ndims];
-		for (int i = 0; i < ndims; i++)
-			shape[i] = array_h.size(i);
-
-		auto ptr = std::shared_ptr<void>(
-			device_array_allocator<T>(size), device_array_deallocator<T>);	
-
-		base_array_t<T>::init(ndims, size, shape, ptr);
 		host_to_device(*this, array_h);
 	}
 };
@@ -151,12 +167,16 @@ public:
 template <typename T>
 void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 {
+	dst_d.setSize(src.ndims(), src.shape());
+
 	cudaMemcpy(dst_d, src, dst_d.size() * sizeof(T), cudaMemcpyHostToDevice);
 }
 
 template <typename T>
 void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 {
+	dst.setSize(src_d.ndims(), src_d.shape());
+
 	cudaMemcpy(dst, src_d, dst.size() * sizeof(T), cudaMemcpyDeviceToHost);
 }
 

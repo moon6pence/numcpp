@@ -69,6 +69,8 @@ void fill(array_t<T> &dst, const T& value)
 template <typename T, typename U, class UnaryFunction>
 void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
 {
+	dst.setSize(src.ndims(), src.shape());
+
 	std::transform(begin(src), end(src), begin(dst), fn);
 }
 
@@ -80,6 +82,11 @@ void transform(
 	const array_t<V> &src2, 
 	BinaryFunction fn)
 {
+	// assert(src1.ndims() == src2.ndims())
+	// assert(src1.shape() == src2.shape())
+
+	dst.setSize(src1.ndims(), src1.shape());
+
 	std::transform(begin(src1), end(src1), begin(src2), begin(dst), fn);
 }
 
