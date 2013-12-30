@@ -74,7 +74,12 @@ void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
 	std::transform(begin(src), end(src), begin(dst), fn);
 }
 
-// std::transform
+template <typename T, class UnaryFunction>
+void transform(array_t<T> &srcDst, UnaryFunction fn)
+{
+	std::transform(begin(srcDst), end(srcDst), begin(srcDst), fn);
+}
+
 template <typename T, typename U, typename V, class BinaryFunction>
 void transform(
 	array_t<T> &dst, 

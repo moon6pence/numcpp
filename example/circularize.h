@@ -16,8 +16,8 @@ struct Circularize
 		meshgrid(X, Y, colon(0.f, DIAMETER - 1.f), colon(0.f, DIAMETER - 1.f));
 
 		const int X0 = DIAMETER / 2, Y0 = DIAMETER / 2;
-		transform(X, X, [X0](int _x) { return _x - X0; });
-		transform(Y, Y, [Y0](int _y) { return _y - Y0; });
+		transform(X, [X0](int _x) { return _x - X0; });
+		transform(Y, [Y0](int _y) { return _y - Y0; });
 
 		// theta
 		transform(theta, Y, X, [](float _y, float _x) { return atan2(_y, _x); });
