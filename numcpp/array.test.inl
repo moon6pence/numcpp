@@ -46,6 +46,46 @@ TEST(ArrayType, DeclareArrayWithSize)
 	EXPECT_NE(a3.raw_ptr(), nullptr);
 }
 
+TEST(ArrayType, SetSize)
+{
+	array_t<int> a1;
+	a1.setSize(5);
+
+	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(a1.ndims(), 1);
+	EXPECT_EQ(a1.size(0), 5);
+	EXPECT_EQ(a1.size(), 5);
+	EXPECT_NE(a1.raw_ptr(), nullptr);
+
+	array_t<int> a1_same(5);
+	int *ptr = a1_same.raw_ptr();
+
+	// Do not allocate again
+	a1_same.setSize(5);
+	EXPECT_EQ(ptr, a1_same.raw_ptr());
+
+	array_t<int> a2;
+	a2.setSize(2, 3);
+
+	EXPECT_FALSE(a2.empty());
+	EXPECT_EQ(a2.ndims(), 2);
+	EXPECT_EQ(a2.size(0), 2);
+	EXPECT_EQ(a2.size(1), 3);
+	EXPECT_EQ(a2.size(), 2 * 3);
+	EXPECT_NE(a2.raw_ptr(), nullptr);
+
+	array_t<int> a3;
+	a3.setSize(2, 3, 4);
+
+	EXPECT_FALSE(a3.empty());
+	EXPECT_EQ(a3.ndims(), 3);
+	EXPECT_EQ(a3.size(0), 2);
+	EXPECT_EQ(a3.size(1), 3);
+	EXPECT_EQ(a3.size(2), 4);
+	EXPECT_EQ(a3.size(), 2 * 3 * 4);
+	EXPECT_NE(a3.raw_ptr(), nullptr);
+}
+
 TEST_F(ArrayFixture, AccessElements)
 {
 	// 1d array

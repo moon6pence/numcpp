@@ -17,11 +17,36 @@ struct array_t : public base_array_t<T>
 public:
 	array_t()
 	{
-		base_array_t<T>::init();
+		this->init();
 	}
 
 	array_t(int size0)
 	{
+		setSize(size0);
+	}
+
+	array_t(int size0, int size1)
+	{
+		setSize(size0, size1);
+	}
+
+	array_t(int size0, int size1, int size2)
+	{
+		setSize(size0, size1, size2);
+	}
+
+	~array_t()
+	{
+		base_array_t<T>::free();
+	}
+
+	void setSize(int size0)
+	{
+		if (this->ndims() == 1 && 
+			this->size(0) == size0) return;
+
+		base_array_t<T>::free();
+
 		int size = size0;
 
 		int *shape = new int[1];
@@ -29,11 +54,17 @@ public:
 
 		auto ptr = std::shared_ptr<void>(new T[size], array_deleter<T>);
 
-		base_array_t<T>::init(1, size, shape, ptr);
+		this->init(1, size, shape, ptr);
 	}
 
-	array_t(int size0, int size1)
+	void setSize(int size0, int size1)
 	{
+		if (this->ndims() == 2 && 
+			this->size(0) == size0 && 
+			this->size(1) == size1) return;
+
+		base_array_t<T>::free();
+
 		int size = size0 * size1;
 
 		int *shape = new int[2];
@@ -42,11 +73,18 @@ public:
 
 		auto ptr = std::shared_ptr<void>(new T[size], array_deleter<T>);	
 
-		base_array_t<T>::init(2, size, shape, ptr);
+		this->init(2, size, shape, ptr);
 	}
 
-	array_t(int size0, int size1, int size2)
+	void setSize(int size0, int size1, int size2)
 	{
+		if (this->ndims() == 3 && 
+			this->size(0) == size0 && 
+			this->size(1) == size1 && 
+			this->size(2) == size2) return;
+
+		base_array_t<T>::free();
+
 		int size = size0 * size1 * size2;
 
 		int *shape = new int[3];
@@ -56,12 +94,7 @@ public:
 
 		auto ptr = std::shared_ptr<void>(new T[size], array_deleter<T>);	
 
-		base_array_t<T>::init(3, size, shape, ptr);
-	}
-
-	~array_t()
-	{
-		base_array_t<T>::free();
+		this->init(3, size, shape, ptr);
 	}
 
 private:

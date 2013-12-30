@@ -15,7 +15,9 @@ protected:
 	std::shared_ptr<void> _address;
 	T *_origin;
 
-	base_array_t() { }
+	base_array_t() : _ndims(0), _size(0), _shape(nullptr), _origin(nullptr) 
+	{ 
+	}
 
 	void init()
 	{

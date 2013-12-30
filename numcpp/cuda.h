@@ -33,19 +33,50 @@ public:
 
 	device_array_t(int size0)
 	{
+		setSize(size0);
+	}
+
+	device_array_t(int size0, int size1)
+	{
+		setSize(size0, size1);
+	}
+
+	device_array_t(int size0, int size1, int size2)
+	{
+		setSize(size0, size1, size2);
+	}
+
+	~device_array_t()
+	{
+		base_array_t<T>::free();
+	}
+
+	void setSize(int size0)
+	{
+		if (this->ndims() == 1 && 
+			this->size(0) == size0) return;
+
+		base_array_t<T>::free();
+
 		int size = size0;
 
 		int *shape = new int[1];
 		shape[0] = size0;
 
 		auto ptr = std::shared_ptr<void>(
-			device_array_allocator<T>(size), device_array_deallocator<T>);
+			device_array_allocator<T>(size), device_array_deallocator<T>);	
 
-		base_array_t<T>::init(1, size, shape, ptr);
+		this->init(1, size, shape, ptr);
 	}
 
-	device_array_t(int size0, int size1)
+	void setSize(int size0, int size1)
 	{
+		if (this->ndims() == 2 && 
+			this->size(0) == size0 && 
+			this->size(1) == size1) return;
+
+		base_array_t<T>::free();
+
 		int size = size0 * size1;
 
 		int *shape = new int[2];
@@ -55,11 +86,18 @@ public:
 		auto ptr = std::shared_ptr<void>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);	
 
-		base_array_t<T>::init(2, size, shape, ptr);
+		this->init(2, size, shape, ptr);
 	}
 
-	device_array_t(int size0, int size1, int size2)
+	void setSize(int size0, int size1, int size2)
 	{
+		if (this->ndims() == 3 && 
+			this->size(0) == size0 && 
+			this->size(1) == size1 && 
+			this->size(2) == size2) return;
+
+		base_array_t<T>::free();
+
 		int size = size0 * size1 * size2;
 
 		int *shape = new int[3];
@@ -70,12 +108,7 @@ public:
 		auto ptr = std::shared_ptr<void>(
 			device_array_allocator<T>(size), device_array_deallocator<T>);	
 
-		base_array_t<T>::init(3, size, shape, ptr);
-	}
-
-	~device_array_t()
-	{
-		base_array_t<T>::free();
+		this->init(3, size, shape, ptr);
 	}
 
 private:
