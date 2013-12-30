@@ -97,6 +97,33 @@ public:
 		this->init(3, size, shape, ptr);
 	}
 
+	void setSize(int ndims, int *shape)
+	{
+		if (this->ndims() == ndims)
+		{
+			for (int i = 0; i < ndims; i++)
+				if (shape[i] != this->size(i))
+					goto allocate;
+
+			return;
+		}
+
+allocate:
+		this->free();
+
+		int size = 1;
+		for (int i = 0; i < ndims; i++)
+			size *= shape[i];
+
+		int *new_shape = new int[ndims];
+		for (int i = 0; i < ndims; i++)
+			new_shape[i] = shape[i];
+
+		auto ptr = std::shared_ptr<void>(new T[size], array_deleter<T>);	
+
+		this->init(ndims, size, new_shape, ptr);
+	}
+
 private:
 	// disable copy constructor, assign
 	array_t(array_t &) { }

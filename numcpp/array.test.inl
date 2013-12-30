@@ -84,6 +84,19 @@ TEST(ArrayType, SetSize)
 	EXPECT_EQ(a3.size(2), 4);
 	EXPECT_EQ(a3.size(), 2 * 3 * 4);
 	EXPECT_NE(a3.raw_ptr(), nullptr);
+
+	array_t<int> a4;
+	int shape[4] = { 2, 2, 2, 2 };
+	a4.setSize(4, shape);
+
+	EXPECT_FALSE(a4.empty());
+	EXPECT_EQ(4, a4.ndims());
+	EXPECT_EQ(2, a4.size(0));
+	EXPECT_EQ(2, a4.size(1));
+	EXPECT_EQ(2, a4.size(2));
+	EXPECT_EQ(2, a4.size(3));
+	EXPECT_EQ(2 * 2 * 2 * 2, a4.size());
+	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 
 TEST_F(ArrayFixture, AccessElements)
