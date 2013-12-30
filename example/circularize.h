@@ -1,19 +1,12 @@
 #include <numcpp/numcpp.h>
 #include <numcpp/opencv.h>
+#include <numcpp/cuda.h>
 
 namespace numcpp {
 
 struct Circularize
 {
 	array_t<float> x_map, y_map;
-
-	void operator() (array_t<uint8_t> &dst, const array_t<uint8_t> &src, const int DIAMETER)
-	{
-		if (x_map.empty() || y_map.empty())
-			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
-
-		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
-	}
 
 	void buildCircularizeMap(const int HEIGHT, const int WIDTH, const int DIAMETER)
 	{
@@ -50,6 +43,30 @@ struct Circularize
 		{
 			return _rho * (HEIGHT-1) / (DIAMETER/2);
 		});
+	}
+
+	void operator() (array_t<uint8_t> &dst, const array_t<uint8_t> &src, int DIAMETER)
+	{
+		if (x_map.empty() || y_map.empty())
+			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
+
+		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
+	}
+
+	device_array_t<float> x_map_d, y_map_d;
+
+	void operator() (device_array_t<uint8_t> &dst, const device_array_t<uint8_t> &src, int DIAMETER)
+	{
+		if (x_map.empty() || y_map.empty())
+			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
+
+		if (x_map_d.empty() || y_map_d.empty())
+		{
+			x_map_d = device_array_t<float>(x_map);
+			y_map_d = device_array_t<float>(y_map);
+		}
+
+		cv::gpu::remap(to_cv_gpu_mat(src), to_cv_gpu_mat(dst), to_cv_gpu_mat(x_map_d), to_cv_gpu_mat(y_map_d), CV_INTER_LINEAR);
 	}
 };
 
