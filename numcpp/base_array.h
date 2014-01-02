@@ -25,12 +25,7 @@ private:
 		int *shape = new int[1];
 		shape[0] = 0;
 
-		init(1, 0, shape, nullptr);
-	}
-
-	void init(int ndims, int size, int *shape, std::shared_ptr<void> address)
-	{
-		init(ndims, size, shape, address, (T *)address.get());
+		init(1, 0, shape, nullptr, nullptr);
 	}
 
 	void init(
@@ -54,8 +49,8 @@ protected:
 	// move constructor
 	base_array_t(base_array_t &&other)
 	{
-		this->init(other._ndims, other._size, 
-			other._shape, std::move(other._address));
+		this->init(other._ndims, other._size, other._shape, 
+			std::move(other._address), other._origin);
 
 		other.init();
 	}
@@ -65,8 +60,8 @@ protected:
 	{
 		free();
 
-		this->init(other._ndims, other._size, 
-			other._shape, std::move(other._address));
+		this->init(other._ndims, other._size, other._shape, 
+			std::move(other._address), other._origin);
 
 		other.init();
 
@@ -91,10 +86,11 @@ public:
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		auto ptr = std::shared_ptr<void>(
-			Allocator::allocate(size), Allocator::free);
+		T *ptr = Allocator::allocate(size);
 
-		init(1, size, shape, ptr);
+		auto address = std::shared_ptr<void>(ptr, Allocator::free);
+
+		init(1, size, shape, address, ptr);
 	}
 
 	void setSize(int size0, int size1)
@@ -111,10 +107,11 @@ public:
 		shape[0] = size0;
 		shape[1] = size1;
 
-		auto ptr = std::shared_ptr<void>(
-			Allocator::allocate(size), Allocator::free);
+		T *ptr = Allocator::allocate(size);
 
-		init(2, size, shape, ptr);
+		auto address = std::shared_ptr<void>(ptr, Allocator::free);
+
+		init(2, size, shape, address, ptr);
 	}
 
 	void setSize(int size0, int size1, int size2)
@@ -133,10 +130,11 @@ public:
 		shape[1] = size1;
 		shape[2] = size2;
 
-		auto ptr = std::shared_ptr<void>(
-			Allocator::allocate(size), Allocator::free);
+		T *ptr = Allocator::allocate(size);
 
-		init(3, size, shape, ptr);
+		auto address = std::shared_ptr<void>(ptr, Allocator::free);
+
+		init(3, size, shape, address, ptr);
 	}
 
 	void setSize(int ndims, int *shape)
@@ -161,10 +159,11 @@ allocate:
 		for (int i = 0; i < ndims; i++)
 			new_shape[i] = shape[i];
 
-		auto ptr = std::shared_ptr<void>(
-			Allocator::allocate(size), Allocator::free);
+		T *ptr = Allocator::allocate(size);
 
-		this->init(ndims, size, new_shape, ptr);
+		auto address = std::shared_ptr<void>(ptr, Allocator::free);
+
+		this->init(ndims, size, new_shape, address, ptr);
 	}
 
 public:
