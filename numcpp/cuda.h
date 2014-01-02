@@ -9,134 +9,48 @@
 namespace numcpp {
 
 template <typename T>
-T *device_array_allocator(int size)
+struct device_allocator
 {
-	T *ptr = nullptr;
-	cudaMalloc((void **)&ptr, size * sizeof(T));
-	return ptr;
-}
+	static T *allocate(int size)
+	{
+		T *ptr = nullptr;
+		cudaMalloc((void **)&ptr, size * sizeof(T));
+		return ptr;
+	}
+
+	static void free(T *ptr)
+	{
+		cudaFree(ptr);
+	}
+};
 
 template <typename T>
-void device_array_deallocator(T *ptr)
-{
-	cudaFree(ptr);
-}
-
-template <typename T>
-struct device_array_t : public base_array_t<T>
+struct device_array_t : public base_array_t<T, device_allocator<T>>
 {
 public:
 	device_array_t()
 	{
-		base_array_t<T>::init();
+		this->setEmpty();
 	}
 
 	device_array_t(int size0)
 	{
-		setSize(size0);
+		this->setSize(size0);
 	}
 
 	device_array_t(int size0, int size1)
 	{
-		setSize(size0, size1);
+		this->setSize(size0, size1);
 	}
 
 	device_array_t(int size0, int size1, int size2)
 	{
-		setSize(size0, size1, size2);
+		this->setSize(size0, size1, size2);
 	}
 
 	~device_array_t()
 	{
-		base_array_t<T>::free();
-	}
-
-	void setSize(int size0)
-	{
-		if (this->ndims() == 1 && 
-			this->size(0) == size0) return;
-
-		base_array_t<T>::free();
-
-		int size = size0;
-
-		int *shape = new int[1];
-		shape[0] = size0;
-
-		auto ptr = std::shared_ptr<void>(
-			device_array_allocator<T>(size), device_array_deallocator<T>);	
-
-		this->init(1, size, shape, ptr);
-	}
-
-	void setSize(int size0, int size1)
-	{
-		if (this->ndims() == 2 && 
-			this->size(0) == size0 && 
-			this->size(1) == size1) return;
-
-		base_array_t<T>::free();
-
-		int size = size0 * size1;
-
-		int *shape = new int[2];
-		shape[0] = size0;
-		shape[1] = size1;
-
-		auto ptr = std::shared_ptr<void>(
-			device_array_allocator<T>(size), device_array_deallocator<T>);	
-
-		this->init(2, size, shape, ptr);
-	}
-
-	void setSize(int size0, int size1, int size2)
-	{
-		if (this->ndims() == 3 && 
-			this->size(0) == size0 && 
-			this->size(1) == size1 && 
-			this->size(2) == size2) return;
-
-		base_array_t<T>::free();
-
-		int size = size0 * size1 * size2;
-
-		int *shape = new int[3];
-		shape[0] = size0;
-		shape[1] = size1;
-		shape[2] = size2;
-
-		auto ptr = std::shared_ptr<void>(
-			device_array_allocator<T>(size), device_array_deallocator<T>);	
-
-		this->init(3, size, shape, ptr);
-	}
-
-	void setSize(int ndims, int *shape)
-	{
-		if (this->ndims() == ndims)
-		{
-			for (int i = 0; i < ndims; i++)
-				if (shape[i] != this->size(i))
-					goto allocate;
-
-			return;
-		}
-
-allocate:
 		this->free();
-
-		int size = 1;
-		for (int i = 0; i < ndims; i++)
-			size *= shape[i];
-
-		int *new_shape = new int[ndims];
-		for (int i = 0; i < ndims; i++)
-			new_shape[i] = shape[i];
-
-		auto ptr = std::shared_ptr<void>(
-			device_array_allocator<T>(size), device_array_deallocator<T>);	
-
-		this->init(ndims, size, new_shape, ptr);
 	}
 
 private:
@@ -146,14 +60,15 @@ private:
 
 public:
 	// inherits move constructor
-	device_array_t(device_array_t &&other) : base_array_t<T>(std::move(other))
+	device_array_t(device_array_t &&other) : 
+		base_array_t<T, device_allocator<T>>(std::move(other))
 	{
 	}
 
 	// inherits move assign
 	const device_array_t &operator=(device_array_t &&other)
 	{
-		base_array_t<T>::operator=(std::move(other));
+		base_array_t<T, device_allocator<T>>::operator=(std::move(other));
 		return *this;
 	}
 

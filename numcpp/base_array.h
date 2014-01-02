@@ -5,7 +5,7 @@
 
 namespace numcpp {
 
-template <typename T>
+template <typename T, class Allocator>
 struct base_array_t
 {
 protected:
@@ -19,6 +19,7 @@ protected:
 	{ 
 	}
 
+private:
 	void init()
 	{
 		int *shape = new int[1];
@@ -43,6 +44,7 @@ protected:
 		_origin = origin;
 	}
 
+protected:
 	void free()
 	{
 		if (_shape) { delete[] _shape; _shape = nullptr; }
@@ -52,8 +54,8 @@ protected:
 	// move constructor
 	base_array_t(base_array_t &&other)
 	{
-		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._address));
+		this->init(other._ndims, other._size, 
+			other._shape, std::move(other._address));
 
 		other.init();
 	}
@@ -61,14 +63,108 @@ protected:
 	// move assign
 	const base_array_t &operator=(base_array_t &&other)
 	{
-		base_array_t<T>::free();
+		free();
 
-		base_array_t<T>::init(
-			other._ndims, other._size, other._shape, std::move(other._address));
+		this->init(other._ndims, other._size, 
+			other._shape, std::move(other._address));
 
 		other.init();
 
 		return *this;
+	}
+
+public:
+	void setEmpty()
+	{
+		init();
+	}
+
+	void setSize(int size0)
+	{
+		if (this->ndims() == 1 && 
+			this->size(0) == size0) return;
+
+		this->free();
+
+		int size = size0;
+
+		int *shape = new int[1];
+		shape[0] = size0;
+
+		auto ptr = std::shared_ptr<void>(
+			Allocator::allocate(size), Allocator::free);
+
+		init(1, size, shape, ptr);
+	}
+
+	void setSize(int size0, int size1)
+	{
+		if (this->ndims() == 2 && 
+			this->size(0) == size0 && 
+			this->size(1) == size1) return;
+
+		this->free();
+
+		int size = size0 * size1;
+
+		int *shape = new int[2];
+		shape[0] = size0;
+		shape[1] = size1;
+
+		auto ptr = std::shared_ptr<void>(
+			Allocator::allocate(size), Allocator::free);
+
+		init(2, size, shape, ptr);
+	}
+
+	void setSize(int size0, int size1, int size2)
+	{
+		if (this->ndims() == 3 && 
+			this->size(0) == size0 && 
+			this->size(1) == size1 && 
+			this->size(2) == size2) return;
+
+		this->free();
+
+		int size = size0 * size1 * size2;
+
+		int *shape = new int[3];
+		shape[0] = size0;
+		shape[1] = size1;
+		shape[2] = size2;
+
+		auto ptr = std::shared_ptr<void>(
+			Allocator::allocate(size), Allocator::free);
+
+		init(3, size, shape, ptr);
+	}
+
+	void setSize(int ndims, int *shape)
+	{
+		if (this->ndims() == ndims)
+		{
+			for (int i = 0; i < ndims; i++)
+				if (shape[i] != this->size(i))
+					goto allocate;
+
+			return;
+		}
+
+allocate:
+		this->free();
+
+		int size = 1;
+		for (int i = 0; i < ndims; i++)
+			size *= shape[i];
+
+		int *new_shape = new int[ndims];
+		for (int i = 0; i < ndims; i++)
+			new_shape[i] = shape[i];
+
+		auto ptr = std::shared_ptr<void>(
+			Allocator::allocate(size), Allocator::free);
+
+		this->init(ndims, size, new_shape, ptr);
 	}
 
 public:
