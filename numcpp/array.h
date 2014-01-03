@@ -25,7 +25,6 @@ struct array_t : public base_array_t<T, heap_allocator<T>>
 public:
 	array_t()
 	{
-		this->setEmpty();
 	}
 
 	array_t(int size0)

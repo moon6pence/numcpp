@@ -10,10 +10,9 @@ TEST(ArrayType, DeclareEmptyArray)
 	array_t<int> a0;
 
 	EXPECT_TRUE(a0.empty());
-	EXPECT_EQ(a0.ndims(), 1);
-	EXPECT_EQ(a0.size(0), 0);
-	EXPECT_EQ(a0.size(), 0);
-	EXPECT_EQ(a0.raw_ptr(), nullptr);
+	EXPECT_EQ(0, a0.ndims());
+	EXPECT_EQ(0, a0.size());
+	EXPECT_EQ(nullptr, a0.raw_ptr());
 }
 
 TEST(ArrayType, DeclareArrayWithSize)
@@ -99,6 +98,39 @@ TEST(ArrayType, SetSize)
 	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 
+TEST_F(ArrayFixture, MoveSemantics)
+{
+	// move constructor
+	auto moved = std::move(a1);
+
+	EXPECT_TRUE(a1.empty());
+	EXPECT_EQ(0, a1.ndims());
+	EXPECT_EQ(0, a1.size());
+	EXPECT_EQ(nullptr, a1.raw_ptr());
+
+	EXPECT_FALSE(moved.empty());
+	EXPECT_EQ(1, moved.ndims());
+	EXPECT_EQ(5, moved.size(0));
+	EXPECT_EQ(5, moved.size());
+	EXPECT_NE(nullptr, moved.raw_ptr());
+
+	// move assign
+	array_t<int> moved2;
+	moved2 = std::move(a2);
+
+	EXPECT_TRUE(a2.empty());
+	EXPECT_EQ(0, a2.ndims());
+	EXPECT_EQ(0, a2.size());
+	EXPECT_EQ(nullptr, a2.raw_ptr());
+
+	EXPECT_FALSE(moved2.empty());
+	EXPECT_EQ(2, moved2.ndims());
+	EXPECT_EQ(2, moved2.size(0));
+	EXPECT_EQ(3, moved2.size(1));
+	EXPECT_EQ(2 * 3, moved2.size());
+	EXPECT_NE(nullptr, moved2.raw_ptr());
+}
+
 TEST_F(ArrayFixture, AccessElements)
 {
 	// 1d array
@@ -142,41 +174,6 @@ TEST_F(ArrayFixture, AccessElements)
 
 	a3.at(0, 2, 3) = 99;
 	EXPECT_EQ(a3.at(0, 2, 3), 99);
-}
-
-TEST_F(ArrayFixture, MoveSemantics)
-{
-	// move constructor
-	auto moved = std::move(a1);
-
-	EXPECT_TRUE(a1.empty());
-	EXPECT_EQ(1, a1.ndims());
-	EXPECT_EQ(0, a1.size(0));
-	EXPECT_EQ(0, a1.size());
-	EXPECT_EQ(nullptr, a1.raw_ptr());
-
-	EXPECT_FALSE(moved.empty());
-	EXPECT_EQ(1, moved.ndims());
-	EXPECT_EQ(5, moved.size(0));
-	EXPECT_EQ(5, moved.size());
-	EXPECT_NE(nullptr, moved.raw_ptr());
-
-	// move assign
-	array_t<int> moved2;
-	moved2 = std::move(a2);
-
-	EXPECT_TRUE(a2.empty());
-	EXPECT_EQ(1, a2.ndims());
-	EXPECT_EQ(0, a2.size(0));
-	EXPECT_EQ(0, a2.size());
-	EXPECT_EQ(nullptr, a2.raw_ptr());
-
-	EXPECT_FALSE(moved2.empty());
-	EXPECT_EQ(2, moved2.ndims());
-	EXPECT_EQ(2, moved2.size(0));
-	EXPECT_EQ(3, moved2.size(1));
-	EXPECT_EQ(2 * 3, moved2.size());
-	EXPECT_NE(nullptr, moved2.raw_ptr());
 }
 
 } // anonymous namespace

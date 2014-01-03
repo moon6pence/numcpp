@@ -62,10 +62,9 @@ TEST(CUDA, DeclareEmptyDeviceArray)
 	device_array_t<int> a0;
 
 	EXPECT_TRUE(a0.empty());
-	EXPECT_EQ(a0.ndims(), 1);
-	EXPECT_EQ(a0.size(0), 0);
-	EXPECT_EQ(a0.size(), 0);
-	EXPECT_EQ(a0.raw_ptr(), nullptr);
+	EXPECT_EQ(0, a0.ndims());
+	EXPECT_EQ(0, a0.size());
+	EXPECT_EQ(nullptr, a0.raw_ptr());
 }
 
 TEST(CUDA, DeclareDeviceArrayWithSize)

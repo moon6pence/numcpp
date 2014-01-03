@@ -30,7 +30,6 @@ struct device_array_t : public base_array_t<T, device_allocator<T>>
 public:
 	device_array_t()
 	{
-		this->setEmpty();
 	}
 
 	device_array_t(int size0)

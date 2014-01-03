@@ -19,26 +19,6 @@ protected:
 	{ 
 	}
 
-private:
-	void init()
-	{
-		int *shape = new int[1];
-		shape[0] = 0;
-
-		init(1, 0, shape, nullptr, nullptr);
-	}
-
-	void init(
-		int ndims, int size, int *shape, 
-		std::shared_ptr<void> address, T *origin)
-	{
-		_ndims = ndims;
-		_size = size;
-		_shape = std::unique_ptr<int[]>(shape);
-		_address = address;
-		_origin = origin;
-	}
-
 protected:
 	// move constructor
 	base_array_t(base_array_t &&other)
@@ -49,7 +29,11 @@ protected:
 		_address = std::move(other._address);
 		_origin = other._origin;
 
-		other.init();
+		other._ndims = 0;
+		other._size = 0;
+		// other._shape = nullptr; // already moved
+		// other._address = nullptr; // already moved
+		other._origin = nullptr;
 	}
 
 	// move assign
@@ -61,17 +45,28 @@ protected:
 		_address = std::move(other._address);
 		_origin = other._origin;
 
-		other.init();
+		other._ndims = 0;
+		other._size = 0;
+		// other._shape = nullptr; // already moved
+		// other._address = nullptr; // already moved
+		other._origin = nullptr;
 
 		return *this;
 	}
 
-public:
-	void setEmpty()
+private:
+	void init(
+		int ndims, int size, int *shape, 
+		std::shared_ptr<void> address, T *origin)
 	{
-		init();
+		_ndims = ndims;
+		_size = size;
+		_shape = std::unique_ptr<int[]>(shape);
+		_address = address;
+		_origin = origin;
 	}
 
+public:
 	void setSize(int size0)
 	{
 		if (this->ndims() == 1 && 
