@@ -35,6 +35,26 @@ TEST(Functions, Colon)
 		EXPECT_EQ(a5(i), value5);
 }
 
+TEST(Functions, Linspace)
+{
+	auto a1 = linspace(1, 10, 10);
+	ASSERT_EQ(10, a1.size(0));
+
+	auto a1_expect = colon(1, 10);
+	for (int i = 0; i < a1.size(0); i++)
+		EXPECT_EQ(a1_expect(i), a1(i));
+
+	auto a2 = linspace(1, 10, 5);
+	ASSERT_EQ(5, a2.size(0));
+	for (int i = 0; i < a2.size(0); i++)
+		EXPECT_EQ(1 + (10 - 1) * i / (5 - 1), a2(i));
+
+	auto a3 = linspace(1.0, 10.0, 6 + 1);
+	ASSERT_EQ(7, a3.size(0));
+	for (int i = 0; i < a3.size(0); i++)
+		EXPECT_EQ(1.0 + 1.5 * i, a3(i));
+}
+
 TEST(Functions, MeshGrid)
 {
 	array_t<int> xgv = colon(1, 5), ygv = colon(2, 10);

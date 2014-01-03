@@ -36,6 +36,17 @@ array_t<T> colon(T j, T i, T k)
 	return std::move(result);
 }
 
+/** Generate linearly spaced vectors */
+template <typename T>
+array_t<T> linspace(T a, T b, int n)
+{
+	array_t<T> result(n);
+	for (int index = 0; index < result.size(0); index++)
+		result(index) = a + (b - a) * index / (n - 1);
+
+	return std::move(result);
+}
+
 template <typename T>
 void meshgrid(
 	array_t<T> &X, array_t<T> &Y, 
