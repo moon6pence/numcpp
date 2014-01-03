@@ -11,11 +11,11 @@ struct base_array_t
 protected:
 	int _ndims;
 	int _size;
-	int *_shape;
+	std::unique_ptr<int[]> _shape;
 	std::shared_ptr<void> _address;
 	T *_origin;
 
-	base_array_t() : _ndims(0), _size(0), _shape(nullptr), _origin(nullptr) 
+	base_array_t() : _ndims(0), _size(0), _origin(nullptr) 
 	{ 
 	}
 
@@ -34,23 +34,20 @@ private:
 	{
 		_ndims = ndims;
 		_size = size;
-		_shape = shape;
+		_shape = std::unique_ptr<int[]>(shape);
 		_address = address;
 		_origin = origin;
 	}
 
 protected:
-	void free()
-	{
-		if (_shape) { delete[] _shape; _shape = nullptr; }
-		_address = nullptr;
-	}
-
 	// move constructor
 	base_array_t(base_array_t &&other)
 	{
-		this->init(other._ndims, other._size, other._shape, 
-			std::move(other._address), other._origin);
+		_ndims = other._ndims;
+		_size = other._size;
+		_shape = std::move(other._shape);
+		_address = std::move(other._address);
+		_origin = other._origin;
 
 		other.init();
 	}
@@ -58,10 +55,11 @@ protected:
 	// move assign
 	const base_array_t &operator=(base_array_t &&other)
 	{
-		free();
-
-		this->init(other._ndims, other._size, other._shape, 
-			std::move(other._address), other._origin);
+		_ndims = other._ndims;
+		_size = other._size;
+		_shape = std::move(other._shape);
+		_address = std::move(other._address);
+		_origin = other._origin;
 
 		other.init();
 
@@ -78,8 +76,6 @@ public:
 	{
 		if (this->ndims() == 1 && 
 			this->size(0) == size0) return;
-
-		this->free();
 
 		int size = size0;
 
@@ -98,8 +94,6 @@ public:
 		if (this->ndims() == 2 && 
 			this->size(0) == size0 && 
 			this->size(1) == size1) return;
-
-		this->free();
 
 		int size = size0 * size1;
 
@@ -120,8 +114,6 @@ public:
 			this->size(0) == size0 && 
 			this->size(1) == size1 && 
 			this->size(2) == size2) return;
-
-		this->free();
 
 		int size = size0 * size1 * size2;
 
@@ -149,8 +141,6 @@ public:
 		}
 
 allocate:
-		this->free();
-
 		int size = 1;
 		for (int i = 0; i < ndims; i++)
 			size *= shape[i];
@@ -189,7 +179,7 @@ public:
 
 	int *shape() const
 	{
-		return _shape;
+		return _shape.get();
 	}
 
 	int width() const

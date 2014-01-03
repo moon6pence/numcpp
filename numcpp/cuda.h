@@ -48,11 +48,6 @@ public:
 		this->setSize(size0, size1, size2);
 	}
 
-	~device_array_t()
-	{
-		this->free();
-	}
-
 private:
 	// disable copy constructor, assign
 	device_array_t(device_array_t &) { }

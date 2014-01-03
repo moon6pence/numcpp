@@ -43,11 +43,6 @@ public:
 		this->setSize(size0, size1, size2);
 	}
 
-	~array_t()
-	{
-		this->free();
-	}
-
 private:
 	// disable copy constructor, assign
 	array_t(array_t &) { }
