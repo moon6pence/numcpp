@@ -95,6 +95,25 @@ void transform(
 	std::transform(begin(src1), end(src1), begin(src2), begin(dst), fn);
 }
 
+// std::accumulate
+template <typename T, class BinaryFunction>
+T accumulate(const array_t<T> &array, T init, BinaryFunction binary_op)
+{
+	return std::accumulate(begin(array), end(array), init, binary_op);
+}
+
+template <typename T>
+T sum(const array_t<T> &array)
+{
+	return accumulate(array, T(), std::plus<T>());
+}
+
+template <typename T>
+T mean(const array_t<T> &array)
+{
+	return sum(array) / array.size();
+}
+
 } // namespace numcpp
 
 #endif // NUMCPP_ARRAY_FUNCTION_H_

@@ -62,4 +62,22 @@ TEST_F(NumcppSTL, Transform)
 	transform(result2, a1, a1, [](int _a1, int _a2) { return _a1 + _a2; });
 }
 
+TEST_F(NumcppSTL, Sum)
+{
+	// 2, 3, 5, 1, 7 
+	int result1 = sum(a1);
+	EXPECT_EQ(18, result1);
+
+	// 7, 2, 3, 
+	// 4, 1, 8 
+	int result2 = sum(a2);
+	EXPECT_EQ(25, result2);
+
+	array_t<int> a0(3);
+	a0(0) = 2;
+	a0(1) = 7;
+	a0(2) = 6;
+	EXPECT_EQ(5, mean(a0));
+}
+
 } // anonymous namespace
