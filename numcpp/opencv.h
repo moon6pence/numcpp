@@ -29,6 +29,11 @@ const cv::Mat to_cv_mat(const array_t<T> &array)
 		cv::DataType<T>::type, const_cast<uint8_t *>(array.raw_ptr()));
 }
 
+base_array_t from_cv_mat(const cv::Mat &cv_mat)
+{
+	return std::move(base_array_t());
+}
+
 template <typename T>
 array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 {

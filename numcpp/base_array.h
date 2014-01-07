@@ -7,18 +7,18 @@ namespace numcpp {
 
 struct base_array_t
 {
-protected:
+private:
 	int _ndims;
 	int _size;
 	std::unique_ptr<int[]> _shape;
 	std::shared_ptr<void> _address;
 	void *_origin;
 
+public:
 	base_array_t() : _ndims(0), _size(0), _origin(nullptr) 
 	{ 
 	}
 
-protected:
 	// move constructor
 	base_array_t(base_array_t &&other)
 	{
@@ -141,7 +141,6 @@ allocate:
 		init<T, Allocator>(ndims, size, new_shape);
 	}
 
-public:
 	bool empty() const
 	{
 		return _size == 0;
