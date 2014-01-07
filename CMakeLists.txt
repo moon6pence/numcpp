@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 2.8.7)
 project(numcpp)
 
 # Conditional build with external dependencies
@@ -92,7 +92,7 @@ if (BUILD_TEST)
 	)
 
 	find_package(Threads)
-	target_include_directories(test PUBLIC "thirdparty/gtest-1.7.0/include")
+	include_directories("thirdparty/gtest-1.7.0/include")
 	target_link_libraries(test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
 
 	# Copy files for test
