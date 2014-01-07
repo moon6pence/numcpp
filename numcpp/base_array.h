@@ -13,7 +13,7 @@ protected:
 	int _size;
 	std::unique_ptr<int[]> _shape;
 	std::shared_ptr<void> _address;
-	T *_origin;
+	void *_origin;
 
 	base_array_t() : _ndims(0), _size(0), _origin(nullptr) 
 	{ 
@@ -57,7 +57,7 @@ protected:
 private:
 	void init(
 		int ndims, int size, int *shape, 
-		std::shared_ptr<void> address, T *origin)
+		std::shared_ptr<void> address, void *origin)
 	{
 		_ndims = ndims;
 		_size = size;
@@ -196,12 +196,12 @@ public:
 
 	T *raw_ptr()
 	{
-		return _origin;
+		return reinterpret_cast<T *>(_origin);
 	}
 
 	const T *raw_ptr() const
 	{
-		return _origin;
+		return reinterpret_cast<T *>(_origin);
 	}
 
 	operator T * ()
@@ -218,32 +218,32 @@ public:
 
 	T& at(int index0)
 	{
-		return _origin[index0];
+		return raw_ptr()[index0];
 	}
 
 	T& at(int index0, int index1)
 	{
-		return _origin[index1 + _shape[1] * index0];
+		return raw_ptr()[index1 + _shape[1] * index0];
 	}
 
 	T& at(int index0, int index1, int index2)
 	{
-		return _origin[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
 	const T& at(int index0) const
 	{
-		return _origin[index0];
+		return raw_ptr()[index0];
 	}
 
 	const T& at(int index0, int index1) const
 	{
-		return _origin[index1 + _shape[1] * index0];
+		return raw_ptr()[index1 + _shape[1] * index0];
 	}
 
 	const T& at(int index0, int index1, int index2) const
 	{
-		return _origin[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
 	T& operator() (int index0)
