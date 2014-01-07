@@ -77,7 +77,7 @@ public:
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		T *ptr = Allocator::allocate(size);
+		void *ptr = Allocator::allocate(size * sizeof(T));
 
 		auto address = std::shared_ptr<void>(ptr, Allocator::free);
 
@@ -96,7 +96,7 @@ public:
 		shape[0] = size0;
 		shape[1] = size1;
 
-		T *ptr = Allocator::allocate(size);
+		void *ptr = Allocator::allocate(size * sizeof(T));
 
 		auto address = std::shared_ptr<void>(ptr, Allocator::free);
 
@@ -117,7 +117,7 @@ public:
 		shape[1] = size1;
 		shape[2] = size2;
 
-		T *ptr = Allocator::allocate(size);
+		void *ptr = Allocator::allocate(size * sizeof(T));
 
 		auto address = std::shared_ptr<void>(ptr, Allocator::free);
 
@@ -144,7 +144,7 @@ allocate:
 		for (int i = 0; i < ndims; i++)
 			new_shape[i] = shape[i];
 
-		T *ptr = Allocator::allocate(size);
+		void *ptr = Allocator::allocate(size * sizeof(T));
 
 		auto address = std::shared_ptr<void>(ptr, Allocator::free);
 

@@ -5,22 +5,21 @@
 
 namespace numcpp {
 
-template <typename T>
 struct heap_allocator
 {
-	static T *allocate(int size)
+	static void *allocate(int size)
 	{
-		return new T[size];
+		return new char[size];
 	}
 
-	static void free(T *ptr)
+	static void free(void *ptr)
 	{
-		delete[] ptr;
+		delete[] reinterpret_cast<char *>(ptr);
 	}
 };
 
 template <typename T>
-struct array_t : public base_array_t<T, heap_allocator<T>>
+struct array_t : public base_array_t<T, heap_allocator>
 {
 public:
 	array_t()
@@ -50,14 +49,14 @@ private:
 public:
 	// inherits move constructor
 	array_t(array_t &&other) : 
-		base_array_t<T, heap_allocator<T>>(std::move(other))
+		base_array_t<T, heap_allocator>(std::move(other))
 	{
 	}
 
 	// inherits move assign
 	const array_t &operator=(array_t &&other)
 	{
-		base_array_t<T, heap_allocator<T>>::operator=(std::move(other));
+		base_array_t<T, heap_allocator>::operator=(std::move(other));
 		return *this;
 	}
 };

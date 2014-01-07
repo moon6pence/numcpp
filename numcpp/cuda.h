@@ -8,24 +8,23 @@
 
 namespace numcpp {
 
-template <typename T>
 struct device_allocator
 {
-	static T *allocate(int size)
+	static void *allocate(int size)
 	{
-		T *ptr = nullptr;
-		cudaMalloc((void **)&ptr, size * sizeof(T));
+		void *ptr = nullptr;
+		cudaMalloc((void **)&ptr, size);
 		return ptr;
 	}
 
-	static void free(T *ptr)
+	static void free(void *ptr)
 	{
 		cudaFree(ptr);
 	}
 };
 
 template <typename T>
-struct device_array_t : public base_array_t<T, device_allocator<T>>
+struct device_array_t : public base_array_t<T, device_allocator>
 {
 public:
 	device_array_t()
@@ -55,14 +54,14 @@ private:
 public:
 	// inherits move constructor
 	device_array_t(device_array_t &&other) : 
-		base_array_t<T, device_allocator<T>>(std::move(other))
+		base_array_t<T, device_allocator>(std::move(other))
 	{
 	}
 
 	// inherits move assign
 	const device_array_t &operator=(device_array_t &&other)
 	{
-		base_array_t<T, device_allocator<T>>::operator=(std::move(other));
+		base_array_t<T, device_allocator>::operator=(std::move(other));
 		return *this;
 	}
 
