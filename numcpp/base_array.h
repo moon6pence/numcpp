@@ -5,7 +5,7 @@
 
 namespace numcpp {
 
-template <typename T, class Allocator>
+template <class Allocator>
 struct base_array_t
 {
 protected:
@@ -55,6 +55,7 @@ protected:
 	}
 
 private:
+	template <typename T>
 	void init(int ndims, int size, int *shape)
 	{
 		void *ptr = Allocator::allocate(size * sizeof(T));
@@ -75,6 +76,7 @@ private:
 	}
 
 public:
+	template <typename T>
 	void setSize(int size0)
 	{
 		if (this->ndims() == 1 && 
@@ -85,9 +87,10 @@ public:
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		init(1, size, shape);
+		init<T>(1, size, shape);
 	}
 
+	template <typename T>
 	void setSize(int size0, int size1)
 	{
 		if (this->ndims() == 2 && 
@@ -100,9 +103,10 @@ public:
 		shape[0] = size0;
 		shape[1] = size1;
 
-		init(2, size, shape);
+		init<T>(2, size, shape);
 	}
 
+	template <typename T>
 	void setSize(int size0, int size1, int size2)
 	{
 		if (this->ndims() == 3 && 
@@ -117,9 +121,10 @@ public:
 		shape[1] = size1;
 		shape[2] = size2;
 
-		init(3, size, shape);
+		init<T>(3, size, shape);
 	}
 
+	template <typename T>
 	void setSize(int ndims, int *shape)
 	{
 		if (this->ndims() == ndims)
@@ -140,7 +145,7 @@ allocate:
 		for (int i = 0; i < ndims; i++)
 			new_shape[i] = shape[i];
 
-		init(ndims, size, new_shape);
+		init<T>(ndims, size, new_shape);
 	}
 
 public:
@@ -186,86 +191,102 @@ public:
 
 	// raw_ptr(): access raw pointer
 
+	template <typename T>
 	T *raw_ptr()
 	{
 		return reinterpret_cast<T *>(_origin);
 	}
 
+	template <typename T>
 	const T *raw_ptr() const
 	{
 		return reinterpret_cast<T *>(_origin);
 	}
 
+	template <typename T>
 	operator T * ()
 	{
-		return raw_ptr();
+		return raw_ptr<T>();
 	}
 
+	template <typename T>
 	operator const T * () const
 	{
-		return raw_ptr();
+		return raw_ptr<T>();
 	}
 
 	// at(index0, index...) : access array elements
 
+	template <typename T>
 	T& at(int index0)
 	{
-		return raw_ptr()[index0];
+		return raw_ptr<T>()[index0];
 	}
 
+	template <typename T>
 	T& at(int index0, int index1)
 	{
-		return raw_ptr()[index1 + _shape[1] * index0];
+		return raw_ptr<T>()[index1 + _shape[1] * index0];
 	}
 
+	template <typename T>
 	T& at(int index0, int index1, int index2)
 	{
-		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return raw_ptr<T>()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
+	template <typename T>
 	const T& at(int index0) const
 	{
-		return raw_ptr()[index0];
+		return raw_ptr<T>()[index0];
 	}
 
+	template <typename T>
 	const T& at(int index0, int index1) const
 	{
-		return raw_ptr()[index1 + _shape[1] * index0];
+		return raw_ptr<T>()[index1 + _shape[1] * index0];
 	}
 
+	template <typename T>
 	const T& at(int index0, int index1, int index2) const
 	{
-		return raw_ptr()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
+		return raw_ptr<T>()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
 	}
 
+	template <typename T>
 	T& operator() (int index0)
 	{
-		return at(index0);
+		return at<T>(index0);
 	}
 
+	template <typename T>
 	T& operator() (int index0, int index1)
 	{
-		return at(index0, index1);
+		return at<T>(index0, index1);
 	}
 
+	template <typename T>
 	T& operator() (int index0, int index1, int index2)
 	{
-		return at(index0, index1, index2);
+		return at<T>(index0, index1, index2);
 	}
 
+	template <typename T>
 	const T& operator() (int index0) const
 	{
-		return at(index0);
+		return at<T>(index0);
 	}
 
+	template <typename T>
 	const T& operator() (int index0, int index1) const
 	{
-		return at(index0, index1);
+		return at<T>(index0, index1);
 	}
 
+	template <typename T>
 	const T& operator() (int index0, int index1, int index2) const
 	{
-		return at(index0, index1, index2);
+		return at<T>(index0, index1, index2);
 	}
 };
 

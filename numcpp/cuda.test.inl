@@ -168,7 +168,7 @@ TEST(CUDA, RunKernel2)
 
 	// Verify result
 	for (int i = 0; i < N; i++)
-		EXPECT_EQ(c[i], a[i] + b[i]);
+		EXPECT_EQ(c(i), a(i) + b(i));
 }
 
 } // anonymous namespace

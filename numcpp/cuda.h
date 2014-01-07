@@ -24,26 +24,28 @@ struct device_allocator
 };
 
 template <typename T>
-struct device_array_t : public base_array_t<T, device_allocator>
+struct device_array_t : public base_array_t<device_allocator>
 {
 public:
+	typedef base_array_t<device_allocator> parent_t;
+
 	device_array_t()
 	{
 	}
 
 	device_array_t(int size0)
 	{
-		this->setSize(size0);
+		setSize(size0);
 	}
 
 	device_array_t(int size0, int size1)
 	{
-		this->setSize(size0, size1);
+		setSize(size0, size1);
 	}
 
 	device_array_t(int size0, int size1, int size2)
 	{
-		this->setSize(size0, size1, size2);
+		setSize(size0, size1, size2);
 	}
 
 private:
@@ -53,15 +55,14 @@ private:
 
 public:
 	// inherits move constructor
-	device_array_t(device_array_t &&other) : 
-		base_array_t<T, device_allocator>(std::move(other))
+	device_array_t(device_array_t &&other) : parent_t(std::move(other))
 	{
 	}
 
 	// inherits move assign
 	const device_array_t &operator=(device_array_t &&other)
 	{
-		base_array_t<T, device_allocator>::operator=(std::move(other));
+		parent_t::operator=(std::move(other));
 		return *this;
 	}
 
@@ -70,7 +71,50 @@ public:
 	{
 		host_to_device(*this, array_h);
 	}
+
+	void setSize(int size0)
+	{
+		parent_t::setSize<T>(size0);
+	}
+
+	void setSize(int size0, int size1)
+	{
+		parent_t::setSize<T>(size0, size1);
+	}
+
+	void setSize(int size0, int size1, int size2)
+	{
+		parent_t::setSize<T>(size0, size1, size2);
+	}
+
+	void setSize(int ndims, int *shape)
+	{
+		parent_t::setSize<T>(ndims, shape);
+	}
+
+	// raw_ptr(): access raw pointer
+
+	T *raw_ptr()
+	{
+		return parent_t::raw_ptr<T>();
+	}
+
+	const T *raw_ptr() const
+	{
+		return parent_t::raw_ptr<T>();
+	}
+
+	operator T * ()
+	{
+		return parent_t::raw_ptr<T>();
+	}
+
+	operator const T * () const
+	{
+		return parent_t::raw_ptr<T>();
+	}
 };
+
 
 template <typename T>
 void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
