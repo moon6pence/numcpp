@@ -63,22 +63,22 @@ public:
 
 	void setSize(int size0)
 	{
-		base_array_t::setSize<T, heap_allocator>(size0);
+		base_array_t::setSize<heap_allocator>(sizeof(T), size0);
 	}
 
 	void setSize(int size0, int size1)
 	{
-		base_array_t::setSize<T, heap_allocator>(size0, size1);
+		base_array_t::setSize<heap_allocator>(sizeof(T), size0, size1);
 	}
 
 	void setSize(int size0, int size1, int size2)
 	{
-		base_array_t::setSize<T, heap_allocator>(size0, size1, size2);
+		base_array_t::setSize<heap_allocator>(sizeof(T), size0, size1, size2);
 	}
 
 	void setSize(int ndims, int *shape)
 	{
-		base_array_t::setSize<T, heap_allocator>(ndims, shape);
+		base_array_t::setSize<heap_allocator>(sizeof(T), ndims, shape);
 	}
 
 	// raw_ptr(): access raw pointer

@@ -31,7 +31,11 @@ const cv::Mat to_cv_mat(const array_t<T> &array)
 
 base_array_t from_cv_mat(const cv::Mat &cv_mat)
 {
-	return std::move(base_array_t());
+	base_array_t result;
+	result.setSize<heap_allocator>(cv_mat.elemSize(), cv_mat.rows, cv_mat.cols);
+	memcpy(result.raw_ptr<void>(), cv_mat.data, result.size() * cv_mat.elemSize());
+
+	return std::move(result);
 }
 
 template <typename T>
