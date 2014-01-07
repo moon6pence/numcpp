@@ -5,7 +5,6 @@
 
 namespace numcpp {
 
-template <class Allocator>
 struct base_array_t
 {
 protected:
@@ -55,15 +54,6 @@ protected:
 	}
 
 private:
-	template <typename T>
-	void init(int ndims, int size, int *shape)
-	{
-		void *ptr = Allocator::allocate(size * sizeof(T));
-		auto address = std::shared_ptr<void>(ptr, Allocator::free);
-
-		init(ndims, size, shape, address, ptr);
-	}
-
 	void init(
 		int ndims, int size, int *shape, 
 		std::shared_ptr<void> address, void *origin)
@@ -75,8 +65,17 @@ private:
 		_origin = origin;
 	}
 
+	template <typename T, class Allocator>
+	void init(int ndims, int size, int *shape)
+	{
+		void *ptr = Allocator::allocate(size * sizeof(T));
+		auto address = std::shared_ptr<void>(ptr, Allocator::free);
+
+		init(ndims, size, shape, address, ptr);
+	}
+
 public:
-	template <typename T>
+	template <typename T, class Allocator>
 	void setSize(int size0)
 	{
 		if (this->ndims() == 1 && 
@@ -85,10 +84,10 @@ public:
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		init<T>(1, size0, shape);
+		init<T, Allocator>(1, size0, shape);
 	}
 
-	template <typename T>
+	template <typename T, class Allocator>
 	void setSize(int size0, int size1)
 	{
 		if (this->ndims() == 2 && 
@@ -99,10 +98,10 @@ public:
 		shape[0] = size0;
 		shape[1] = size1;
 
-		init<T>(2, size0 * size1, shape);
+		init<T, Allocator>(2, size0 * size1, shape);
 	}
 
-	template <typename T>
+	template <typename T, class Allocator>
 	void setSize(int size0, int size1, int size2)
 	{
 		if (this->ndims() == 3 && 
@@ -115,10 +114,10 @@ public:
 		shape[1] = size1;
 		shape[2] = size2;
 
-		init<T>(3, size0 * size1 * size2, shape);
+		init<T, Allocator>(3, size0 * size1 * size2, shape);
 	}
 
-	template <typename T>
+	template <typename T, class Allocator>
 	void setSize(int ndims, int *shape)
 	{
 		if (this->ndims() == ndims)
@@ -139,7 +138,7 @@ allocate:
 		for (int i = 0; i < ndims; i++)
 			new_shape[i] = shape[i];
 
-		init<T>(ndims, size, new_shape);
+		init<T, Allocator>(ndims, size, new_shape);
 	}
 
 public:
