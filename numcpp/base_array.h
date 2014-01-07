@@ -82,12 +82,10 @@ public:
 		if (this->ndims() == 1 && 
 			this->size(0) == size0) return;
 
-		int size = size0;
-
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		init<T>(1, size, shape);
+		init<T>(1, size0, shape);
 	}
 
 	template <typename T>
@@ -97,13 +95,11 @@ public:
 			this->size(0) == size0 && 
 			this->size(1) == size1) return;
 
-		int size = size0 * size1;
-
 		int *shape = new int[2];
 		shape[0] = size0;
 		shape[1] = size1;
 
-		init<T>(2, size, shape);
+		init<T>(2, size0 * size1, shape);
 	}
 
 	template <typename T>
@@ -114,14 +110,12 @@ public:
 			this->size(1) == size1 && 
 			this->size(2) == size2) return;
 
-		int size = size0 * size1 * size2;
-
 		int *shape = new int[3];
 		shape[0] = size0;
 		shape[1] = size1;
 		shape[2] = size2;
 
-		init<T>(3, size, shape);
+		init<T>(3, size0 * size1 * size2, shape);
 	}
 
 	template <typename T>
