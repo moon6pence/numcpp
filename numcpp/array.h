@@ -48,6 +48,14 @@ public:
 		return *this;
 	}
 
+	// Convert from base_array_t
+	explicit array_t(base_array_t &&other) : base_array_t(sizeof(T))
+	{
+		assert(other.itemSize() == sizeof(T));
+
+		base_array_t::operator=(std::move(other));
+	}
+
 	// raw_ptr(): access raw pointer
 
 	T *raw_ptr()

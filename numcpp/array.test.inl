@@ -139,6 +139,25 @@ TEST_F(ArrayFixture, MoveSemantics)
 	EXPECT_NE(nullptr, moved2.raw_ptr());
 }
 
+TEST(Array, MoveFromBaseArray)
+{
+	base_array_t base_a1(sizeof(int));
+	base_a1.setSize(5);
+
+	array_t<int> a1(std::move(base_a1));
+
+	EXPECT_TRUE(base_a1.empty());
+	EXPECT_EQ(0, base_a1.ndims());
+	EXPECT_EQ(0, base_a1.size());
+	EXPECT_EQ(nullptr, base_a1.raw_ptr());
+
+	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(1, a1.ndims());
+	EXPECT_EQ(5, a1.size(0));
+	EXPECT_EQ(5, a1.size());
+	EXPECT_NE(nullptr, a1.raw_ptr());
+}
+
 TEST_F(ArrayFixture, AccessElements)
 {
 	// 1d array
