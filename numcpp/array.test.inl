@@ -5,56 +5,64 @@ namespace {
 
 using namespace numcpp;
 
-TEST(ArrayType, DeclareEmptyArray)
+TEST(Array, DeclareEmptyArray)
 {
 	array_t<int> a0;
 
 	EXPECT_TRUE(a0.empty());
+	EXPECT_EQ(sizeof(int), a0.itemSize());
 	EXPECT_EQ(0, a0.ndims());
 	EXPECT_EQ(0, a0.size());
+	EXPECT_EQ(0, a0.byteSize());
 	EXPECT_EQ(nullptr, a0.raw_ptr());
 }
 
-TEST(ArrayType, DeclareArrayWithSize)
+TEST(Array, DeclareArrayWithSize)
 {
 	array_t<int> a1(5);
 
 	EXPECT_FALSE(a1.empty());
-	EXPECT_EQ(a1.ndims(), 1);
-	EXPECT_EQ(a1.size(0), 5);
-	EXPECT_EQ(a1.size(), 5);
-	EXPECT_NE(a1.raw_ptr(), nullptr);
+	EXPECT_EQ(sizeof(int), a1.itemSize());
+	EXPECT_EQ(1, a1.ndims());
+	EXPECT_EQ(5, a1.size(0));
+	EXPECT_EQ(5, a1.size());
+	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
+	EXPECT_NE(nullptr, a1.raw_ptr());
 
-	array_t<int> a2(2, 3);
+	array_t<float> a2(2, 3);
 
 	EXPECT_FALSE(a2.empty());
-	EXPECT_EQ(a2.ndims(), 2);
-	EXPECT_EQ(a2.size(0), 2);
-	EXPECT_EQ(a2.size(1), 3);
-	EXPECT_EQ(a2.size(), 2 * 3);
-	EXPECT_NE(a2.raw_ptr(), nullptr);
+	EXPECT_EQ(sizeof(float), a2.itemSize());
+	EXPECT_EQ(2, a2.ndims());
+	EXPECT_EQ(2, a2.size(0));
+	EXPECT_EQ(3, a2.size(1));
+	EXPECT_EQ(2 * 3, a2.size());
+	EXPECT_EQ(2 * 3 * sizeof(float), a2.byteSize());
+	EXPECT_NE(nullptr, a2.raw_ptr());
 
-	array_t<int> a3(2, 3, 4);
+	array_t<double> a3(2, 3, 4);
 
 	EXPECT_FALSE(a3.empty());
-	EXPECT_EQ(a3.ndims(), 3);
-	EXPECT_EQ(a3.size(0), 2);
-	EXPECT_EQ(a3.size(1), 3);
-	EXPECT_EQ(a3.size(2), 4);
-	EXPECT_EQ(a3.size(), 2 * 3 * 4);
-	EXPECT_NE(a3.raw_ptr(), nullptr);
+	EXPECT_EQ(sizeof(double), a3.itemSize());
+	EXPECT_EQ(3, a3.ndims());
+	EXPECT_EQ(2, a3.size(0));
+	EXPECT_EQ(3, a3.size(1));
+	EXPECT_EQ(4, a3.size(2));
+	EXPECT_EQ(2 * 3 * 4, a3.size());
+	EXPECT_EQ(2 * 3 * 4 * sizeof(double), a3.byteSize());
+	EXPECT_NE(nullptr, a3.raw_ptr());
 }
 
-TEST(ArrayType, SetSize)
+TEST(Array, SetSize)
 {
 	array_t<int> a1;
 	a1.setSize(5);
 
 	EXPECT_FALSE(a1.empty());
-	EXPECT_EQ(a1.ndims(), 1);
-	EXPECT_EQ(a1.size(0), 5);
-	EXPECT_EQ(a1.size(), 5);
-	EXPECT_NE(a1.raw_ptr(), nullptr);
+	EXPECT_EQ(1, a1.ndims());
+	EXPECT_EQ(5, a1.size(0));
+	EXPECT_EQ(5, a1.size());
+	EXPECT_NE(nullptr, a1.raw_ptr());
 
 	array_t<int> a1_same(5);
 	int *ptr = a1_same.raw_ptr();
@@ -67,22 +75,22 @@ TEST(ArrayType, SetSize)
 	a2.setSize(2, 3);
 
 	EXPECT_FALSE(a2.empty());
-	EXPECT_EQ(a2.ndims(), 2);
-	EXPECT_EQ(a2.size(0), 2);
-	EXPECT_EQ(a2.size(1), 3);
-	EXPECT_EQ(a2.size(), 2 * 3);
-	EXPECT_NE(a2.raw_ptr(), nullptr);
+	EXPECT_EQ(2, a2.ndims());
+	EXPECT_EQ(2, a2.size(0));
+	EXPECT_EQ(3, a2.size(1));
+	EXPECT_EQ(2 * 3, a2.size());
+	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	array_t<int> a3;
 	a3.setSize(2, 3, 4);
 
 	EXPECT_FALSE(a3.empty());
-	EXPECT_EQ(a3.ndims(), 3);
-	EXPECT_EQ(a3.size(0), 2);
-	EXPECT_EQ(a3.size(1), 3);
-	EXPECT_EQ(a3.size(2), 4);
-	EXPECT_EQ(a3.size(), 2 * 3 * 4);
-	EXPECT_NE(a3.raw_ptr(), nullptr);
+	EXPECT_EQ(3, a3.ndims());
+	EXPECT_EQ(2, a3.size(0));
+	EXPECT_EQ(3, a3.size(1));
+	EXPECT_EQ(4, a3.size(2));
+	EXPECT_EQ(2 * 3 * 4, a3.size());
+	EXPECT_NE(nullptr, a3.raw_ptr());
 
 	array_t<int> a4;
 	int shape[4] = { 2, 2, 2, 2 };
@@ -131,49 +139,68 @@ TEST_F(ArrayFixture, MoveSemantics)
 	EXPECT_NE(nullptr, moved2.raw_ptr());
 }
 
+TEST(Array, MoveFromBaseArray)
+{
+	base_array_t base_a1(sizeof(int));
+	base_a1.setSize(5);
+
+	array_t<int> a1(std::move(base_a1));
+
+	EXPECT_TRUE(base_a1.empty());
+	EXPECT_EQ(0, base_a1.ndims());
+	EXPECT_EQ(0, base_a1.size());
+	EXPECT_EQ(nullptr, base_a1.raw_ptr());
+
+	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(1, a1.ndims());
+	EXPECT_EQ(5, a1.size(0));
+	EXPECT_EQ(5, a1.size());
+	EXPECT_NE(nullptr, a1.raw_ptr());
+}
+
 TEST_F(ArrayFixture, AccessElements)
 {
 	// 1d array
-	EXPECT_EQ(a1.at(0), 2);
-	EXPECT_EQ(a1.at(1), 3);
-	EXPECT_EQ(a1.at(2), 5);
-	EXPECT_EQ(a1(3), 1);
-	EXPECT_EQ(a1(4), 7);
+	EXPECT_EQ(2, a1.at(0));
+	EXPECT_EQ(3, a1.at(1));
+	EXPECT_EQ(5, a1.at(2));
+	EXPECT_EQ(1, a1(3));
+	EXPECT_EQ(7, a1(4));
 
 	int *ptr = a1.raw_ptr();
 	ptr[2] = 8;
 
-	EXPECT_EQ(a1(2), 8);
+	EXPECT_EQ(8, a1(2));
 
 	int *ptr2 = a1;
 	ptr[3] = 9;
 
-	EXPECT_EQ(a1(3), 9);
+	EXPECT_EQ(9, a1(3));
 	EXPECT_EQ(ptr, ptr2);
 
 	// 2d array
-	EXPECT_EQ(a2(0), 7);
-	EXPECT_EQ(a2(2), 3);
-	EXPECT_EQ(a2(5), 8);
+	EXPECT_EQ(7, a2(0));
+	EXPECT_EQ(3, a2(2));
+	EXPECT_EQ(8, a2(5));
 
-	EXPECT_EQ(a2.at(0, 0), 7);
-	EXPECT_EQ(a2(1, 1), 1);
-	EXPECT_EQ(a2.at(1, 2), 8);
+	EXPECT_EQ(7, a2.at(0, 0));
+	EXPECT_EQ(1, a2(1, 1));
+	EXPECT_EQ(8, a2.at(1, 2));
 
 	a2.at(0, 2) = 5;
-	EXPECT_EQ(a2.at(0, 2), 5);
+	EXPECT_EQ(5, a2.at(0, 2));
 
 	// 3d array
-	EXPECT_EQ(a3.at(0), 32);
-	EXPECT_EQ(a3(15), 32);
-	EXPECT_EQ(a3(23), 24);
+	EXPECT_EQ(32, a3.at(0));
+	EXPECT_EQ(32, a3(15));
+	EXPECT_EQ(24, a3(23));
 
-	EXPECT_EQ(a3.at(0, 0, 0), 32);
-	EXPECT_EQ(a3(0, 1, 2), 71);
-	EXPECT_EQ(a3.at(1, 2, 3), 24);
+	EXPECT_EQ(32, a3.at(0, 0, 0));
+	EXPECT_EQ(71, a3(0, 1, 2));
+	EXPECT_EQ(24, a3.at(1, 2, 3));
 
 	a3.at(0, 2, 3) = 99;
-	EXPECT_EQ(a3.at(0, 2, 3), 99);
+	EXPECT_EQ(99, a3.at(0, 2, 3));
 }
 
 } // anonymous namespace

@@ -73,6 +73,24 @@ TEST(OpenCV, FromCvMat)
 			ASSERT_EQ(mat2(y, x), cv_mat2.at<float>(y, x));
 }
 
+TEST(OpenCV, FromCvMatRuntime)
+{
+	cv::Mat cv_mat(5, 5, CV_8U, cvScalar(128));
+	cv_mat.at<uint8_t>(3, 2) = 123;
+	cv_mat.at<uint8_t>(1, 4) = 7;
+
+	base_array_t a1 = from_cv_mat(cv_mat);
+	ASSERT_FALSE(a1.empty());
+	ASSERT_EQ(cv_mat.rows, a1.size(0));
+	ASSERT_EQ(cv_mat.cols, a1.size(1));
+
+	EXPECT_EQ(123, a1.at<uint8_t>(3, 2));
+	EXPECT_EQ(7, a1.at<uint8_t>(1, 4));
+	for (int y = 0; y < a1.size(0); y++)
+		for (int x = 0; x < a1.size(1); x++)
+			EXPECT_EQ(cv_mat.at<uint8_t>(y, x), a1.at<uint8_t>(y, x));
+}
+
 TEST(OpenCV, ImRead)
 {
 	cv::Mat cv_image = cv::imread("Lena.bmp");

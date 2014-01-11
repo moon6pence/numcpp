@@ -81,6 +81,7 @@ if (BUILD_TEST)
 		test 
 		test.cpp
 
+		numcpp/base_array.test.inl
 		numcpp/array.test.inl
 		numcpp/stl.test.inl
 		numcpp/functions.test.inl
