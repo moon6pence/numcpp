@@ -29,7 +29,7 @@ const cv::Mat to_cv_mat(const array_t<T> &array)
 		cv::DataType<T>::type, const_cast<uint8_t *>(array.raw_ptr()));
 }
 
-base_array_t from_cv_mat(const cv::Mat &cv_mat)
+inline base_array_t from_cv_mat(const cv::Mat &cv_mat)
 {
 	base_array_t result(cv_mat.elemSize());
 	result.setSize<heap_allocator>(cv_mat.rows, cv_mat.cols);

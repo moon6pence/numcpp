@@ -142,7 +142,7 @@ TEST_F(ArrayFixture, MoveSemantics)
 TEST(Array, MoveFromBaseArray)
 {
 	base_array_t base_a1(sizeof(int));
-	base_a1.setSize(5);
+	base_a1.setSize<heap_allocator>(5);
 
 	array_t<int> a1(std::move(base_a1));
 

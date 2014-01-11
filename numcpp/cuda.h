@@ -48,7 +48,7 @@ public:
 
 private:
 	// disable copy constructor, assign
-	device_array_t(device_array_t &) { }
+	device_array_t(device_array_t &) : base_array_t(sizeof(T)) { }
 	const device_array_t &operator=(const device_array_t &) { return *this; }
 
 public:

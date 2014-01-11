@@ -32,7 +32,7 @@ public:
 
 private:
 	// disable copy constructor, assign
-	array_t(array_t &) { }
+	array_t(array_t &) : base_array_t(sizeof(T)) { }
 	const array_t &operator=(const array_t &) { return *this; }
 
 public:
@@ -54,6 +54,26 @@ public:
 		assert(other.itemSize() == sizeof(T));
 
 		base_array_t::operator=(std::move(other));
+	}
+
+	void setSize(int size0)
+	{
+		base_array_t::setSize<heap_allocator>(size0);
+	}
+
+	void setSize(int size0, int size1)
+	{
+		base_array_t::setSize<heap_allocator>(size0, size1);
+	}
+
+	void setSize(int size0, int size1, int size2)
+	{
+		base_array_t::setSize<heap_allocator>(size0, size1, size2);
+	}
+
+	void setSize(int ndims, int *shape)
+	{
+		base_array_t::setSize<heap_allocator>(ndims, shape);
 	}
 
 	// raw_ptr(): access raw pointer

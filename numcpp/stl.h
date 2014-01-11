@@ -4,6 +4,8 @@
 #include "array.h"
 
 #include <algorithm>
+#include <functional> // plus
+#include <numeric> // accumulate
 #include <iostream>
 #include <stdint.h>
 
