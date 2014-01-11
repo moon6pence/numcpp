@@ -11,7 +11,7 @@ TEST(BaseArray, DeclareEmptyArray)
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(0, a0.ndims());
 	EXPECT_EQ(0, a0.size());
-	EXPECT_EQ(nullptr, a0.raw_ptr<void>());
+	EXPECT_EQ(nullptr, a0.raw_ptr());
 }
 
 /*

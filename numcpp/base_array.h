@@ -183,6 +183,16 @@ allocate:
 
 	// raw_ptr(): access raw pointer
 
+	void *raw_ptr()
+	{
+		return _origin;
+	}
+
+	const void *raw_ptr() const
+	{
+		return _origin;
+	}
+
 	template <typename T>
 	T *raw_ptr()
 	{
