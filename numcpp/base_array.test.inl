@@ -14,27 +14,25 @@ TEST(BaseArray, DeclareEmptyArray)
 	EXPECT_EQ(nullptr, a0.raw_ptr());
 }
 
-/*
-
 TEST(BaseArray, SetSize)
 {
-	base_array_t a1;
-	a1.setSize<heap_allocator>(1, 5);
+	base_array_t a1(4);
+	a1.setSize<heap_allocator>(5);
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_EQ(5, a1.size());
-	EXPECT_NE(nullptr, a1.raw_ptr<void>());
+	EXPECT_NE(nullptr, a1.raw_ptr());
 
-	int *ptr = a1.raw_ptr<void>();
+	void *ptr = a1.raw_ptr();
 
 	// Do not allocate again
-	a1.setSize<heap_allocator>(1, 5);
-	EXPECT_EQ(ptr, a1.raw_ptr<void>());
+	a1.setSize<heap_allocator>(5);
+	EXPECT_EQ(ptr, a1.raw_ptr());
 
-	base_array_t a2;
-	a2.setSize(2, 3);
+	base_array_t a2(4);
+	a2.setSize<heap_allocator>(2, 3);
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(a2.ndims(), 2);
@@ -43,8 +41,8 @@ TEST(BaseArray, SetSize)
 	EXPECT_EQ(a2.size(), 2 * 3);
 	EXPECT_NE(a2.raw_ptr(), nullptr);
 
-	array_t<int> a3;
-	a3.setSize(2, 3, 4);
+	base_array_t a3(4);
+	a3.setSize<heap_allocator>(2, 3, 4);
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(a3.ndims(), 3);
@@ -54,9 +52,9 @@ TEST(BaseArray, SetSize)
 	EXPECT_EQ(a3.size(), 2 * 3 * 4);
 	EXPECT_NE(a3.raw_ptr(), nullptr);
 
-	array_t<int> a4;
+	base_array_t a4(4);
 	int shape[4] = { 2, 2, 2, 2 };
-	a4.setSize(4, shape);
+	a4.setSize<heap_allocator>(4, shape);
 
 	EXPECT_FALSE(a4.empty());
 	EXPECT_EQ(4, a4.ndims());
@@ -67,6 +65,8 @@ TEST(BaseArray, SetSize)
 	EXPECT_EQ(2 * 2 * 2 * 2, a4.size());
 	EXPECT_NE(nullptr, a4.raw_ptr());
 }
+
+/*
 
 TEST_F(ArrayFixture, MoveSemantics)
 {

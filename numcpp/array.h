@@ -5,19 +5,6 @@
 
 namespace numcpp {
 
-struct heap_allocator
-{
-	static void *allocate(int size)
-	{
-		return new char[size];
-	}
-
-	static void free(void *ptr)
-	{
-		delete[] reinterpret_cast<char *>(ptr);
-	}
-};
-
 template <typename T>
 struct array_t : public base_array_t
 {
