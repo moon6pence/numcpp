@@ -94,7 +94,7 @@ private:
 	}
 
 public:
-	template <class Allocator>
+	template <class Allocator = heap_allocator>
 	void setSize(int size0)
 	{
 		if (this->ndims() == 1 && 
@@ -106,7 +106,7 @@ public:
 		init<Allocator>(1, size0, shape);
 	}
 
-	template <class Allocator>
+	template <class Allocator = heap_allocator>
 	void setSize(int size0, int size1)
 	{
 		if (this->ndims() == 2 && 
@@ -120,7 +120,7 @@ public:
 		init<Allocator>(2, size0 * size1, shape);
 	}
 
-	template <class Allocator>
+	template <class Allocator = heap_allocator>
 	void setSize(int size0, int size1, int size2)
 	{
 		if (this->ndims() == 3 && 
@@ -136,7 +136,7 @@ public:
 		init<Allocator>(3, size0 * size1 * size2, shape);
 	}
 
-	template <class Allocator>
+	template <class Allocator = heap_allocator>
 	void setSize(int ndims, int *shape)
 	{
 		if (this->ndims() == ndims)
