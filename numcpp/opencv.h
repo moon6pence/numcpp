@@ -33,6 +33,8 @@ base_array_t from_cv_mat(const cv::Mat &cv_mat)
 {
 	base_array_t result(cv_mat.elemSize());
 	result.setSize<heap_allocator>(cv_mat.rows, cv_mat.cols);
+
+	// TODO: Do not copy
 	memcpy(result.raw_ptr<void>(), cv_mat.data, result.byteSize());
 
 	return std::move(result);
@@ -41,11 +43,7 @@ base_array_t from_cv_mat(const cv::Mat &cv_mat)
 template <typename T>
 array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 {
-	// TODO: Do not copy
-	array_t<T> result(cv_mat.rows, cv_mat.cols);
-	memcpy(result.raw_ptr(), cv_mat.data, result.byteSize());
-
-	return std::move(result);
+	return array_t<T>(from_cv_mat(cv_mat));
 }
 
 #ifdef USE_CUDA
