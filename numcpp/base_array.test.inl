@@ -6,7 +6,7 @@ using namespace numcpp;
 
 TEST(BaseArray, DeclareEmptyArray)
 {
-	base_array_t a0;
+	base_array_t a0(4);
 
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(0, a0.ndims());

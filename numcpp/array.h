@@ -24,21 +24,21 @@ struct array_t : public base_array_t
 public:
 	typedef base_array_t parent_t;
 
-	array_t()
+	array_t() : base_array_t(sizeof(T))
 	{
 	}
 
-	array_t(int size0)
+	array_t(int size0) : base_array_t(sizeof(T))
 	{
 		setSize(size0);
 	}
 
-	array_t(int size0, int size1)
+	array_t(int size0, int size1) : base_array_t(sizeof(T))
 	{
 		setSize(size0, size1);
 	}
 
-	array_t(int size0, int size1, int size2)
+	array_t(int size0, int size1, int size2) : base_array_t(sizeof(T))
 	{
 		setSize(size0, size1, size2);
 	}
@@ -63,22 +63,22 @@ public:
 
 	void setSize(int size0)
 	{
-		base_array_t::setSize<heap_allocator>(sizeof(T), size0);
+		base_array_t::setSize<heap_allocator>(size0);
 	}
 
 	void setSize(int size0, int size1)
 	{
-		base_array_t::setSize<heap_allocator>(sizeof(T), size0, size1);
+		base_array_t::setSize<heap_allocator>(size0, size1);
 	}
 
 	void setSize(int size0, int size1, int size2)
 	{
-		base_array_t::setSize<heap_allocator>(sizeof(T), size0, size1, size2);
+		base_array_t::setSize<heap_allocator>(size0, size1, size2);
 	}
 
 	void setSize(int ndims, int *shape)
 	{
-		base_array_t::setSize<heap_allocator>(sizeof(T), ndims, shape);
+		base_array_t::setSize<heap_allocator>(ndims, shape);
 	}
 
 	// raw_ptr(): access raw pointer

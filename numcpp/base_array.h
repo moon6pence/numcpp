@@ -2,12 +2,14 @@
 #define NUMCPP_BASE_ARRAY_H_
 
 #include <memory>
+#include <assert.h>
 
 namespace numcpp {
 
 struct base_array_t
 {
 private:
+	const int _itemSize;
 	int _ndims;
 	int _size;
 	std::unique_ptr<int[]> _shape;
@@ -15,12 +17,14 @@ private:
 	void *_origin;
 
 public:
-	base_array_t() : _ndims(0), _size(0), _origin(nullptr) 
+	base_array_t(int itemSize) : 
+		_itemSize(itemSize), _ndims(0), _size(0), _origin(nullptr) 
 	{ 
 	}
 
 	// move constructor
-	base_array_t(base_array_t &&other)
+	base_array_t(base_array_t &&other) : 
+		_itemSize(other._itemSize)
 	{
 		_ndims = other._ndims;
 		_size = other._size;
@@ -38,6 +42,8 @@ public:
 	// move assign
 	const base_array_t &operator=(base_array_t &&other)
 	{
+		assert(_itemSize == other._itemSize);
+
 		_ndims = other._ndims;
 		_size = other._size;
 		_shape = std::move(other._shape);
@@ -66,9 +72,9 @@ private:
 	}
 
 	template <class Allocator>
-	void init(int itemSize, int ndims, int size, int *shape)
+	void init(int ndims, int size, int *shape)
 	{
-		void *ptr = Allocator::allocate(size * itemSize);
+		void *ptr = Allocator::allocate(size * _itemSize);
 		auto address = std::shared_ptr<void>(ptr, Allocator::free);
 
 		init(ndims, size, shape, address, ptr);
@@ -76,7 +82,7 @@ private:
 
 public:
 	template <class Allocator>
-	void setSize(int itemSize, int size0)
+	void setSize(int size0)
 	{
 		if (this->ndims() == 1 && 
 			this->size(0) == size0) return;
@@ -84,11 +90,11 @@ public:
 		int *shape = new int[1];
 		shape[0] = size0;
 
-		init<Allocator>(itemSize, 1, size0, shape);
+		init<Allocator>(1, size0, shape);
 	}
 
 	template <class Allocator>
-	void setSize(int itemSize, int size0, int size1)
+	void setSize(int size0, int size1)
 	{
 		if (this->ndims() == 2 && 
 			this->size(0) == size0 && 
@@ -98,11 +104,11 @@ public:
 		shape[0] = size0;
 		shape[1] = size1;
 
-		init<Allocator>(itemSize, 2, size0 * size1, shape);
+		init<Allocator>(2, size0 * size1, shape);
 	}
 
 	template <class Allocator>
-	void setSize(int itemSize, int size0, int size1, int size2)
+	void setSize(int size0, int size1, int size2)
 	{
 		if (this->ndims() == 3 && 
 			this->size(0) == size0 && 
@@ -114,11 +120,11 @@ public:
 		shape[1] = size1;
 		shape[2] = size2;
 
-		init<Allocator>(itemSize, 3, size0 * size1 * size2, shape);
+		init<Allocator>(3, size0 * size1 * size2, shape);
 	}
 
 	template <class Allocator>
-	void setSize(int itemSize, int ndims, int *shape)
+	void setSize(int ndims, int *shape)
 	{
 		if (this->ndims() == ndims)
 		{
@@ -138,7 +144,7 @@ allocate:
 		for (int i = 0; i < ndims; i++)
 			new_shape[i] = shape[i];
 
-		init<Allocator>(itemSize, ndims, size, new_shape);
+		init<Allocator>(ndims, size, new_shape);
 	}
 
 	bool empty() const

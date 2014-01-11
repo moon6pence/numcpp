@@ -27,21 +27,21 @@ template <typename T>
 struct device_array_t : public base_array_t
 {
 public:
-	device_array_t()
+	device_array_t() : base_array_t(sizeof(T))
 	{
 	}
 
-	device_array_t(int size0)
+	device_array_t(int size0) : base_array_t(sizeof(T))
 	{
 		setSize(size0);
 	}
 
-	device_array_t(int size0, int size1)
+	device_array_t(int size0, int size1) : base_array_t(sizeof(T))
 	{
 		setSize(size0, size1);
 	}
 
-	device_array_t(int size0, int size1, int size2)
+	device_array_t(int size0, int size1, int size2) : base_array_t(sizeof(T))
 	{
 		setSize(size0, size1, size2);
 	}
@@ -65,29 +65,29 @@ public:
 	}
 
 	// Convert from host array
-	explicit device_array_t(const array_t<T> &array_h)
+	explicit device_array_t(const array_t<T> &array_h) : base_array_t(sizeof(T))
 	{
 		host_to_device(*this, array_h);
 	}
 
 	void setSize(int size0)
 	{
-		base_array_t::setSize<device_allocator>(sizeof(T), size0);
+		base_array_t::setSize<device_allocator>(size0);
 	}
 
 	void setSize(int size0, int size1)
 	{
-		base_array_t::setSize<device_allocator>(sizeof(T), size0, size1);
+		base_array_t::setSize<device_allocator>(size0, size1);
 	}
 
 	void setSize(int size0, int size1, int size2)
 	{
-		base_array_t::setSize<device_allocator>(sizeof(T), size0, size1, size2);
+		base_array_t::setSize<device_allocator>(size0, size1, size2);
 	}
 
 	void setSize(int ndims, int *shape)
 	{
-		base_array_t::setSize<device_allocator>(sizeof(T), ndims, shape);
+		base_array_t::setSize<device_allocator>(ndims, shape);
 	}
 
 	// raw_ptr(): access raw pointer
