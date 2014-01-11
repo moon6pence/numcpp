@@ -195,18 +195,6 @@ allocate:
 		return reinterpret_cast<T *>(_origin);
 	}
 
-	template <typename T>
-	operator T * ()
-	{
-		return raw_ptr<T>();
-	}
-
-	template <typename T>
-	operator const T * () const
-	{
-		return raw_ptr<T>();
-	}
-
 	// at(index0, index...) : access array elements
 
 	template <typename T>
@@ -243,42 +231,6 @@ allocate:
 	const T& at(int index0, int index1, int index2) const
 	{
 		return raw_ptr<T>()[index2 + _shape[2] * (index1 + _shape[1] * index0)];
-	}
-
-	template <typename T>
-	T& operator() (int index0)
-	{
-		return at<T>(index0);
-	}
-
-	template <typename T>
-	T& operator() (int index0, int index1)
-	{
-		return at<T>(index0, index1);
-	}
-
-	template <typename T>
-	T& operator() (int index0, int index1, int index2)
-	{
-		return at<T>(index0, index1, index2);
-	}
-
-	template <typename T>
-	const T& operator() (int index0) const
-	{
-		return at<T>(index0);
-	}
-
-	template <typename T>
-	const T& operator() (int index0, int index1) const
-	{
-		return at<T>(index0, index1);
-	}
-
-	template <typename T>
-	const T& operator() (int index0, int index1, int index2) const
-	{
-		return at<T>(index0, index1, index2);
 	}
 };
 
