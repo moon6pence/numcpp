@@ -165,6 +165,11 @@ allocate:
 		return _size == 0;
 	}
 
+	int itemSize() const
+	{
+		return _itemSize;
+	}
+
 	int ndims() const
 	{
 		return _ndims;
@@ -173,6 +178,11 @@ allocate:
 	int size() const
 	{
 		return _size;
+	}
+
+	int byteSize() const
+	{
+		return size() * _itemSize;
 	}
 
 	int size(int dim) const

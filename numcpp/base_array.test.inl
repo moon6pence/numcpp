@@ -6,23 +6,27 @@ using namespace numcpp;
 
 TEST(BaseArray, DeclareEmptyArray)
 {
-	base_array_t a0(4);
+	base_array_t a0(sizeof(int));
 
+	EXPECT_EQ(sizeof(int), a0.itemSize());
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(0, a0.ndims());
 	EXPECT_EQ(0, a0.size());
 	EXPECT_EQ(nullptr, a0.raw_ptr());
+	EXPECT_EQ(0, a0.byteSize());
 }
 
 TEST(BaseArray, SetSize)
 {
-	base_array_t a1(4);
+	base_array_t a1(sizeof(int));
 	a1.setSize(5);
 
 	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(sizeof(int), a1.itemSize());
 	EXPECT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_EQ(5, a1.size());
+	EXPECT_EQ(sizeof(int) * 5, a1.byteSize());
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
 	void *ptr = a1.raw_ptr();
@@ -31,38 +35,44 @@ TEST(BaseArray, SetSize)
 	a1.setSize(5);
 	EXPECT_EQ(ptr, a1.raw_ptr());
 
-	base_array_t a2(4);
+	base_array_t a2(sizeof(float));
 	a2.setSize(2, 3);
 
 	EXPECT_FALSE(a2.empty());
-	EXPECT_EQ(a2.ndims(), 2);
-	EXPECT_EQ(a2.size(0), 2);
-	EXPECT_EQ(a2.size(1), 3);
-	EXPECT_EQ(a2.size(), 2 * 3);
+	EXPECT_EQ(sizeof(float), a2.itemSize());
+	EXPECT_EQ(2, a2.ndims());
+	EXPECT_EQ(2, a2.size(0));
+	EXPECT_EQ(3, a2.size(1));
+	EXPECT_EQ(2 * 3, a2.size());
+	EXPECT_EQ(2 * 3 * sizeof(float), a2.byteSize());
 	EXPECT_NE(a2.raw_ptr(), nullptr);
 
-	base_array_t a3(4);
+	base_array_t a3(sizeof(double));
 	a3.setSize(2, 3, 4);
 
 	EXPECT_FALSE(a3.empty());
-	EXPECT_EQ(a3.ndims(), 3);
-	EXPECT_EQ(a3.size(0), 2);
-	EXPECT_EQ(a3.size(1), 3);
-	EXPECT_EQ(a3.size(2), 4);
-	EXPECT_EQ(a3.size(), 2 * 3 * 4);
-	EXPECT_NE(a3.raw_ptr(), nullptr);
+	EXPECT_EQ(sizeof(double), a3.itemSize());
+	EXPECT_EQ(3, a3.ndims());
+	EXPECT_EQ(2, a3.size(0));
+	EXPECT_EQ(3, a3.size(1));
+	EXPECT_EQ(4, a3.size(2));
+	EXPECT_EQ(2 * 3 * 4, a3.size());
+	EXPECT_EQ(2 * 3 * 4 * sizeof(double), a3.byteSize());
+	EXPECT_NE(nullptr, a3.raw_ptr());
 
-	base_array_t a4(4);
+	base_array_t a4(sizeof(char));
 	int shape[4] = { 2, 2, 2, 2 };
 	a4.setSize(4, shape);
 
 	EXPECT_FALSE(a4.empty());
+	EXPECT_EQ(sizeof(char), a4.itemSize());
 	EXPECT_EQ(4, a4.ndims());
 	EXPECT_EQ(2, a4.size(0));
 	EXPECT_EQ(2, a4.size(1));
 	EXPECT_EQ(2, a4.size(2));
 	EXPECT_EQ(2, a4.size(3));
 	EXPECT_EQ(2 * 2 * 2 * 2, a4.size());
+	EXPECT_EQ(2 * 2 * 2 * 2 * sizeof(char), a4.byteSize());
 	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 

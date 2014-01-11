@@ -113,13 +113,12 @@ public:
 	}
 };
 
-
 template <typename T>
 void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 {
 	dst_d.setSize(src.ndims(), src.shape());
 
-	cudaMemcpy(dst_d, src, dst_d.size() * sizeof(T), cudaMemcpyHostToDevice);
+	cudaMemcpy(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice);
 }
 
 template <typename T>
@@ -127,7 +126,7 @@ void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 {
 	dst.setSize(src_d.ndims(), src_d.shape());
 
-	cudaMemcpy(dst, src_d, dst.size() * sizeof(T), cudaMemcpyDeviceToHost);
+	cudaMemcpy(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost);
 }
 
 } // namespace numcpp
