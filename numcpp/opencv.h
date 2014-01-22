@@ -46,6 +46,16 @@ array_t<T> from_cv_mat(const cv::Mat &cv_mat)
 	return array_t<T>(from_cv_mat(cv_mat));
 }
 
+template <typename T>
+void from_cv_mat(array_t<T> &dst, const cv::Mat &src)
+{
+	// TODO: check type of src
+	dst.setSize(src.rows, src.cols);
+
+	// TODO: Do not copy
+	memcpy(dst, src.data, dst.byteSize());
+}
+
 #ifdef USE_CUDA
 
 template <typename T>
@@ -70,6 +80,16 @@ inline array_t<uint8_t> imread(const std::string &filename)
 	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
 
 	return from_cv_mat<uint8_t>(cv_grayscale);
+}
+
+inline void imread(array_t<uint8_t> &dst, const std::string &filename)
+{
+	cv::Mat cv_image = cv::imread(filename);
+
+	cv::Mat cv_grayscale;
+	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
+
+	from_cv_mat(dst, cv_grayscale);
 }
 
 inline bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
