@@ -9,7 +9,7 @@
 #include <iostream>
 #include <stdint.h>
 
-namespace numcpp {
+namespace np {
 
 template <typename T>
 T *begin(array_t<T> &array)
@@ -116,6 +116,6 @@ T mean(const array_t<T> &array)
 	return sum(array) / array.size();
 }
 
-} // namespace numcpp
+} // namespace np
 
 #endif // NUMCPP_ARRAY_FUNCTION_H_

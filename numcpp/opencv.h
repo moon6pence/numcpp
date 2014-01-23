@@ -11,7 +11,7 @@
 #include <opencv2/gpu/gpu.hpp>
 #endif
 
-namespace numcpp {
+namespace np {
 
 template <typename T>
 cv::Mat to_cv_mat(array_t<T> &array)
@@ -103,6 +103,6 @@ inline void imshow(const array_t<uint8_t> &image)
 	cv::waitKey(0);
 }
 
-} // namespace numcpp
+} // namespace np
 
 #endif // NUMCPP_OPENCV_H_

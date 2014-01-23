@@ -2,7 +2,7 @@
 
 namespace {
 
-using namespace numcpp;
+using namespace np;
 
 TEST(BaseArray, DeclareEmptyArray)
 {

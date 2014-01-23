@@ -47,7 +47,7 @@ protected:
 
 	virtual void TearDown() {}
 
-	numcpp::array_t<int> a1, a2, a3;
+	np::array_t<int> a1, a2, a3;
 	int data1[5], data2[6], data3[24];
 };
 

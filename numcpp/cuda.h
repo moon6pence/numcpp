@@ -6,7 +6,7 @@
 
 #include <cuda_runtime.h>
 
-namespace numcpp {
+namespace np {
 
 struct device_allocator
 {
@@ -129,6 +129,6 @@ void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 	cudaMemcpy(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost);
 }
 
-} // namespace numcpp
+} // namespace np
 
 #endif // NUMCPP_CUDA_H_

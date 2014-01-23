@@ -3,7 +3,7 @@
 
 namespace {
 
-using namespace numcpp;
+using namespace np;
 
 TEST(Functions, Colon)
 {

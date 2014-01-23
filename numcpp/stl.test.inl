@@ -5,7 +5,7 @@ namespace {
 
 typedef ArrayFixture NumcppSTL;
 
-using namespace numcpp;
+using namespace np;
 
 TEST_F(NumcppSTL, DenseIterator)
 {

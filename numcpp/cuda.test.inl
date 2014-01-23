@@ -5,6 +5,8 @@ void vecAdd(const int *A, const int *B, int *C, int N);
 
 namespace {
 
+using namespace np;
+
 TEST(CUDA, HelloCUDA)
 {
 	using namespace std;

@@ -3,7 +3,7 @@
 
 #include "base_array.h"
 
-namespace numcpp {
+namespace np {
 
 template <typename T>
 struct array_t : public base_array_t
@@ -161,6 +161,6 @@ public:
 	}
 };
 
-} // namespace numcpp
+} // namespace np
 
 #endif // NUMCPP_ARRAY_H_

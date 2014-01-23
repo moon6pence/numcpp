@@ -4,7 +4,7 @@
 #include <memory>
 #include <assert.h>
 
-namespace numcpp {
+namespace np {
 
 struct heap_allocator
 {
@@ -273,6 +273,6 @@ allocate:
 	}
 };
 
-} // namespace numcpp
+} // namespace np
 
 #endif // NUMCPP_ABSTRACT_ARRAY_H_

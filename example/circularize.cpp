@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
 	using namespace std;
-	using namespace numcpp;
+	using namespace np;
 
 	auto image = imread("Lena.bmp");
 	if (image.empty())

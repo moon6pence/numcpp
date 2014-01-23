@@ -6,7 +6,7 @@
 #include <fstream>
 #include <vector>
 
-namespace numcpp {
+namespace np {
 
 /** One-dimensional array from j to k, such as {j, j+1, ..., k} */
 template <typename T>
@@ -87,6 +87,6 @@ array_t<T> fromfile(const std::string &filename)
 	return std::move(result);
 }
 
-} // namespace numcpp
+} // namespace np
 
 #endif // NUMCPP_FUNCTIONS_H_

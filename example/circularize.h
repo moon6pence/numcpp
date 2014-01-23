@@ -2,7 +2,7 @@
 #include <numcpp/opencv.h>
 #include <numcpp/cuda.h>
 
-namespace numcpp {
+namespace np {
 
 struct Circularize
 {
@@ -72,4 +72,4 @@ struct Circularize
 	}
 };
 
-} // namespace numcpp
+} // namespace np
