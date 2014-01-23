@@ -1,6 +1,10 @@
+#include "../config.h"
 #include <numcpp/numcpp.h>
 #include <numcpp/opencv.h>
+
+#ifdef USE_CUDA
 #include <numcpp/cuda.h>
+#endif
 
 namespace np {
 
@@ -52,6 +56,12 @@ struct Circularize
 		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
 	}
 
+};
+
+#ifdef USE_CUDA
+
+struct Circularize_d : private Circularize
+{
 	device_array_t<float> x_map_d, y_map_d;
 
 	void operator() (device_array_t<uint8_t> &dst, const device_array_t<uint8_t> &src, int DIAMETER)
@@ -71,5 +81,7 @@ struct Circularize
 		cv::gpu::remap(to_cv_gpu_mat(src), cv_dst, to_cv_gpu_mat(x_map_d), to_cv_gpu_mat(y_map_d), CV_INTER_LINEAR);
 	}
 };
+
+#endif // USE_CUDA
 
 } // namespace np
