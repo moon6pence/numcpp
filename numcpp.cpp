@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include <numcpp/numcpp.h>
 
 #ifdef USE_OPENCV

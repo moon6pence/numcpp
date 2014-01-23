@@ -1,8 +1,6 @@
 #ifndef NUMCPP_OPENCV_H_
 #define NUMCPP_OPENCV_H_
 
-#include "../config.h"
-
 #include <opencv/cv.h>
 #include <opencv2/highgui/highgui.hpp>
 
