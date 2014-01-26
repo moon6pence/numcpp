@@ -88,9 +88,13 @@ private:
 
 		// Initialize stride from shape
 		_stride = std::unique_ptr<int[]>(new int[_ndims]);
-		_stride[ndims - 1] = 1;
-		for (int i = _ndims - 2; i >= 0; i--)
-		 	_stride[i] = _stride[i + 1] * _shape[i + 1];
+		// _stride[ndims - 1] = 1;
+		// for (int i = _ndims - 2; i >= 0; i--)
+		//  	_stride[i] = _stride[i + 1] * _shape[i + 1];
+
+		_stride[0] = 1;
+		for (int i = 1; i < _ndims; i++)
+			_stride[i] = _stride[i - 1] * _shape[i - 1];
 	}
 
 	template <class Allocator>
