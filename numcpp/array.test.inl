@@ -27,6 +27,7 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_EQ(5, a1.size());
 	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
+	EXPECT_EQ(1, a1.stride(0)); 
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
 	array_t<float> a2(2, 3);
@@ -38,6 +39,8 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(3, a2.size(1));
 	EXPECT_EQ(2 * 3, a2.size());
 	EXPECT_EQ(2 * 3 * sizeof(float), a2.byteSize());
+	EXPECT_EQ(3, a2.stride(0));
+	EXPECT_EQ(1, a2.stride(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	array_t<double> a3(2, 3, 4);
@@ -50,6 +53,9 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(4, a3.size(2));
 	EXPECT_EQ(2 * 3 * 4, a3.size());
 	EXPECT_EQ(2 * 3 * 4 * sizeof(double), a3.byteSize());
+	EXPECT_EQ(3 * 4, a3.stride(0));
+	EXPECT_EQ(4, a3.stride(1));
+	EXPECT_EQ(1, a3.stride(2));
 	EXPECT_NE(nullptr, a3.raw_ptr());
 }
 
@@ -62,6 +68,7 @@ TEST(Array, SetSize)
 	EXPECT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_EQ(5, a1.size());
+	EXPECT_EQ(1, a1.stride(0)); 
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
 	array_t<int> a1_same(5);
@@ -79,6 +86,8 @@ TEST(Array, SetSize)
 	EXPECT_EQ(2, a2.size(0));
 	EXPECT_EQ(3, a2.size(1));
 	EXPECT_EQ(2 * 3, a2.size());
+	EXPECT_EQ(3, a2.stride(0));
+	EXPECT_EQ(1, a2.stride(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	array_t<int> a3;
@@ -90,6 +99,9 @@ TEST(Array, SetSize)
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(4, a3.size(2));
 	EXPECT_EQ(2 * 3 * 4, a3.size());
+	EXPECT_EQ(3 * 4, a3.stride(0));
+	EXPECT_EQ(4, a3.stride(1));
+	EXPECT_EQ(1, a3.stride(2));
 	EXPECT_NE(nullptr, a3.raw_ptr());
 
 	array_t<int> a4;
@@ -103,6 +115,10 @@ TEST(Array, SetSize)
 	EXPECT_EQ(2, a4.size(2));
 	EXPECT_EQ(2, a4.size(3));
 	EXPECT_EQ(2 * 2 * 2 * 2, a4.size());
+	EXPECT_EQ(2 * 2 * 2, a4.stride(0));
+	EXPECT_EQ(2 * 2, a4.stride(1));
+	EXPECT_EQ(2, a4.stride(2));
+	EXPECT_EQ(1, a4.stride(3));
 	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 
@@ -120,6 +136,7 @@ TEST_F(ArrayFixture, MoveSemantics)
 	EXPECT_EQ(1, moved.ndims());
 	EXPECT_EQ(5, moved.size(0));
 	EXPECT_EQ(5, moved.size());
+	EXPECT_EQ(1, moved.stride(0));
 	EXPECT_NE(nullptr, moved.raw_ptr());
 
 	// move assign
@@ -136,6 +153,8 @@ TEST_F(ArrayFixture, MoveSemantics)
 	EXPECT_EQ(2, moved2.size(0));
 	EXPECT_EQ(3, moved2.size(1));
 	EXPECT_EQ(2 * 3, moved2.size());
+	EXPECT_EQ(3, moved2.stride(0));
+	EXPECT_EQ(1, moved2.stride(1));
 	EXPECT_NE(nullptr, moved2.raw_ptr());
 }
 
