@@ -257,9 +257,7 @@ allocate:
 	template <typename T>
 	T& at(int index0)
 	{
-		// TODO
-		// return raw_ptr<T>()[index0 * _stride[0]];
-		return raw_ptr<T>()[index0];
+		return raw_ptr<T>()[index0 * _stride[0]];
 	}
 
 	template <typename T>
