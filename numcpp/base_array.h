@@ -215,17 +215,17 @@ allocate:
 
 	int width() const
 	{
-		return size(ndims() - 1);
+		return size(0);
 	}
 
 	int height() const
 	{
-		return size(ndims() - 2);
+		return size(1);
 	}
 
 	int depth() const
 	{
-		return size(ndims() - 3);
+		return size(2);
 	}
 
 	// raw_ptr(): access raw pointer
