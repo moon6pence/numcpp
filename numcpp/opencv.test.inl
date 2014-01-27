@@ -48,57 +48,57 @@ TEST(OpenCV, ToCvMat)
 
 TEST(OpenCV, FromCvMat)
 {
-	cv::Mat cv_mat(5, 5, CV_8U, cvScalar(128));
+	cv::Mat cv_mat(5, 8, CV_8U, cvScalar(128));
 	cv_mat.at<uint8_t>(3, 2) = 123;
 	cv_mat.at<uint8_t>(1, 4) = 7;
 
 	auto mat = from_cv_mat<uint8_t>(cv_mat);
-	ASSERT_EQ(cv_mat.rows, mat.size(0));
-	ASSERT_EQ(cv_mat.cols, mat.size(1));
-	for (int y = 0; y < mat.size(0); y++)
-		for (int x = 0; x < mat.size(1); x++)
+	ASSERT_EQ(cv_mat.cols, mat.size(0));
+	ASSERT_EQ(cv_mat.rows, mat.size(1));
+	for (int y = 0; y < mat.size(1); y++)
+		for (int x = 0; x < mat.size(0); x++)
 			ASSERT_EQ(mat(x, y), cv_mat.at<uint8_t>(y, x));
 	ASSERT_EQ(mat(2, 3), 123);
 	ASSERT_EQ(mat(4, 1), 7);
 
-	cv::Mat cv_mat2(5, 5, CV_32F, cvScalar(0.5f));
+	cv::Mat cv_mat2(5, 8, CV_32F, cvScalar(0.5f));
 	cv_mat2.at<float>(3, 2) = 1.0f;
 	cv_mat2.at<float>(1, 4) = 0.0f;
 
 	auto mat2 = from_cv_mat<float>(cv_mat2);
-	ASSERT_EQ(cv_mat2.rows, mat2.size(0));
-	ASSERT_EQ(cv_mat2.cols, mat2.size(1));
-	for (int y = 0; y < mat2.size(0); y++)
-		for (int x = 0; x < mat2.size(1); x++)
+	ASSERT_EQ(cv_mat2.cols, mat2.size(0));
+	ASSERT_EQ(cv_mat2.rows, mat2.size(1));
+	for (int y = 0; y < mat2.size(1); y++)
+		for (int x = 0; x < mat2.size(0); x++)
 			ASSERT_EQ(mat2(x, y), cv_mat2.at<float>(y, x));
 }
 
 TEST(OpenCV, FromCvMatVoid)
 {
-	cv::Mat cv_mat(5, 5, CV_8U, cvScalar(128));
+	cv::Mat cv_mat(5, 8, CV_8U, cvScalar(128));
 	cv_mat.at<uint8_t>(3, 2) = 123;
 	cv_mat.at<uint8_t>(1, 4) = 7;
 
 	array_t<uint8_t> mat;
 	from_cv_mat(mat, cv_mat);
-	ASSERT_EQ(cv_mat.rows, mat.size(0));
-	ASSERT_EQ(cv_mat.cols, mat.size(1));
-	for (int y = 0; y < mat.size(0); y++)
-		for (int x = 0; x < mat.size(1); x++)
+	ASSERT_EQ(cv_mat.cols, mat.size(0));
+	ASSERT_EQ(cv_mat.rows, mat.size(1));
+	for (int y = 0; y < mat.size(1); y++)
+		for (int x = 0; x < mat.size(0); x++)
 			ASSERT_EQ(mat(x, y), cv_mat.at<uint8_t>(y, x));
 	ASSERT_EQ(mat(2, 3), 123);
 	ASSERT_EQ(mat(4, 1), 7);
 
-	cv::Mat cv_mat2(5, 5, CV_32F, cvScalar(0.5f));
+	cv::Mat cv_mat2(5, 8, CV_32F, cvScalar(0.5f));
 	cv_mat2.at<float>(3, 2) = 1.0f;
 	cv_mat2.at<float>(1, 4) = 0.0f;
 
 	array_t<float> mat2;
 	from_cv_mat(mat2, cv_mat2);
-	ASSERT_EQ(cv_mat2.rows, mat2.size(0));
-	ASSERT_EQ(cv_mat2.cols, mat2.size(1));
-	for (int y = 0; y < mat2.size(0); y++)
-		for (int x = 0; x < mat2.size(1); x++)
+	ASSERT_EQ(cv_mat2.cols, mat2.size(0));
+	ASSERT_EQ(cv_mat2.rows, mat2.size(1));
+	for (int y = 0; y < mat2.size(1); y++)
+		for (int x = 0; x < mat2.size(0); x++)
 			ASSERT_EQ(mat2(x, y), cv_mat2.at<float>(y, x));
 }
 
