@@ -275,6 +275,29 @@ TEST(Array, Slice)
 	EXPECT_EQ(3, slice1(0));
 	EXPECT_EQ(5, slice1(1));
 	EXPECT_EQ(1, slice1(2));
+
+	// 2d array
+	np::array_t<int> a2(3, 2);
+
+	const int data2[6] = 
+	{ 
+		7, 2, 3, 
+		4, 1, 8 
+	};
+
+	memcpy(a2.raw_ptr(), data2, 6 * sizeof(int));
+
+	auto slice2 = a2.slice(1, 0, 2, 1);
+
+	EXPECT_EQ(2, slice2.size(0));
+	EXPECT_EQ(2, slice2.size(1));
+	EXPECT_EQ(a2.stride(0), slice2.stride(0));
+	EXPECT_EQ(a2.stride(1), slice2.stride(1));
+
+	EXPECT_EQ(2, slice2(0, 0));
+	EXPECT_EQ(3, slice2(1, 0));
+	EXPECT_EQ(1, slice2(0, 1));
+	EXPECT_EQ(8, slice2(1, 1));
 }
 
 } // anonymous namespace

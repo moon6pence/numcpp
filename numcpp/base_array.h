@@ -179,7 +179,7 @@ allocate:
 		result._shape = std::unique_ptr<int[]>(shape);
 
 		int *stride = new int[1];
-		stride[0] = this->itemSize();
+		stride[0] = this->stride(0);
 		result._stride = std::unique_ptr<int[]>(stride);
 
 		// add reference count here
@@ -187,6 +187,34 @@ allocate:
 
 		// new origin with offset
 		result._origin = this->ptr_at(from);
+
+		return result;
+	}
+
+	base_array_t slice(int from0, int from1, int to0, int to1)
+	{
+		assert(from0 <= to0);	
+		assert(from1 <= to1);	
+
+		base_array_t result(itemSize());
+
+		result._ndims = this->_ndims;
+
+		int *shape = new int[2];
+		shape[0] = to0 - from0 + 1;
+		shape[1] = to1 - from1 + 1;
+		result._shape = std::unique_ptr<int[]>(shape);
+
+		int *stride = new int[1];
+		stride[0] = this->stride(0);
+		stride[1] = this->stride(1);
+		result._stride = std::unique_ptr<int[]>(stride);
+
+		// add reference count here
+		result._address = this->_address;
+
+		// new origin with offset
+		result._origin = this->ptr_at(from0, from1);
 
 		return result;
 	}
