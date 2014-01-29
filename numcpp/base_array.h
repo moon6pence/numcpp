@@ -173,6 +173,33 @@ allocate:
 		init<Allocator>(ndims, size, new_shape);
 	}
 
+	base_array_t slice(int from, int to)
+	{
+		assert(from <= to);	
+
+		base_array_t result(itemSize());
+
+		result._ndims = this->_ndims;
+
+		int *shape = new int[1];
+		shape[0] = to - from + 1;
+		result._shape = std::unique_ptr<int[]>(shape);
+
+		result._size = shape[0];
+
+		int *stride = new int[1];
+		stride[0] = 1;
+		result._stride = std::unique_ptr<int[]>(stride);
+
+		result._address = this->_address;
+
+		// TODO: Do this according to itemSize
+		// result._origin = &this->at<char>(from);
+		result._origin = &this->at<int>(from);
+
+		return result;
+	}
+
 	bool empty() const
 	{
 		return _size == 0;

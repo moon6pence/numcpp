@@ -1,5 +1,4 @@
 #include <numcpp/array.h>
-#include "test_arrayfixture.h"
 
 namespace {
 
@@ -261,6 +260,29 @@ TEST(Array, AccessElements)
 
 	a3.at(3, 2, 0) = 99;
 	EXPECT_EQ(99, a3.at(3, 2, 0));
+}
+
+TEST(Array, Slice)
+{
+	// 1d array
+	np::array_t<int> a1(5);
+
+	const int data1[5] = 
+	{ 
+		2, 3, 5, 1, 7 
+	};
+
+	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
+
+	auto slice1 = a1.slice(1, 3);
+
+	EXPECT_FALSE(slice1.empty());
+	EXPECT_EQ(3, slice1.size(0));
+	EXPECT_EQ(3, slice1.size());
+
+	EXPECT_EQ(3, slice1(0));
+	EXPECT_EQ(5, slice1(1));
+	EXPECT_EQ(1, slice1(2));
 }
 
 } // anonymous namespace
