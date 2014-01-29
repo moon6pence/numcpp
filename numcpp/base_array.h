@@ -83,7 +83,7 @@ private:
 		// Initialize stride from shape
 		int *stride = new int[_ndims];
 
-		stride[0] = 1;
+		stride[0] = itemSize();
 		for (int i = 1; i < _ndims; i++)
 			stride[i] = stride[i - 1] * shape[i - 1];
 
@@ -179,14 +179,14 @@ allocate:
 		result._shape = std::unique_ptr<int[]>(shape);
 
 		int *stride = new int[1];
-		stride[0] = 1;
+		stride[0] = this->itemSize();
 		result._stride = std::unique_ptr<int[]>(stride);
 
+		// add reference count here
 		result._address = this->_address;
 
-		// TODO: Do this according to itemSize
-		// result._origin = &this->at<char>(from);
-		result._origin = &this->at<int>(from);
+		// new origin with offset
+		result._origin = this->ptr_at(from);
 
 		return result;
 	}
@@ -266,44 +266,70 @@ allocate:
 		return static_cast<const T *>(raw_ptr());
 	}
 
-	// at(index0, index...) : access array elements
+	void *ptr_at(int index0)
+	{
+		return raw_ptr<char>() + index0 * stride(0);
+	}
+
+	void *ptr_at(int index0, int index1)
+	{
+		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1);
+	}
+
+	void *ptr_at(int index0, int index1, int index2)
+	{
+		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1) + index2 * stride(2);
+	}
+
+	const void *ptr_at(int index0) const
+	{
+		return raw_ptr<char>() + index0 * stride(0);
+	}
+
+	const void *ptr_at(int index0, int index1) const
+	{
+		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1);
+	}
+
+	const void *ptr_at(int index0, int index1, int index2) const
+	{
+		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1) + index2 * stride(2);
+	}
 
 	template <typename T>
 	T& at(int index0)
 	{
-		return raw_ptr<T>()[index0 * stride(0)];
+		return *static_cast<T *>(ptr_at(index0));
 	}
 
 	template <typename T>
 	T& at(int index0, int index1)
 	{
-		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1)];
+		return *static_cast<T *>(ptr_at(index0, index1));
 	}
 
 	template <typename T>
 	T& at(int index0, int index1, int index2)
 	{
-		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1) + index2 * stride(2)];
+		return *static_cast<T *>(ptr_at(index0, index1, index2));
 	}
 
 	template <typename T>
 	const T& at(int index0) const
 	{
-		// TODO
-		// return raw_ptr<T>()[index0 * stride(0]];
-		return raw_ptr<T>()[index0];
+		return *static_cast<const T *>(ptr_at(index0));
 	}
 
 	template <typename T>
 	const T& at(int index0, int index1) const
 	{
-		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1)];
+		return *static_cast<const T *>(ptr_at(index0, index1));
 	}
 
 	template <typename T>
 	const T& at(int index0, int index1, int index2) const
 	{
-		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1) + index2 * stride(2)];
+		return *static_cast<const T *>(ptr_at(index0, index1, index2));
 	}
 };
 
