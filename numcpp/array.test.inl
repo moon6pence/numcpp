@@ -11,8 +11,6 @@ TEST(Array, DeclareEmptyArray)
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(sizeof(int), a0.itemSize());
 	EXPECT_EQ(0, a0.ndims());
-	EXPECT_EQ(0, a0.size());
-	EXPECT_EQ(0, a0.byteSize());
 	EXPECT_EQ(nullptr, a0.raw_ptr());
 }
 
@@ -22,10 +20,8 @@ TEST(Array, DeclareArrayWithSize)
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(sizeof(int), a1.itemSize());
-	EXPECT_EQ(1, a1.ndims());
+	ASSERT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
-	EXPECT_EQ(5, a1.size());
-	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
 	EXPECT_EQ(1, a1.stride(0)); 
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
@@ -33,11 +29,9 @@ TEST(Array, DeclareArrayWithSize)
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(sizeof(float), a2.itemSize());
-	EXPECT_EQ(2, a2.ndims());
+	ASSERT_EQ(2, a2.ndims());
 	EXPECT_EQ(3, a2.size(0));
 	EXPECT_EQ(2, a2.size(1));
-	EXPECT_EQ(3 * 2, a2.size());
-	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
 	EXPECT_EQ(1, a2.stride(0));
 	EXPECT_EQ(3, a2.stride(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
@@ -46,12 +40,10 @@ TEST(Array, DeclareArrayWithSize)
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
-	EXPECT_EQ(3, a3.ndims());
+	ASSERT_EQ(3, a3.ndims());
 	EXPECT_EQ(4, a3.size(0));
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(2, a3.size(2));
-	EXPECT_EQ(4 * 3 * 2, a3.size());
-	EXPECT_EQ(4 * 3 * 2 * sizeof(double), a3.byteSize());
 	EXPECT_EQ(1, a3.stride(0));
 	EXPECT_EQ(4, a3.stride(1));
 	EXPECT_EQ(3 * 4, a3.stride(2));
@@ -65,10 +57,8 @@ TEST(Array, SetSize)
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(sizeof(int), a1.itemSize());
-	EXPECT_EQ(1, a1.ndims());
+	ASSERT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
-	EXPECT_EQ(5, a1.size());
-	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
 	EXPECT_EQ(1, a1.stride(0)); 
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
@@ -84,11 +74,9 @@ TEST(Array, SetSize)
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(sizeof(float), a2.itemSize());
-	EXPECT_EQ(2, a2.ndims());
+	ASSERT_EQ(2, a2.ndims());
 	EXPECT_EQ(3, a2.size(0));
 	EXPECT_EQ(2, a2.size(1));
-	EXPECT_EQ(3 * 2, a2.size());
-	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
 	EXPECT_EQ(1, a2.stride(0));
 	EXPECT_EQ(3, a2.stride(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
@@ -98,12 +86,10 @@ TEST(Array, SetSize)
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
-	EXPECT_EQ(3, a3.ndims());
+	ASSERT_EQ(3, a3.ndims());
 	EXPECT_EQ(4, a3.size(0));
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(2, a3.size(2));
-	EXPECT_EQ(4 * 3 * 2, a3.size());
-	EXPECT_EQ(4 * 3 * 2 * sizeof(double), a3.byteSize());
 	EXPECT_EQ(1, a3.stride(0));
 	EXPECT_EQ(4, a3.stride(1));
 	EXPECT_EQ(3 * 4, a3.stride(2));
@@ -114,12 +100,11 @@ TEST(Array, SetSize)
 	a4.setSize(4, shape);
 
 	EXPECT_FALSE(a4.empty());
-	EXPECT_EQ(4, a4.ndims());
+	ASSERT_EQ(4, a4.ndims());
 	EXPECT_EQ(2, a4.size(0));
 	EXPECT_EQ(2, a4.size(1));
 	EXPECT_EQ(2, a4.size(2));
 	EXPECT_EQ(2, a4.size(3));
-	EXPECT_EQ(2 * 2 * 2 * 2, a4.size());
 	EXPECT_EQ(1, a4.stride(0));
 	EXPECT_EQ(2, a4.stride(1));
 	EXPECT_EQ(2 * 2, a4.stride(2));
@@ -135,13 +120,11 @@ TEST(Array, MoveSemantics)
 
 	EXPECT_TRUE(a1.empty());
 	EXPECT_EQ(0, a1.ndims());
-	EXPECT_EQ(0, a1.size());
 	EXPECT_EQ(nullptr, a1.raw_ptr());
 
 	EXPECT_FALSE(moved.empty());
-	EXPECT_EQ(1, moved.ndims());
+	ASSERT_EQ(1, moved.ndims());
 	EXPECT_EQ(5, moved.size(0));
-	EXPECT_EQ(5, moved.size());
 	EXPECT_EQ(1, moved.stride(0));
 	EXPECT_NE(nullptr, moved.raw_ptr());
 
@@ -151,14 +134,12 @@ TEST(Array, MoveSemantics)
 
 	EXPECT_TRUE(a2.empty());
 	EXPECT_EQ(0, a2.ndims());
-	EXPECT_EQ(0, a2.size());
 	EXPECT_EQ(nullptr, a2.raw_ptr());
 
 	EXPECT_FALSE(moved2.empty());
-	EXPECT_EQ(2, moved2.ndims());
+	ASSERT_EQ(2, moved2.ndims());
 	EXPECT_EQ(3, moved2.size(0));
 	EXPECT_EQ(2, moved2.size(1));
-	EXPECT_EQ(3 * 2, moved2.size());
 	EXPECT_EQ(1, moved2.stride(0));
 	EXPECT_EQ(3, moved2.stride(1));
 	EXPECT_NE(nullptr, moved2.raw_ptr());
@@ -173,14 +154,39 @@ TEST(Array, MoveFromBaseArray)
 
 	EXPECT_TRUE(base_a1.empty());
 	EXPECT_EQ(0, base_a1.ndims());
-	EXPECT_EQ(0, base_a1.size());
 	EXPECT_EQ(nullptr, base_a1.raw_ptr());
 
 	EXPECT_FALSE(a1.empty());
-	EXPECT_EQ(1, a1.ndims());
+	ASSERT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
-	EXPECT_EQ(5, a1.size());
 	EXPECT_NE(nullptr, a1.raw_ptr());
+}
+
+TEST(Array, DerivedFunctions)
+{
+	array_t<int> a0;
+
+	EXPECT_TRUE(a0.empty());
+	EXPECT_EQ(1, a0.size()); // Be careful, not 0
+	EXPECT_EQ(1 * sizeof(int), a0.byteSize());
+
+	array_t<int> a1(5);
+
+	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(5, a1.size());
+	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
+
+	array_t<float> a2(3, 2);
+
+	EXPECT_FALSE(a2.empty());
+	EXPECT_EQ(3 * 2, a2.size());
+	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
+
+	array_t<char> a3(4, 3, 2);
+
+	EXPECT_FALSE(a3.empty());
+	EXPECT_EQ(4 * 3 * 2, a3.size());
+	EXPECT_EQ(4 * 3 * 2 * sizeof(char), a3.byteSize());
 }
 
 TEST(Array, AccessElements)
@@ -278,7 +284,6 @@ TEST(Array, Slice)
 
 	EXPECT_FALSE(slice1.empty());
 	EXPECT_EQ(3, slice1.size(0));
-	EXPECT_EQ(3, slice1.size());
 
 	EXPECT_EQ(3, slice1(0));
 	EXPECT_EQ(5, slice1(1));

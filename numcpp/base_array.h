@@ -24,7 +24,6 @@ struct base_array_t
 private:
 	const int _itemSize;
 	int _ndims;
-	int _size;
 	std::unique_ptr<int[]> _shape;
 	std::unique_ptr<int[]> _stride;
 	std::shared_ptr<void> _address;
@@ -32,7 +31,7 @@ private:
 
 public:
 	base_array_t(int itemSize) : 
-		_itemSize(itemSize), _ndims(0), _size(0), _origin(nullptr) 
+		_itemSize(itemSize), _ndims(0), _origin(nullptr) 
 	{ 
 	}
 
@@ -41,14 +40,12 @@ public:
 		_itemSize(other._itemSize)
 	{
 		_ndims = other._ndims;
-		_size = other._size;
 		_shape = std::move(other._shape);
 		_stride = std::move(other._stride);
 		_address = std::move(other._address);
 		_origin = other._origin;
 
 		other._ndims = 0;
-		other._size = 0;
 		// other._shape = nullptr; // already moved
 		// other._stride = nullptr; // already moved
 		// other._address = nullptr; // already moved
@@ -59,14 +56,12 @@ public:
 	const base_array_t &operator=(base_array_t &&other)
 	{
 		_ndims = other._ndims;
-		_size = other._size;
 		_shape = std::move(other._shape);
 		_stride = std::move(other._stride);
 		_address = std::move(other._address);
 		_origin = other._origin;
 
 		other._ndims = 0;
-		other._size = 0;
 		// other._shape = nullptr; // already moved
 		// other._stride = nullptr; // already moved
 		// other._address = nullptr; // already moved
@@ -81,20 +76,18 @@ private:
 		std::shared_ptr<void> address, void *origin)
 	{
 		_ndims = ndims;
-		_size = size;
 		_shape = std::unique_ptr<int[]>(shape);
 		_address = address;
 		_origin = origin;
 
 		// Initialize stride from shape
-		_stride = std::unique_ptr<int[]>(new int[_ndims]);
-		// _stride[ndims - 1] = 1;
-		// for (int i = _ndims - 2; i >= 0; i--)
-		//  	_stride[i] = _stride[i + 1] * _shape[i + 1];
+		int *stride = new int[_ndims];
 
-		_stride[0] = 1;
+		stride[0] = 1;
 		for (int i = 1; i < _ndims; i++)
-			_stride[i] = _stride[i - 1] * _shape[i - 1];
+			stride[i] = stride[i - 1] * shape[i - 1];
+
+		_stride = std::unique_ptr<int[]>(stride);
 	}
 
 	template <class Allocator>
@@ -185,8 +178,6 @@ allocate:
 		shape[0] = to - from + 1;
 		result._shape = std::unique_ptr<int[]>(shape);
 
-		result._size = shape[0];
-
 		int *stride = new int[1];
 		stride[0] = 1;
 		result._stride = std::unique_ptr<int[]>(stride);
@@ -200,10 +191,7 @@ allocate:
 		return result;
 	}
 
-	bool empty() const
-	{
-		return _size == 0;
-	}
+	// ## Access to premitive properties
 
 	int itemSize() const
 	{
@@ -215,14 +203,14 @@ allocate:
 		return _ndims;
 	}
 
-	int size() const
+	int *shape() const
 	{
-		return _size;
+		return _shape.get();
 	}
 
-	int byteSize() const
+	int shape(int dim) const
 	{
-		return size() * _itemSize;
+		return _shape[dim];
 	}
 
 	int size(int dim) const
@@ -230,17 +218,10 @@ allocate:
 		return _shape[dim];
 	}
 
-	int *shape() const
-	{
-		return _shape.get();
-	}
-
 	int stride(int dim) const
 	{
 		return _stride[dim];
 	}
-
-	// raw_ptr(): access raw pointer
 
 	void *raw_ptr()
 	{
@@ -252,16 +233,37 @@ allocate:
 		return _origin;
 	}
 
+	// ## Derived property functions
+
+	bool empty() const
+	{
+		return raw_ptr() == nullptr || size() == 0;
+	}
+
+	int size() const
+	{
+		int result = 1;
+		for (int i = 0; i < ndims(); i++)
+			result *= size(i);
+
+		return result;
+	}
+
+	int byteSize() const
+	{
+		return size() * itemSize();
+	}
+
 	template <typename T>
 	T *raw_ptr()
 	{
-		return reinterpret_cast<T *>(_origin);
+		return static_cast<T *>(raw_ptr());
 	}
 
 	template <typename T>
 	const T *raw_ptr() const
 	{
-		return reinterpret_cast<T *>(_origin);
+		return static_cast<const T *>(raw_ptr());
 	}
 
 	// at(index0, index...) : access array elements
@@ -269,39 +271,39 @@ allocate:
 	template <typename T>
 	T& at(int index0)
 	{
-		return raw_ptr<T>()[index0 * _stride[0]];
+		return raw_ptr<T>()[index0 * stride(0)];
 	}
 
 	template <typename T>
 	T& at(int index0, int index1)
 	{
-		return raw_ptr<T>()[index0 * _stride[0] + index1 * _stride[1]];
+		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1)];
 	}
 
 	template <typename T>
 	T& at(int index0, int index1, int index2)
 	{
-		return raw_ptr<T>()[index0 * _stride[0] + index1 * _stride[1] + index2 * _stride[2]];
+		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1) + index2 * stride(2)];
 	}
 
 	template <typename T>
 	const T& at(int index0) const
 	{
 		// TODO
-		// return raw_ptr<T>()[index0 * _stride[0]];
+		// return raw_ptr<T>()[index0 * stride(0]];
 		return raw_ptr<T>()[index0];
 	}
 
 	template <typename T>
 	const T& at(int index0, int index1) const
 	{
-		return raw_ptr<T>()[index0 * _stride[0] + index1 * _stride[1]];
+		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1)];
 	}
 
 	template <typename T>
 	const T& at(int index0, int index1, int index2) const
 	{
-		return raw_ptr<T>()[index0 * _stride[0] + index1 * _stride[1] + index2 * _stride[2]];
+		return raw_ptr<T>()[index0 * stride(0) + index1 * stride(1) + index2 * stride(2)];
 	}
 };
 
