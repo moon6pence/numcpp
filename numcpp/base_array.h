@@ -213,21 +213,6 @@ allocate:
 		return _stride[dim];
 	}
 
-	int width() const
-	{
-		return size(0);
-	}
-
-	int height() const
-	{
-		return size(1);
-	}
-
-	int depth() const
-	{
-		return size(2);
-	}
-
 	// raw_ptr(): access raw pointer
 
 	void *raw_ptr()
