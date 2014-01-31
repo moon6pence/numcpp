@@ -15,7 +15,7 @@ template <typename T>
 cv::Mat to_cv_mat(array_t<T> &array)
 {
 	return cv::Mat(
-		array.size(0), array.size(1), 
+		array.size(1), array.size(0), 
 		cv::DataType<T>::type, array.raw_ptr());
 }
 
@@ -23,14 +23,14 @@ template <typename T>
 const cv::Mat to_cv_mat(const array_t<T> &array)
 {
 	return cv::Mat(
-		array.size(0), array.size(1), 
+		array.size(1), array.size(0), 
 		cv::DataType<T>::type, const_cast<uint8_t *>(array.raw_ptr()));
 }
 
 inline base_array_t from_cv_mat(const cv::Mat &cv_mat)
 {
 	base_array_t result(cv_mat.elemSize());
-	result.setSize<heap_allocator>(cv_mat.rows, cv_mat.cols);
+	result.setSize<heap_allocator>(cv_mat.cols, cv_mat.rows);
 
 	// TODO: Do not copy
 	memcpy(result.raw_ptr<void>(), cv_mat.data, result.byteSize());
@@ -48,7 +48,7 @@ template <typename T>
 void from_cv_mat(array_t<T> &dst, const cv::Mat &src)
 {
 	// TODO: check type of src
-	dst.setSize(src.rows, src.cols);
+	dst.setSize(src.cols, src.rows);
 
 	// TODO: Do not copy
 	memcpy(dst, src.data, dst.byteSize());

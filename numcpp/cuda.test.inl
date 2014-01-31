@@ -66,8 +66,6 @@ TEST(CUDA, DeclareEmptyDeviceArray)
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(sizeof(int), a0.itemSize());
 	EXPECT_EQ(0, a0.ndims());
-	EXPECT_EQ(0, a0.size());
-	EXPECT_EQ(0, a0.byteSize());
 	EXPECT_EQ(nullptr, a0.raw_ptr());
 }
 
@@ -79,8 +77,6 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	EXPECT_EQ(sizeof(int), a1.itemSize());
 	EXPECT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
-	EXPECT_EQ(5, a1.size());
-	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
 	device_array_t<float> a2(2, 3);
@@ -90,8 +86,6 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	EXPECT_EQ(2, a2.ndims());
 	EXPECT_EQ(2, a2.size(0));
 	EXPECT_EQ(3, a2.size(1));
-	EXPECT_EQ(2 * 3, a2.size());
-	EXPECT_EQ(2 * 3 * sizeof(float), a2.byteSize());
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	device_array_t<double> a3(2, 3, 4);
@@ -102,8 +96,6 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	EXPECT_EQ(2, a3.size(0));
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(4, a3.size(2));
-	EXPECT_EQ(2 * 3 * 4, a3.size());
-	EXPECT_EQ(2 * 3 * 4 * sizeof(double), a3.byteSize());
 	EXPECT_NE(nullptr, a3.raw_ptr());
 	
 	// This test doesn't work in windows
@@ -140,7 +132,6 @@ TEST_F(CUDA_F, ConstructorWithHostArray)
 	EXPECT_FALSE(a1_d.empty());
 	EXPECT_EQ(a1_d.ndims(), 1);
 	EXPECT_EQ(a1_d.size(0), 5);
-	EXPECT_EQ(a1_d.size(), 5);
 	EXPECT_NE(a1_d.raw_ptr(), nullptr);
 
 	array_t<int> a1_h(5);

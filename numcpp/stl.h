@@ -18,20 +18,22 @@ T *begin(array_t<T> &array)
 }
 
 template <typename T>
-T *end(array_t<T> &array)
-{
-	return array.raw_ptr() + array.size();
-}
-
-template <typename T>
 const T *begin(const array_t<T> &array)
 {
 	return array.raw_ptr();
 }
 
 template <typename T>
+T *end(array_t<T> &array)
+{
+	// TODO: this is wrong for array with custom stride
+	return array.raw_ptr() + array.size();
+}
+
+template <typename T>
 const T *end(const array_t<T> &array)
 {
+	// TODO: this is wrong for array with custom stride
 	return array.raw_ptr() + array.size();
 }
 

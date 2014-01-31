@@ -28,9 +28,11 @@ int main(int argc, char *argv[])
 #ifdef USE_CUDA
 
 	// Run GPU version
+	Circularize_d circularize_d;
+
 	cout << "Running GPU version..." << endl;
 	device_array_t<uint8_t> image_d(image), result_image_d;
-	circularize(result_image_d, image_d, DIAMETER);
+	circularize_d(result_image_d, image_d, DIAMETER);
 
 	array_t<uint8_t> result_image_h(DIAMETER, DIAMETER);
 	device_to_host(result_image_h, result_image_d);

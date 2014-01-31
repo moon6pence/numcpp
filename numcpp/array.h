@@ -159,6 +159,16 @@ public:
 	{
 		return base_array_t::at<T>(index0, index1, index2);
 	}
+
+	array_t<T> slice(int from, int to)
+	{
+		return array_t<T>(base_array_t::slice(from, to));
+	}
+
+	array_t<T> slice(int from0, int from1, int to0, int to1)
+	{
+		return array_t<T>(base_array_t::slice(from0, from1, to0, to1));
+	}
 };
 
 } // namespace np
