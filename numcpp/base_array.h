@@ -205,7 +205,7 @@ allocate:
 		shape[1] = to1 - from1 + 1;
 		result._shape = std::unique_ptr<int[]>(shape);
 
-		int *stride = new int[1];
+		int *stride = new int[2];
 		stride[0] = this->stride(0);
 		stride[1] = this->stride(1);
 		result._stride = std::unique_ptr<int[]>(stride);
