@@ -267,7 +267,7 @@ TEST(Array, Slice)
 
 	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
 
-	auto slice1 = a1.slice(1, 3);
+	auto slice1 = a1.slice(1, 4);
 
 	EXPECT_FALSE(slice1.empty());
 	EXPECT_EQ(3, slice1.size(0));
@@ -287,7 +287,7 @@ TEST(Array, Slice)
 
 	memcpy(a2.raw_ptr(), data2, 6 * sizeof(int));
 
-	auto slice2 = a2.slice(1, 0, 2, 1);
+	auto slice2 = a2.slice(1, 0, 3, 2);
 
 	EXPECT_EQ(2, slice2.size(0));
 	EXPECT_EQ(2, slice2.size(1));

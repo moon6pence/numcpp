@@ -175,7 +175,7 @@ allocate:
 		result._ndims = this->_ndims;
 
 		int *shape = new int[1];
-		shape[0] = to - from + 1;
+		shape[0] = to - from;
 		result._shape = std::unique_ptr<int[]>(shape);
 
 		int *stride = new int[1];
@@ -201,8 +201,8 @@ allocate:
 		result._ndims = this->_ndims;
 
 		int *shape = new int[2];
-		shape[0] = to0 - from0 + 1;
-		shape[1] = to1 - from1 + 1;
+		shape[0] = to0 - from0;
+		shape[1] = to1 - from1;
 		result._shape = std::unique_ptr<int[]>(shape);
 
 		int *stride = new int[2];
