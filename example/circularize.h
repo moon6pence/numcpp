@@ -20,30 +20,21 @@ struct Circularize
 		meshgrid(X, Y, colon(0.f, DIAMETER - 1.f), colon(0.f, DIAMETER - 1.f));
 
 		const int X0 = DIAMETER / 2, Y0 = DIAMETER / 2;
-		transform(X, [X0](int _x) { return _x - X0; });
-		transform(Y, [Y0](int _y) { return _y - Y0; });
+		assign(X, subtract(X, (float)X0));
+		assign(Y, subtract(Y, (float)Y0));
 
 		// theta
-		transform(theta, Y, X, [](float _y, float _x) { return atan2(_y, _x); });
+		assign(theta, atan2(Y, X));
 
 		// X map: interpolate (-pi, pi) -> (0, width - 1)
 		const float PI = 3.1415927f;
-		transform(x_map, theta, [PI, WIDTH](float _theta)
-		{
-			return (_theta + PI) * (WIDTH-1) / (2*PI);
-		});
+		assign(x_map, multiply(add(theta, PI), (WIDTH-1) / (2*PI)));
 
 		// rho
-		transform(rho, X, Y, [](float _x, float _y)
-		{
-			return sqrt(_x * _x + _y * _y);
-		});
+		assign(rho, sqrt(add(multiply(X, X), multiply(Y, Y))));
 
 		// Y map: interpolate (0, RADIUS) -> (1, height)
-		transform(y_map, rho, [HEIGHT, DIAMETER](float _rho)
-		{
-			return _rho * (HEIGHT-1) / (DIAMETER/2);
-		});
+		assign(y_map, multiply(rho, (float)(HEIGHT-1) / (DIAMETER/2)));
 	}
 
 	void operator() (array_t<uint8_t> &dst, const array_t<uint8_t> &src, int DIAMETER)

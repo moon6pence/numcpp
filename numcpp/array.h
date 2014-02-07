@@ -9,7 +9,7 @@ template <typename T>
 struct array_t : public base_array_t
 {
 public:
-	typedef base_array_t parent_t;
+	typedef T element_type;
 
 	array_t() : base_array_t(sizeof(T))
 	{
@@ -28,6 +28,11 @@ public:
 	array_t(int size0, int size1, int size2) : base_array_t(sizeof(T))
 	{
 		setSize(size0, size1, size2);
+	}
+
+	array_t(int ndims, int *shape) : base_array_t(sizeof(T))
+	{
+		setSize(ndims, shape);
 	}
 
 private:

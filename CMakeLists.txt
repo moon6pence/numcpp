@@ -13,6 +13,7 @@ include_directories("${PROJECT_SOURCE_DIR}")
 
 # Compiler option for gcc
 if (${CMAKE_COMPILER_IS_GNUCXX})
+	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++11" )
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 endif (${CMAKE_COMPILER_IS_GNUCXX})
 
