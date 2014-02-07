@@ -3,7 +3,7 @@
 
 #include "array.h"
 
-template <class Array1, class Array2, int Function(int, int)>
+template <class Array1, class Array2, typename T, T Function(T, T)>
 struct lazy_array_with_binary_function
 {
 	lazy_array_with_binary_function(Array1 &a1, Array2 &a2) : a1(a1), a2(a2)
@@ -16,8 +16,7 @@ struct lazy_array_with_binary_function
 		return a1.size();
 	}
 
-	const decltype(Function(Array1().at(0), Array2().at(0))) 
-		at(int index0) const
+	T at(int index0) const
 	{
 		return Function(a1.at(index0), a2.at(index0));
 	}
@@ -48,13 +47,16 @@ private:
 // 		*_dst = *_src;
 // }
 
-int _add(int a, int b) { return a + b; }
+template <typename T>
+T _add(T a, T b) { return a + b; }
 
 template <class Array1, class Array2>
-lazy_array_with_binary_function<Array1, Array2, _add> 
+lazy_array_with_binary_function<
+	Array1, Array2, typename Array1::element_type, _add> 
 	add(Array1 &a1, Array2 &a2)
 {
-	return lazy_array_with_binary_function<Array1, Array2, _add>(a1, a2);
+	return lazy_array_with_binary_function<
+		Array1, Array2, typename Array1::element_type, _add>(a1, a2);
 }
 
 template <typename T, class LazyArray>
