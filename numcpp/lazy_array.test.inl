@@ -43,3 +43,57 @@ TEST(LazyArray, ArrayExpression)
 	for (int i = 0; i < result.size(0); i++)
 		EXPECT_EQ(a1(i) - a2(i), result(i));
 }
+
+template <typename T>
+array_t<T> add_without_lazy(const array_t<T> &a1, const array_t<T> &a2)
+{
+	// TODO: assert shape
+	assert(a1.size() == a2.size());
+
+	array_t<T> result(a1.ndims(), a1.shape());
+	transform(result, a1, a2, [](T _a1, T _a2) -> T { return _a1 + _a2; });
+	return result;
+}
+
+TEST(LazyArray, Performance)
+{
+	const int N = 10000000;
+
+	array_t<int> a1(N);
+	fill(a1, 1);
+
+	puts("Start without lazy array");
+	{
+		auto result = add_without_lazy(a1, 
+			add_without_lazy(a1, 
+			add_without_lazy(a1, 
+			add_without_lazy(a1, 
+			add_without_lazy(a1, 
+			add_without_lazy(a1, 
+			add_without_lazy(a1, 
+			add_without_lazy(a1, 
+			add_without_lazy(a1, a1)))))))));
+
+		ASSERT_EQ(10, result(0));
+		ASSERT_EQ(10, result(N - 1));
+	}
+	puts("End without lazy array");
+
+	puts("Start with lazy array");
+	{
+		array_t<int> result;
+		assign(result, add(a1, 
+			add(a1, 
+			add(a1, 
+			add(a1, 
+			add(a1, 
+			add(a1, 
+			add(a1, 
+			add(a1, 
+			add(a1, a1))))))))));
+
+		ASSERT_EQ(10, result(0));
+		ASSERT_EQ(10, result(N - 1));
+	}
+	puts("End with lazy array");
+}
