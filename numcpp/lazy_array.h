@@ -26,6 +26,27 @@ private:
 	const Array2 &a2;
 };
 
+template <class Array1, typename T, T Function(T)>
+struct lazy_array_with_unary_function
+{
+	lazy_array_with_unary_function(Array1 &a1) : a1(a1)
+	{
+	}
+
+	int size() const
+	{
+		return a1.size();
+	}
+
+	T at(int index0) const
+	{
+		return Function(a1.at(index0));
+	}
+
+private:
+	const Array1 &a1;
+};
+
 // template <typename T>
 // array_t<T> add(const array_t<T> &a1, const array_t<T> &a2)
 // {
@@ -57,6 +78,18 @@ lazy_array_with_binary_function<
 {
 	return lazy_array_with_binary_function<
 		Array1, Array2, typename Array1::element_type, _add>(a1, a2);
+}
+
+template <typename T>
+T _minus(T a) { return -a; }
+
+template <class Array1>
+lazy_array_with_unary_function<
+	Array1, typename Array1::element_type, _minus> 
+	minus(Array1 &a1)
+{
+	return lazy_array_with_unary_function<
+		Array1, typename Array1::element_type, _minus>(a1);
 }
 
 template <typename T, class LazyArray>

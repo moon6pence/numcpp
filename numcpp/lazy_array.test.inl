@@ -14,3 +14,17 @@ TEST(LazyArray, AddArrays)
 	for (int i = 0; i < result.size(0); i++)
 		EXPECT_EQ(a1(i) + a2(i), result(i));
 }
+
+TEST(LazyArray, InvertArraySign)
+{
+	array_t<int> a1(5), result;
+
+	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
+
+	assign(result, minus(a1));
+
+	ASSERT_EQ(5, result.size(0));
+
+	for (int i = 0; i < result.size(0); i++)
+		EXPECT_EQ(-a1(i), result(i));
+}
