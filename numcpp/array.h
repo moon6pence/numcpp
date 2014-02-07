@@ -30,6 +30,11 @@ public:
 		setSize(size0, size1, size2);
 	}
 
+	array_t(int ndims, int *shape) : base_array_t(sizeof(T))
+	{
+		setSize(ndims, shape);
+	}
+
 private:
 	// disable copy constructor, assign
 	array_t(array_t &) : base_array_t(sizeof(T)) { }

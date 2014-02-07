@@ -42,6 +42,17 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(2, a3.size(2));
 	EXPECT_NE(nullptr, a3.raw_ptr());
+
+	int shape[4] = { 2, 2, 2, 2 };
+	array_t<int> a4(4, shape);
+	
+	EXPECT_FALSE(a4.empty());
+	ASSERT_EQ(4, a4.ndims());
+	EXPECT_EQ(2, a4.size(0));
+	EXPECT_EQ(2, a4.size(1));
+	EXPECT_EQ(2, a4.size(2));
+	EXPECT_EQ(2, a4.size(3));
+	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 
 TEST(Array, SetSize)
