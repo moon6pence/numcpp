@@ -9,10 +9,22 @@ namespace np {
 template <class Array1, class Array2, typename T, T Function(T, T)>
 struct lazy_array_with_binary_function
 {
+	typedef T element_type;
+
 	lazy_array_with_binary_function(const Array1 &a1, const Array2 &a2) : 
 		a1(a1), a2(a2)
 	{
 		assert(a1.size() == a2.size());
+	}
+
+	int ndims() const
+	{
+		return a1.ndims();
+	}
+
+	int *shape() const
+	{
+		return a1.shape();
 	}
 
 	int size() const
@@ -34,9 +46,21 @@ private:
 template <class Array1, typename T, T Function(T, T)>
 struct lazy_array_with_binary_function<Array1, T, T, Function>
 {
+	typedef T element_type;
+
 	lazy_array_with_binary_function(const Array1 &a1, T value) : 
 		a1(a1), value(value)
 	{
+	}
+
+	int ndims() const
+	{
+		return a1.ndims();
+	}
+
+	int *shape() const
+	{
+		return a1.shape();
 	}
 
 	int size() const
@@ -57,10 +81,22 @@ private:
 template <class Array1, typename T, T Function(T)>
 struct lazy_array_with_unary_function
 {
+	typedef T element_type;
+
 	lazy_array_with_unary_function(const Array1 &a1) : a1(a1)
 	{
 	}
 
+	int ndims() const
+	{
+		return a1.ndims();
+	}
+
+	int *shape() const
+	{
+		return a1.shape();
+	}
+	
 	int size() const
 	{
 		return a1.size();
@@ -120,11 +156,13 @@ namespace element_func
 	template <typename T> T add(T a, T b) { return a + b; }
 	template <typename T> T subtract(T a, T b) { return a - b; }
 	template <typename T> T multiply(T a, T b) { return a * b; }
+	template <typename T> T atan2(T a, T b) { return ::atan2(a, b); }
 }
 
 MAP_FUNC2(add, element_func::add)
 MAP_FUNC2(subtract, element_func::subtract)
 MAP_FUNC2(multiply, element_func::multiply)
+MAP_FUNC2(atan2, element_func::atan2)
 
 // template <class Array1>
 // lazy_array_with_unary_function<
@@ -148,19 +186,22 @@ MAP_FUNC2(multiply, element_func::multiply)
 namespace element_func
 {
 	template <typename T> T minus(T a) { return -a; }
-	template <typename T> T cos(T a) { return cos(a); }
-	template <typename T> T sin(T a) { return sin(a); }
+	template <typename T> T cos(T a) { return ::cos(a); }
+	template <typename T> T sin(T a) { return ::sin(a); }
+	template <typename T> T sqrt(T a) { return ::sqrt(a); }
 }
 
 MAP_FUNC1(minus, element_func::minus)
 MAP_FUNC1(cos, element_func::cos)
 MAP_FUNC1(sin, element_func::sin)
+MAP_FUNC1(sqrt, element_func::sqrt)
 
 // Wake up lazy array
 template <typename T, class LazyArray>
 void assign(array_t<T> &dst, const LazyArray &lazy_array)
 {
-	dst.setSize(lazy_array.size());
+	// dst.setSize(lazy_array.size());
+	dst.setSize(lazy_array.ndims(), lazy_array.shape());
 
 	for (int i = 0; i < lazy_array.size(); i++)
 		dst.at(i) = lazy_array.at(i);
