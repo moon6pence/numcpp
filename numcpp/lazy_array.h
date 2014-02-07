@@ -3,7 +3,7 @@
 
 #include "array.h"
 
-template <typename T, class Array1, class Array2>
+template <class Array1, class Array2>
 struct lazy_add_array
 {
 	lazy_add_array(Array1 &a1, Array2 &a2) : a1(a1), a2(a2)
@@ -16,7 +16,7 @@ struct lazy_add_array
 		return a1.size();
 	}
 
-	const T at(int index0) const
+	const decltype(Array1().at(0) + Array2().at(0)) at(int index0) const
 	{
 		return a1.at(index0) + a2.at(index0);
 	}
@@ -47,14 +47,15 @@ private:
 // 		*_dst = *_src;
 // }
 
-template <typename T, class Array1, class Array2>
-lazy_add_array<T, Array1, Array2> add(Array1 &a1, Array2 &a2)
+template <class Array1, class Array2>
+lazy_add_array<Array1, Array2> 
+	add(Array1 &a1, Array2 &a2)
 {
-	return lazy_add_array<T, Array1, Array2>(a1, a2);
+	return lazy_add_array<Array1, Array2>(a1, a2);
 }
 
 template <typename T, class Array1, class Array2>
-void assign(array_t<T> &dst, const lazy_add_array<T, Array1, Array2> &lazy_array)
+void assign(array_t<T> &dst, const lazy_add_array<Array1, Array2> &lazy_array)
 {
 	dst.setSize(lazy_array.size());
 

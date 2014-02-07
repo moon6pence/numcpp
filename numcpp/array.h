@@ -9,8 +9,6 @@ template <typename T>
 struct array_t : public base_array_t
 {
 public:
-	typedef base_array_t parent_t;
-
 	array_t() : base_array_t(sizeof(T))
 	{
 	}
