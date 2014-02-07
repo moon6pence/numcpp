@@ -57,12 +57,14 @@ array_t<T> add_without_lazy(const array_t<T> &a1, const array_t<T> &a2)
 
 TEST(LazyArray, Performance)
 {
-	const int N = 10000000;
+	// const int N = 10000000;
+	const int N = 1000;
 
 	array_t<int> a1(N);
 	fill(a1, 1);
 
 	puts("Start without lazy array");
+	for (int i = 0; i < 10; i++)
 	{
 		auto result = add_without_lazy(a1, 
 			add_without_lazy(a1, 
@@ -80,6 +82,7 @@ TEST(LazyArray, Performance)
 	puts("End without lazy array");
 
 	puts("Start with lazy array");
+	for (int i = 0; i < 10; i++)
 	{
 		array_t<int> result;
 		assign(result, add(a1, 
