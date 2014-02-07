@@ -3,10 +3,10 @@
 
 #include "array.h"
 
-template <class Array1, class Array2>
-struct lazy_add_array
+template <class Array1, class Array2, int Function(int, int)>
+struct lazy_array_with_binary_function
 {
-	lazy_add_array(Array1 &a1, Array2 &a2) : a1(a1), a2(a2)
+	lazy_array_with_binary_function(Array1 &a1, Array2 &a2) : a1(a1), a2(a2)
 	{
 		assert(a1.size() == a2.size());
 	}
@@ -16,9 +16,10 @@ struct lazy_add_array
 		return a1.size();
 	}
 
-	const decltype(Array1().at(0) + Array2().at(0)) at(int index0) const
+	const decltype(Function(Array1().at(0), Array2().at(0))) 
+		at(int index0) const
 	{
-		return a1.at(index0) + a2.at(index0);
+		return Function(a1.at(index0), a2.at(index0));
 	}
 
 private:
@@ -47,15 +48,17 @@ private:
 // 		*_dst = *_src;
 // }
 
+int _add(int a, int b) { return a + b; }
+
 template <class Array1, class Array2>
-lazy_add_array<Array1, Array2> 
+lazy_array_with_binary_function<Array1, Array2, _add> 
 	add(Array1 &a1, Array2 &a2)
 {
-	return lazy_add_array<Array1, Array2>(a1, a2);
+	return lazy_array_with_binary_function<Array1, Array2, _add>(a1, a2);
 }
 
-template <typename T, class Array1, class Array2>
-void assign(array_t<T> &dst, const lazy_add_array<Array1, Array2> &lazy_array)
+template <typename T, class LazyArray>
+void assign(array_t<T> &dst, const LazyArray &lazy_array)
 {
 	dst.setSize(lazy_array.size());
 
