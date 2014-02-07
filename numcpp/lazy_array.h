@@ -4,6 +4,8 @@
 #include "array.h"
 #include <cmath>
 
+namespace np {
+
 template <class Array1, class Array2, typename T, T Function(T, T)>
 struct lazy_array_with_binary_function
 {
@@ -163,5 +165,7 @@ void assign(array_t<T> &dst, const LazyArray &lazy_array)
 	for (int i = 0; i < lazy_array.size(); i++)
 		dst.at(i) = lazy_array.at(i);
 }
+
+} // namespace np
 
 #endif // LAZY_ARRAY_H_
