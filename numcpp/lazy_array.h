@@ -6,7 +6,8 @@
 template <class Array1, class Array2, typename T, T Function(T, T)>
 struct lazy_array_with_binary_function
 {
-	lazy_array_with_binary_function(Array1 &a1, Array2 &a2) : a1(a1), a2(a2)
+	lazy_array_with_binary_function(const Array1 &a1, const Array2 &a2) : 
+		a1(a1), a2(a2)
 	{
 		assert(a1.size() == a2.size());
 	}
@@ -29,7 +30,7 @@ private:
 template <class Array1, typename T, T Function(T)>
 struct lazy_array_with_unary_function
 {
-	lazy_array_with_unary_function(Array1 &a1) : a1(a1)
+	lazy_array_with_unary_function(const Array1 &a1) : a1(a1)
 	{
 	}
 
@@ -74,7 +75,7 @@ T _add(T a, T b) { return a + b; }
 template <class Array1, class Array2>
 lazy_array_with_binary_function<
 	Array1, Array2, typename Array1::element_type, _add> 
-	add(Array1 &a1, Array2 &a2)
+	add(const Array1 &a1, const Array2 &a2)
 {
 	return lazy_array_with_binary_function<
 		Array1, Array2, typename Array1::element_type, _add>(a1, a2);
@@ -86,7 +87,7 @@ T _minus(T a) { return -a; }
 template <class Array1>
 lazy_array_with_unary_function<
 	Array1, typename Array1::element_type, _minus> 
-	minus(Array1 &a1)
+	minus(const Array1 &a1)
 {
 	return lazy_array_with_unary_function<
 		Array1, typename Array1::element_type, _minus>(a1);
