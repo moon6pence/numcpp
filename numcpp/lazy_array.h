@@ -2,6 +2,7 @@
 #define LAZY_ARRAY_H_
 
 #include "array.h"
+#include <cmath>
 
 template <class Array1, class Array2, typename T, T Function(T, T)>
 struct lazy_array_with_binary_function
@@ -69,30 +70,67 @@ private:
 // 		*_dst = *_src;
 // }
 
-template <typename T>
-T _add(T a, T b) { return a + b; }
+// template <class Array1, class Array2>
+// lazy_array_with_binary_function<
+// 	Array1, Array2, typename Array1::element_type, _add> 
+// 	add(const Array1 &a1, const Array2 &a2)
+// {
+// 	return lazy_array_with_binary_function<
+// 		Array1, Array2, typename Array1::element_type, _add>(a1, a2);
+// }
 
-template <class Array1, class Array2>
-lazy_array_with_binary_function<
-	Array1, Array2, typename Array1::element_type, _add> 
-	add(const Array1 &a1, const Array2 &a2)
+#define MAP_FUNC2(ARRAY_FUNC, ELEMENT_FUNC)\
+	template <class Array1, class Array2>\
+	lazy_array_with_binary_function<\
+		Array1, Array2, typename Array1::element_type, ELEMENT_FUNC> \
+		ARRAY_FUNC(const Array1 &a1, const Array2 &a2)\
+	{\
+		return lazy_array_with_binary_function<\
+			Array1, Array2, typename Array1::element_type, ELEMENT_FUNC>(a1, a2);\
+	}
+
+namespace element_func
 {
-	return lazy_array_with_binary_function<
-		Array1, Array2, typename Array1::element_type, _add>(a1, a2);
+	template <typename T> T add(T a, T b) { return a + b; }
+	template <typename T> T subtract(T a, T b) { return a - b; }
+	template <typename T> T multiply(T a, T b) { return a * b; }
 }
 
-template <typename T>
-T _minus(T a) { return -a; }
+MAP_FUNC2(add, element_func::add)
+MAP_FUNC2(subtract, element_func::subtract)
+MAP_FUNC2(multiply, element_func::multiply)
 
-template <class Array1>
-lazy_array_with_unary_function<
-	Array1, typename Array1::element_type, _minus> 
-	minus(const Array1 &a1)
+// template <class Array1>
+// lazy_array_with_unary_function<
+// 	Array1, typename Array1::element_type, _minus> 
+// 	minus(const Array1 &a1)
+// {
+// 	return lazy_array_with_unary_function<
+// 		Array1, typename Array1::element_type, _minus>(a1);
+// }
+
+#define MAP_FUNC1(ARRAY_FUNC, ELEMENT_FUNC)\
+	template <class Array1>\
+	lazy_array_with_unary_function<\
+		Array1, typename Array1::element_type, ELEMENT_FUNC> \
+		ARRAY_FUNC(const Array1 &a1)\
+	{\
+		return lazy_array_with_unary_function<\
+			Array1, typename Array1::element_type, ELEMENT_FUNC>(a1);\
+	}
+
+namespace element_func
 {
-	return lazy_array_with_unary_function<
-		Array1, typename Array1::element_type, _minus>(a1);
+	template <typename T> T minus(T a) { return -a; }
+	template <typename T> T cos(T a) { return cos(a); }
+	template <typename T> T sin(T a) { return sin(a); }
 }
 
+MAP_FUNC1(minus, element_func::minus)
+MAP_FUNC1(cos, element_func::cos)
+MAP_FUNC1(sin, element_func::sin)
+
+// Wake up lazy array
 template <typename T, class LazyArray>
 void assign(array_t<T> &dst, const LazyArray &lazy_array)
 {
