@@ -28,6 +28,30 @@ private:
 	const Array2 &a2;
 };
 
+// template specialization: second parameter is constant value
+template <class Array1, typename T, T Function(T, T)>
+struct lazy_array_with_binary_function<Array1, T, T, Function>
+{
+	lazy_array_with_binary_function(const Array1 &a1, T value) : 
+		a1(a1), value(value)
+	{
+	}
+
+	int size() const
+	{
+		return a1.size();
+	}
+
+	T at(int index0) const
+	{
+		return Function(a1.at(index0), value);
+	}
+
+private:
+	const Array1 &a1;
+	T value;
+};
+
 template <class Array1, typename T, T Function(T)>
 struct lazy_array_with_unary_function
 {

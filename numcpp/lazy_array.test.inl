@@ -15,6 +15,19 @@ TEST(LazyArray, AddArrays)
 		EXPECT_EQ(a1(i) + a2(i), result(i));
 }
 
+TEST(LazyArray, AddConstantToArray)
+{
+	array_t<int> a1(5), result;
+
+	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
+
+	assign(result, add(a1, 3));
+
+	ASSERT_EQ(5, result.size(0));
+	for (int i = 0; i < result.size(0); i++)
+		EXPECT_EQ(a1(i) + 3, result(i));
+}
+
 TEST(LazyArray, InvertArraySign)
 {
 	array_t<int> a1(5), result;
