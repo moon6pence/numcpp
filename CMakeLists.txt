@@ -32,6 +32,7 @@ add_library(
 	numcpp/array.h
 	numcpp/stl.h
 	numcpp/functions.h
+	numcpp/lazy_array.h
 
 	# TODO: conditional include?
 	numcpp/opencv.h
@@ -86,6 +87,8 @@ if (BUILD_TEST)
 		numcpp/array.test.inl
 		numcpp/stl.test.inl
 		numcpp/functions.test.inl
+		numcpp/lazy_array.test.inl
+		
 		numcpp/opencv.test.inl
 		numcpp/cuda.test.inl
 		${TEST_CUDA_KERNEL_O}
