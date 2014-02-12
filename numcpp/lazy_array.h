@@ -111,36 +111,6 @@ private:
 	const Array1 &a1;
 };
 
-// template <typename T>
-// array_t<T> add(const array_t<T> &a1, const array_t<T> &a2)
-// {
-// 	// TODO: assert shape
-// 	assert(a1.size() == a2.size());
-
-// 	array_t<T> result(a1.ndims(), a1.shape());
-// 	transform(result, a1, a2, [](T _a1, T _a2) -> T { return _a1 + _a2; });
-// 	return result;
-// }
-
-// template <typename T>
-// void assign(array_t<T> &dst, const array_t<T> &src)
-// {
-// 	dst.setSize(src.ndims(), src.shape());
-
-// 	auto _src = begin(src);
-// 	for (auto _dst = begin(dst); _dst != end(dst); ++_dst, ++_src)
-// 		*_dst = *_src;
-// }
-
-// template <class Array1, class Array2>
-// lazy_array_with_binary_function<
-// 	Array1, Array2, typename Array1::element_type, _add> 
-// 	add(const Array1 &a1, const Array2 &a2)
-// {
-// 	return lazy_array_with_binary_function<
-// 		Array1, Array2, typename Array1::element_type, _add>(a1, a2);
-// }
-
 namespace element_func
 {
 	template <typename T> T add(T a, T b) { return a + b; }
@@ -148,19 +118,6 @@ namespace element_func
 	template <typename T> T multiply(T a, T b) { return a * b; }
 	template <typename T> T atan2(T a, T b) { return ::atan2(a, b); }
 }
-
-#define MAP_FUNC2_OP(OPERATOR, ELEMENT_FUNC)\
-	template <class Array1, class Array2>\
-	lazy_array_with_binary_function\
-		<Array1, Array2, typename Array1::element_type, ELEMENT_FUNC>\
-		operator OPERATOR (const Array1 &a1, const Array2 &a2)\
-	{\
-		return lazy_array_with_binary_function\
-			<Array1, Array2, typename Array1::element_type, ELEMENT_FUNC>\
-			(a1, a2);\
-	}
-
-MAP_FUNC2_OP(+, element_func::add)
 
 #define MAP_FUNC2(ARRAY_FUNC, ELEMENT_FUNC)\
 	template <class Array1, class Array2>\
@@ -178,14 +135,20 @@ MAP_FUNC2(subtract, element_func::subtract)
 MAP_FUNC2(multiply, element_func::multiply)
 MAP_FUNC2(atan2, element_func::atan2)
 
-// template <class Array1>
-// lazy_array_with_unary_function<
-// 	Array1, typename Array1::element_type, _minus> 
-// 	minus(const Array1 &a1)
-// {
-// 	return lazy_array_with_unary_function<
-// 		Array1, typename Array1::element_type, _minus>(a1);
-// }
+#define MAP_FUNC2_OP(OPERATOR, ELEMENT_FUNC)\
+	template <class Array1, class Array2>\
+	lazy_array_with_binary_function\
+		<Array1, Array2, typename Array1::element_type, ELEMENT_FUNC>\
+		operator OPERATOR (const Array1 &a1, const Array2 &a2)\
+	{\
+		return lazy_array_with_binary_function\
+			<Array1, Array2, typename Array1::element_type, ELEMENT_FUNC>\
+			(a1, a2);\
+	}
+
+MAP_FUNC2_OP(+, element_func::add)
+MAP_FUNC2_OP(-, element_func::subtract)
+MAP_FUNC2_OP(*, element_func::multiply)
 
 #define MAP_FUNC1(ARRAY_FUNC, ELEMENT_FUNC)\
 	template <class Array1>\
