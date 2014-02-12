@@ -6,7 +6,7 @@ TEST(LazyArray, AddArrays)
 	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
 	a2(0) = 3; a2(1) = 3; a2(2) = 3; a2(3) = 3; a2(4) = 3;
 
-	result = add(a1, a2);
+	result = a1 + a2;
 
 	ASSERT_EQ(5, result.size(0));
 	for (int i = 0; i < result.size(0); i++)
@@ -18,7 +18,7 @@ TEST(LazyArray, AddConstantToArray)
 	array_t<int> a1(5), result;
 	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
 
-	result = add(a1, 3);
+	result = a1 + 3;
 
 	ASSERT_EQ(5, result.size(0));
 	for (int i = 0; i < result.size(0); i++)
@@ -43,7 +43,7 @@ TEST(LazyArray, ArrayExpression)
 	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
 	a2(0) = 3; a2(1) = 3; a2(2) = 3; a2(3) = 3; a2(4) = 3;
 
-	result = add(a1, minus(a2));
+	result = a1 + minus(a2);
 
 	ASSERT_EQ(5, result.size(0));
 	for (int i = 0; i < result.size(0); i++)
@@ -104,15 +104,16 @@ TEST(LazyArray, Performance)
 	for (int i = 0; i < 10; i++)
 	{
 		array_t<int> result;
-		result = add(a1, 
-			add(a1, 
-			add(a1, 
-			add(a1, 
-			add(a1, 
-			add(a1, 
-			add(a1, 
-			add(a1, 
-			add(a1, a1)))))))));
+		// result = add(a1, 
+		// 	add(a1, 
+		// 	add(a1, 
+		// 	add(a1, 
+		// 	add(a1, 
+		// 	add(a1, 
+		// 	add(a1, 
+		// 	add(a1, 
+		// 	add(a1, a1)))))))));
+		result = a1 + a1 + a1 + a1 + a1 + a1 + a1 + a1 + a1 + a1;
 
 		ASSERT_EQ(10, result(0));
 		ASSERT_EQ(10, result(N - 1));
