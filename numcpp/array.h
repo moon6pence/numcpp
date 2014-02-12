@@ -174,6 +174,15 @@ public:
 	{
 		return array_t<T>(base_array_t::slice(from0, from1, to0, to1));
 	}
+
+	template <class LazyArray>
+	const array_t<T> &operator=(LazyArray lazy_array)
+	{
+		this->setSize(lazy_array.ndims(), lazy_array.shape());
+
+		for (int i = 0; i < lazy_array.size(); i++)
+			this->at(i) = lazy_array.at(i);
+	}
 };
 
 } // namespace np
