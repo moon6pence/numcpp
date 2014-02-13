@@ -182,6 +182,8 @@ public:
 
 		for (int i = 0; i < lazy_array.size(); i++)
 			this->at(i) = lazy_array.at(i);
+
+		return *this;
 	}
 };
 
