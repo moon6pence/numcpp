@@ -84,14 +84,17 @@ inline array_t<uint8_t> imread(const std::string &filename)
 	return from_cv_mat<uint8_t>(cv_grayscale);
 }
 
-inline void imread(array_t<uint8_t> &dst, const std::string &filename)
+inline bool imread(array_t<uint8_t> &dst, const std::string &filename)
 {
 	cv::Mat cv_image = cv::imread(filename);
+	if (cv_image.empty()) 
+		return false;
 
 	cv::Mat cv_grayscale;
 	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
 
 	from_cv_mat(dst, cv_grayscale);
+	return true;
 }
 
 inline bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
