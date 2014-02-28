@@ -35,12 +35,19 @@ public:
 		setSize(ndims, shape);
 	}
 
-private:
-	// disable copy constructor, assign
-	array_t(array_t &) : base_array_t(sizeof(T)) { }
-	const array_t &operator=(const array_t &) { return *this; }
-
 public:
+	// inherits copy constructor
+	array_t(const array_t &other) : base_array_t(other)
+	{
+	}
+
+	// inherits copy assign
+	const array_t &operator=(const array_t &other)
+	{
+		base_array_t::operator=(other);
+		return *this;
+	}
+
 	// inherits move constructor
 	array_t(array_t &&other) : base_array_t(std::move(other))
 	{

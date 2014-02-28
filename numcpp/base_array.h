@@ -35,6 +35,41 @@ public:
 	{ 
 	}
 
+	// copy constructor
+	base_array_t(const base_array_t &other) : 
+		_itemSize(other._itemSize)
+	{
+		_ndims = other._ndims;
+
+		_shape.reset(new int[_ndims]);
+		std::copy(other._shape.get(), other._shape.get() + _ndims, _shape.get());
+
+		_stride.reset(new int[_ndims]);
+		std::copy(other._stride.get(), other._stride.get() + _ndims, _stride.get());
+
+		_address = other._address; // add reference
+
+		_origin = other._origin;
+	}
+
+	// copy assign
+	const base_array_t &operator=(const base_array_t &other)
+	{
+		_ndims = other._ndims;
+
+		_shape.reset(new int[_ndims]);
+		std::copy(other._shape.get(), other._shape.get() + _ndims, _shape.get());
+
+		_stride.reset(new int[_ndims]);
+		std::copy(other._stride.get(), other._stride.get() + _ndims, _stride.get());
+
+		_address = other._address; // add reference
+
+		_origin = other._origin;
+
+		return *this;
+	}
+
 	// move constructor
 	base_array_t(base_array_t &&other) : 
 		_itemSize(other._itemSize)
