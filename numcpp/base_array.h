@@ -60,6 +60,8 @@ public:
 	// copy assign
 	const base_array_t &operator=(const base_array_t &other)
 	{
+		// TODO: assign _itemSize
+
 		_ndims = other._ndims;
 
 		_shape.reset(new int[_ndims]);

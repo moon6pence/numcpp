@@ -36,14 +36,16 @@ public:
 	}
 
 public:
-	// inherits copy constructor
-	array_t(const array_t &other) : base_array_t(other)
+	array_t(const base_array_t &other) : base_array_t(other)
 	{
+		assert(other.itemSize() == sizeof(T));
 	}
 
 	// inherits copy assign
-	const array_t &operator=(const array_t &other)
+	const array_t &operator=(const base_array_t &other)
 	{
+		assert(other.itemSize() == sizeof(T));
+
 		base_array_t::operator=(other);
 		return *this;
 	}
@@ -58,14 +60,6 @@ public:
 	{
 		base_array_t::operator=(std::move(other));
 		return *this;
-	}
-
-	// Convert from base_array_t
-	explicit array_t(base_array_t &&other) : base_array_t(sizeof(T))
-	{
-		assert(other.itemSize() == sizeof(T));
-
-		base_array_t::operator=(std::move(other));
 	}
 
 	void setSize(int size0)
