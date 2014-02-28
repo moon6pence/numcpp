@@ -30,6 +30,11 @@ private:
 	void *_origin;
 
 public:
+	base_array_t() : 
+		_itemSize(1), _ndims(0), _origin(nullptr)
+	{
+	}
+
 	base_array_t(int itemSize) : 
 		_itemSize(itemSize), _ndims(0), _origin(nullptr) 
 	{ 
