@@ -72,6 +72,12 @@ public:
 		base_array_t::setSize<heap_allocator>(size0, size1);
 	}
 
+	template <typename Allocator>
+	void setSize(int size0, int size1)
+	{
+		base_array_t::setSize<Allocator>(size0, size1);
+	}
+
 	void setSize(int size0, int size1, int size2)
 	{
 		base_array_t::setSize<heap_allocator>(size0, size1, size2);
