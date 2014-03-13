@@ -36,7 +36,7 @@ public:
 	}
 
 public:
-	array_t(const base_array_t &other) : base_array_t(other)
+	explicit array_t(const base_array_t &other) : base_array_t(other)
 	{
 		assert(other.itemSize() == sizeof(T));
 	}
