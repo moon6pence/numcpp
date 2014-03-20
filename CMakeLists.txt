@@ -3,7 +3,7 @@ project(numcpp)
 
 # Conditional build with external dependencies
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
-set(USE_CUDA OFF CACHE BOOL "Use CUDA")
+set(USE_CUDA ON CACHE BOOL "Use CUDA")
 set(BUILD_TEST ON CACHE BOOL "Build unit tests")
 set(BUILD_EXAMPLE OFF CACHE BOOL "Build examples")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)

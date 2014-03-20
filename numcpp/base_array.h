@@ -21,7 +21,8 @@ struct heap_allocator
 
 struct base_array_t
 {
-private:
+//private:
+public:
 	const int _itemSize;
 	int _ndims;
 	std::unique_ptr<int[]> _shape;
