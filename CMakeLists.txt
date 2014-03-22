@@ -3,7 +3,7 @@ project(numcpp)
 
 # Conditional build with external dependencies
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
-set(USE_CUDA OFF CACHE BOOL "Use CUDA")
+set(USE_CUDA ON CACHE BOOL "Use CUDA")
 set(BUILD_TEST ON CACHE BOOL "Build unit tests")
 set(BUILD_EXAMPLE OFF CACHE BOOL "Build examples")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
@@ -70,7 +70,14 @@ if (BUILD_TEST)
 	if (${CMAKE_COMPILER_IS_GNUCXX})
 		link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
 	elseif (${MSVC})
-		link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+		if (${CMAKE_SIZEOF_VOID_P} MATCHES "8")
+			# Link 64 bit library
+			link_directories("thirdparty/gtest-1.7.0/lib/msvc2012_64")
+		else ()
+			# Link 32 bit library
+			link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+		endif ()
+
 		add_definitions(-D_VARIADIC_MAX=10)
 	endif()
 

@@ -1,8 +1,7 @@
 #ifndef NUMCPP_OPENCV_H_
 #define NUMCPP_OPENCV_H_
 
-#include <opencv/cv.h>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
 
 #ifdef USE_CUDA
 #include "cuda.h"
