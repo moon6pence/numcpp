@@ -51,7 +51,7 @@ struct CuFFT_R2C
 				CUFFT_ERROR(cufftSetStream(plan, stream));
 		}
 
-		dst.setSize(src.size(0), getLeastPower2Over(src.size(1)));
+		dst.setSize(getLeastPower2Over(src.size(0)), src.size(1));
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecR2C(plan, src, dst));
@@ -93,7 +93,7 @@ struct CuFFT_C2C
 				CUFFT_ERROR(cufftSetStream(plan, stream));
 		}
 
-		dst.setSize(src.size(0), getLeastPower2Over(src.size(1)));
+		dst.setSize(getLeastPower2Over(src.size(0)), src.size(1));
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecC2C(plan, src, dst, direction));

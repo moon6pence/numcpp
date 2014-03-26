@@ -37,6 +37,7 @@ add_library(
 	# TODO: conditional include?
 	numcpp/opencv.h
 	numcpp/cuda.h
+	numcpp/cufft.h
 )
 
 # External library: OpenCV
