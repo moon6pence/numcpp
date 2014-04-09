@@ -82,7 +82,7 @@ array_t<T> fromfile(const std::string &filename)
 			buffer.push_back(value);
 	}
 
-	array_t<T> result(buffer.size());
+	array_t<T> result((int)buffer.size());
 	std::copy(begin(buffer), end(buffer), begin(result));
 	return std::move(result);
 }
