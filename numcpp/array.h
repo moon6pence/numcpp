@@ -50,13 +50,25 @@ public:
 		return *this;
 	}
 
-	// inherits move constructor
+	// move constructor (inherited)
 	array_t(array_t &&other) : base_array_t(std::move(other))
 	{
 	}
 
-	// inherits move assign
+	// move constructor (for base_array_t)
+	array_t(base_array_t &&other) : base_array_t(std::move(other))
+	{
+	}
+
+	// move assign (inherited)
 	const array_t &operator=(array_t &&other)
+	{
+		base_array_t::operator=(std::move(other));
+		return *this;
+	}
+
+	// move assign (for base_array_t)
+	const array_t &operator=(base_array_t &&other)
 	{
 		base_array_t::operator=(std::move(other));
 		return *this;

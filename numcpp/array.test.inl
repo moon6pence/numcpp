@@ -139,19 +139,45 @@ TEST(Array, MoveSemantics)
 
 TEST(Array, MoveFromBaseArray)
 {
-	base_array_t base_a1(sizeof(int));
-	base_a1.setSize<heap_allocator>(5);
+	// move constructor
+	{
+		base_array_t base1(sizeof(int));
+		base1.setSize<heap_allocator>(5);
 
-	array_t<int> a1(std::move(base_a1));
+		EXPECT_FALSE(base1.empty());
+		EXPECT_EQ(1, base1.ndims());
+		EXPECT_NE(nullptr, base1.raw_ptr());
 
-	EXPECT_TRUE(base_a1.empty());
-	EXPECT_EQ(0, base_a1.ndims());
-	EXPECT_EQ(nullptr, base_a1.raw_ptr());
+		array_t<int> a1(std::move(base1));
 
-	EXPECT_FALSE(a1.empty());
-	ASSERT_EQ(1, a1.ndims());
-	EXPECT_EQ(5, a1.size(0));
-	EXPECT_NE(nullptr, a1.raw_ptr());
+		EXPECT_TRUE(base1.empty());
+		EXPECT_EQ(0, base1.ndims());
+		EXPECT_EQ(nullptr, base1.raw_ptr());
+
+		EXPECT_FALSE(a1.empty());
+		ASSERT_EQ(1, a1.ndims());
+		EXPECT_EQ(5, a1.size(0));
+		EXPECT_NE(nullptr, a1.raw_ptr());
+	}
+
+	// move assign
+	{
+		base_array_t base2(sizeof(float));
+		base2.setSize<heap_allocator>(3, 2);
+
+		array_t<int> a2(5);
+		a2 = std::move(base2);
+
+		EXPECT_TRUE(base2.empty());
+		EXPECT_EQ(0, base2.ndims());
+		EXPECT_EQ(nullptr, base2.raw_ptr());
+
+		EXPECT_FALSE(a2.empty());
+		ASSERT_EQ(2, a2.ndims());
+		EXPECT_EQ(3, a2.size(0));
+		EXPECT_EQ(2, a2.size(1));
+		EXPECT_NE(nullptr, a2.raw_ptr());
+	}
 }
 
 TEST(Array, DerivedFunctions)
