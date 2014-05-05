@@ -12,11 +12,11 @@ struct tuple
     { 
     }
 
-    tuple(int siz, int *ptr) : 
-        _size(siz), 
-        _ptr(new int[siz])
+    tuple(int size, int *ptr) : 
+        _size(size), 
+        _ptr(new int[size])
     {
-        for (int i = 0; i < size(); i++)
+        for (int i = 0; i < size; i++)
             _ptr[i] = ptr[i];
     }
 

@@ -28,6 +28,7 @@ add_library(
 	numcpp/numcpp.h
 	numcpp.cpp
 
+	numcpp/tuple.h
 	numcpp/base_array.h
 	numcpp/array.h
 	numcpp/stl.h
