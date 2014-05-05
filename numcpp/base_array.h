@@ -170,6 +170,12 @@ allocate:
 		init<Allocator>(ndims, size, shape);
 	}
 
+	template <class Allocator>
+	void setSize(const tuple &size)
+	{
+		setSize<Allocator>(size.size(), size.ptr());
+	}
+
 	base_array_t slice(int from, int to)
 	{
 		assert(from <= to);	
@@ -226,20 +232,9 @@ allocate:
 		return _itemSize;
 	}
 
-	int ndims() const
+	const tuple &size() const
 	{
-		return _size.size();
-	}
-
-	int *shape() const
-	{
-		return _size.ptr();
-	}
-
-	// TODO: Remove this function
-	int shape(int dim) const
-	{
-		return _size[dim];
+		return _size;
 	}
 
 	int size(int dim) const
@@ -264,13 +259,17 @@ allocate:
 
 	// ## Derived property functions
 
-	bool empty() const
+	int ndims() const
 	{
-		return raw_ptr() == nullptr || size() == 0;
+		return _size.size();
 	}
 
-	// TODO: Rename to length()
-	int size() const
+	bool empty() const
+	{
+		return raw_ptr() == nullptr || length() == 0;
+	}
+
+	int length() const
 	{
 		int result = 1;
 		for (int i = 0; i < ndims(); i++)
@@ -281,7 +280,7 @@ allocate:
 
 	int byteSize() const
 	{
-		return size() * itemSize();
+		return length() * itemSize();
 	}
 
 	template <typename T>

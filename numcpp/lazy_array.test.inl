@@ -69,7 +69,7 @@ array_t<T> add_without_lazy(const array_t<T> &a1, const array_t<T> &a2)
 	// TODO: assert shape
 	assert(a1.size() == a2.size());
 
-	array_t<T> result(a1.ndims(), a1.shape());
+	array_t<T> result(a1.size());
 	transform(result, a1, a2, [](T _a1, T _a2) -> T { return _a1 + _a2; });
 	return std::move(result);
 }

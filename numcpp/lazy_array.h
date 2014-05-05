@@ -22,14 +22,14 @@ struct lazy_array_with_binary_function
 		return a1.ndims();
 	}
 
-	int *shape() const
-	{
-		return a1.shape();
-	}
-
-	int size() const
+	const tuple &size() const
 	{
 		return a1.size();
+	}
+
+	int length() const
+	{
+		return a1.length();
 	}
 
 	T at(int index0) const
@@ -58,14 +58,14 @@ struct lazy_array_with_binary_function<Array1, T, T, Function>
 		return a1.ndims();
 	}
 
-	int *shape() const
-	{
-		return a1.shape();
-	}
-
-	int size() const
+	const tuple &size() const
 	{
 		return a1.size();
+	}
+
+	int length() const
+	{
+		return a1.length();
 	}
 
 	T at(int index0) const
@@ -92,14 +92,14 @@ struct lazy_array_with_unary_function
 		return a1.ndims();
 	}
 
-	int *shape() const
-	{
-		return a1.shape();
-	}
-	
-	int size() const
+	const tuple &size() const
 	{
 		return a1.size();
+	}
+	
+	int length() const
+	{
+		return a1.length();
 	}
 
 	T at(int index0) const
@@ -187,14 +187,14 @@ struct lazy_array_cast
 		return a1.ndims();
 	}
 
-	int *shape() const
-	{
-		return a1.shape();
-	}
-	
-	int size() const
+	const tuple &size() const
 	{
 		return a1.size();
+	}
+	
+	int length() const
+	{
+		return a1.length();
 	}
 
 	T at(int index0) const
@@ -217,9 +217,9 @@ template <typename T, class LazyArray>
 void assign(array_t<T> &dst, const LazyArray &lazy_array)
 {
 	// dst.setSize(lazy_array.size());
-	dst.setSize(lazy_array.ndims(), lazy_array.shape());
+	dst.setSize(lazy_array.size());
 
-	for (int i = 0; i < lazy_array.size(); i++)
+	for (int i = 0; i < lazy_array.length(); i++)
 		dst.at(i) = lazy_array.at(i);
 }
 

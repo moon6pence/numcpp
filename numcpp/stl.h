@@ -27,14 +27,14 @@ template <typename T>
 T *end(array_t<T> &array)
 {
 	// TODO: this is wrong for array with custom stride
-	return array.raw_ptr() + array.size();
+	return array.raw_ptr() + array.length();
 }
 
 template <typename T>
 const T *end(const array_t<T> &array)
 {
 	// TODO: this is wrong for array with custom stride
-	return array.raw_ptr() + array.size();
+	return array.raw_ptr() + array.length();
 }
 
 // std::for_each
@@ -73,7 +73,7 @@ void fill(array_t<T> &dst, const T& value)
 template <typename T, typename U, class UnaryFunction>
 void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
 {
-	dst.setSize(src.ndims(), src.shape());
+	dst.setSize(src.size());
 
 	std::transform(begin(src), end(src), begin(dst), fn);
 }
@@ -94,7 +94,7 @@ void transform(
 	// assert(src1.ndims() == src2.ndims())
 	// assert(src1.shape() == src2.shape())
 
-	dst.setSize(src1.ndims(), src1.shape());
+	dst.setSize(src1.size());
 
 	std::transform(begin(src1), end(src1), begin(src2), begin(dst), fn);
 }
@@ -115,7 +115,7 @@ T sum(const array_t<T> &array)
 template <typename T>
 T mean(const array_t<T> &array)
 {
-	return sum(array) / array.size();
+	return sum(array) / array.length();
 }
 
 } // namespace np

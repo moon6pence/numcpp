@@ -35,6 +35,11 @@ public:
 		setSize(ndims, shape);
 	}
 
+	array_t(const tuple &size) : base_array_t(sizeof(T))
+	{
+		setSize(size);
+	}
+
 public:
 	explicit array_t(const base_array_t &other) : base_array_t(other)
 	{
@@ -98,6 +103,11 @@ public:
 	void setSize(int ndims, int *shape)
 	{
 		base_array_t::setSize<heap_allocator>(ndims, shape);
+	}
+
+	void setSize(const tuple &size)
+	{
+		base_array_t::setSize<heap_allocator>(size);
 	}
 
 	// raw_ptr(): access raw pointer
@@ -197,9 +207,9 @@ public:
 	template <class LazyArray>
 	const array_t<T> &operator=(LazyArray lazy_array)
 	{
-		this->setSize(lazy_array.ndims(), lazy_array.shape());
+		this->setSize(lazy_array.size());
 
-		for (int i = 0; i < lazy_array.size(); i++)
+		for (int i = 0; i < lazy_array.length(); i++)
 			this->at(i) = lazy_array.at(i);
 
 		return *this;

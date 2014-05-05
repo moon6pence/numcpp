@@ -185,20 +185,20 @@ TEST(Array, DerivedFunctions)
 	array_t<int> a0;
 
 	EXPECT_TRUE(a0.empty());
-	EXPECT_EQ(1, a0.size()); // Be careful, not 0
+	EXPECT_EQ(1, a0.length()); // Be careful, not 0
 	EXPECT_EQ(1 * sizeof(int), a0.byteSize());
 
 	array_t<int> a1(5);
 
 	EXPECT_FALSE(a1.empty());
-	EXPECT_EQ(5, a1.size());
+	EXPECT_EQ(5, a1.length());
 	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
 	EXPECT_EQ(sizeof(int), a1.stride(0));
 
 	array_t<float> a2(3, 2);
 
 	EXPECT_FALSE(a2.empty());
-	EXPECT_EQ(3 * 2, a2.size());
+	EXPECT_EQ(3 * 2, a2.length());
 	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
 	EXPECT_EQ(sizeof(float), a2.stride(0));
 	EXPECT_EQ(sizeof(float) * 3, a2.stride(1));
@@ -206,7 +206,7 @@ TEST(Array, DerivedFunctions)
 	array_t<char> a3(4, 3, 2);
 
 	EXPECT_FALSE(a3.empty());
-	EXPECT_EQ(4 * 3 * 2, a3.size());
+	EXPECT_EQ(4 * 3 * 2, a3.length());
 	EXPECT_EQ(4 * 3 * 2 * sizeof(char), a3.byteSize());
 	EXPECT_EQ(sizeof(char), a3.stride(0));
 	EXPECT_EQ(sizeof(char) * 4, a3.stride(1));

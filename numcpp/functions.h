@@ -52,11 +52,11 @@ void meshgrid(
 	array_t<T> &X, array_t<T> &Y, 
 	const array_t<T> &xgv, const array_t<T> &ygv)
 {
-	X.setSize(xgv.size(), ygv.size());
-	Y.setSize(xgv.size(), ygv.size());
+	X.setSize(xgv.length(), ygv.length());
+	Y.setSize(xgv.length(), ygv.length());
 
-	for (int y = 0; y < ygv.size(); y++)
-		for (int x = 0; x < xgv.size(); x++)
+	for (int y = 0; y < ygv.length(); y++)
+		for (int x = 0; x < xgv.length(); x++)
 		{
 			X(x, y) = xgv(x);
 			Y(x, y) = ygv(y);

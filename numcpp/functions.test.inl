@@ -62,10 +62,10 @@ TEST(Functions, MeshGrid)
 
 	meshgrid(X, Y, xgv, ygv);
 
-	ASSERT_EQ(xgv.size(), X.size(0));
-	ASSERT_EQ(xgv.size(), Y.size(0));
-	ASSERT_EQ(ygv.size(), X.size(1));
-	ASSERT_EQ(ygv.size(), Y.size(1));
+	ASSERT_EQ(xgv.length(), X.size(0));
+	ASSERT_EQ(xgv.length(), Y.size(0));
+	ASSERT_EQ(ygv.length(), X.size(1));
+	ASSERT_EQ(ygv.length(), Y.size(1));
 
 	for (int y = 0; y < X.size(1); y++)
 		for (int x = 0; x < X.size(0); x++)
