@@ -93,87 +93,41 @@ public:
 		return *this;
 	}
 
-private:
-	void init(
-		int ndims, int *shape, 
-		std::shared_ptr<void> address, void *origin)
-	{
-		_size = tuple(ndims, shape);
-		_stride.reset(new int[ndims]);
-		_stride[0] = itemSize();
-		for (int i = 1; i < ndims; i++)
-			_stride[i] = _stride[i - 1] * shape[i - 1];
-
-		_address = address;
-		_origin = origin;
-	}
-
-	template <class Allocator>
-	void init(int ndims, int size, int *shape)
-	{
-		void *ptr = Allocator::allocate(size * _itemSize);
-		auto address = std::shared_ptr<void>(ptr, Allocator::free);
-
-		init(ndims, shape, address, ptr);
-	}
-
 public:
 	template <class Allocator>
 	void setSize(int size0)
 	{
-		if (this->ndims() == 1 && 
-			this->size(0) == size0) return;
-
-		int shape[1] = { size0 };
-		init<Allocator>(1, size0, shape);
+		setSize<Allocator>(tuple(size0));
 	}
 
 	template <class Allocator>
-	void setSize(int size0, int size1) {
-		if (this->ndims() == 2 && 
-			this->size(0) == size0 && 
-			this->size(1) == size1) return;
-
-		int shape[2] = { size0, size1 };
-		init<Allocator>(2, size0 * size1, shape);
+	void setSize(int size0, int size1) 
+	{
+		setSize<Allocator>(tuple(size0, size1));
 	}
 
 	template <class Allocator>
 	void setSize(int size0, int size1, int size2)
 	{
-		if (this->ndims() == 3 && 
-			this->size(0) == size0 && 
-			this->size(1) == size1 && 
-			this->size(2) == size2) return;
-
-		int shape[3] = { size0, size1, size2 };
-		init<Allocator>(3, size0 * size1 * size2, shape);
-	}
-
-	template <class Allocator>
-	void setSize(int ndims, int *shape)
-	{
-		if (this->ndims() == ndims)
-		{
-			for (int i = 0; i < ndims; i++)
-				if (shape[i] != this->size(i))
-					goto allocate;
-
-			return;
-		}
-
-allocate:
-		int size = 1;
-		for (int i = 0; i < ndims; i++)
-			size *= shape[i];
-
-		init<Allocator>(ndims, size, shape);
+		setSize<Allocator>(tuple(size0, size1, size2));
 	}
 
 	template <class Allocator>
 	void setSize(const tuple &size)
 	{
-		setSize<Allocator>(size.size(), size.ptr());
+		if (this->size() == size)
+			return;
+
+		_size = size;
+		_stride.reset(new int[ndims()]);
+		_stride[0] = itemSize();
+		for (int i = 1; i < ndims(); i++)
+			_stride[i] = _stride[i - 1] * size[i - 1];
+
+		void *ptr = Allocator::allocate(size.product() * _itemSize);
+
+		_address = std::shared_ptr<void>(ptr, Allocator::free);
+		_origin = ptr;
 	}
 
 	base_array_t slice(int from, int to)
@@ -261,7 +215,7 @@ allocate:
 
 	int ndims() const
 	{
-		return _size.size();
+		return _size.length();
 	}
 
 	bool empty() const
@@ -271,11 +225,7 @@ allocate:
 
 	int length() const
 	{
-		int result = 1;
-		for (int i = 0; i < ndims(); i++)
-			result *= size(i);
-
-		return result;
+		return size().product();
 	}
 
 	int byteSize() const

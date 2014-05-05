@@ -85,11 +85,6 @@ public:
 		base_array_t::setSize<device_allocator>(size0, size1, size2);
 	}
 
-	void setSize(int ndims, int *shape)
-	{
-		base_array_t::setSize<device_allocator>(ndims, shape);
-	}
-
 	void setSize(const tuple &size)
 	{
 		base_array_t::setSize<device_allocator>(size);

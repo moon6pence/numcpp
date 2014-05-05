@@ -30,11 +30,6 @@ public:
 		setSize(size0, size1, size2);
 	}
 
-	array_t(int ndims, int *shape) : base_array_t(sizeof(T))
-	{
-		setSize(ndims, shape);
-	}
-
 	array_t(const tuple &size) : base_array_t(sizeof(T))
 	{
 		setSize(size);
@@ -98,11 +93,6 @@ public:
 	void setSize(int size0, int size1, int size2)
 	{
 		base_array_t::setSize<heap_allocator>(size0, size1, size2);
-	}
-
-	void setSize(int ndims, int *shape)
-	{
-		base_array_t::setSize<heap_allocator>(ndims, shape);
 	}
 
 	void setSize(const tuple &size)

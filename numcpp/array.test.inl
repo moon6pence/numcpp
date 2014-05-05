@@ -44,7 +44,7 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_NE(nullptr, a3.raw_ptr());
 
 	int shape[4] = { 2, 2, 2, 2 };
-	array_t<int> a4(4, shape);
+	array_t<int> a4(tuple(4, shape));
 	
 	EXPECT_FALSE(a4.empty());
 	ASSERT_EQ(4, a4.ndims());
@@ -96,7 +96,7 @@ TEST(Array, SetSize)
 
 	array_t<int> a4;
 	int shape[4] = { 2, 2, 2, 2 };
-	a4.setSize(4, shape);
+	a4.setSize(tuple(4, shape));
 
 	EXPECT_FALSE(a4.empty());
 	ASSERT_EQ(4, a4.ndims());

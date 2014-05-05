@@ -52,7 +52,7 @@ TEST(BaseArray, SetSize)
 
 	base_array_t a4(sizeof(char));
 	int shape[4] = { 2, 2, 2, 2 };
-	a4.setSize<heap_allocator>(4, shape);
+	a4.setSize<heap_allocator>(tuple(4, shape));
 
 	EXPECT_FALSE(a4.empty());
 	EXPECT_EQ(sizeof(char), a4.itemSize());

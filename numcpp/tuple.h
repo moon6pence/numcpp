@@ -8,34 +8,58 @@ namespace np {
 // tuple to store array size, immutable
 struct tuple
 {
-    tuple() : _size(0)
+    tuple() : _length(0)
     { 
     }
 
-    tuple(int size, int *ptr) : 
-        _size(size), 
+	tuple(int size0) :
+		_length(1), 
+		_ptr(new int[1])
+	{
+		_ptr[0] = size0;
+	}
+
+	tuple(int size0, int size1) :
+		_length(2), 
+		_ptr(new int[2])
+	{
+		_ptr[0] = size0;
+		_ptr[1] = size1;
+	}
+
+	tuple(int size0, int size1, int size2) :
+		_length(3), 
+		_ptr(new int[3])
+	{
+		_ptr[0] = size0;
+		_ptr[1] = size1;
+		_ptr[2] = size2;
+	}
+
+	tuple(int size, int *ptr) : 
+        _length(size), 
         _ptr(new int[size])
     {
         for (int i = 0; i < size; i++)
             _ptr[i] = ptr[i];
-    }
+	}
 
     // copy constructor
     tuple(const tuple &other) : 
-        _size(other.size()), 
-        _ptr(new int[other.size()])
+        _length(other.length()), 
+        _ptr(new int[other.length()])
     {
-        for (int i = 0; i < size(); i++)
+        for (int i = 0; i < length(); i++)
             _ptr[i] = other[i];
     }
 
     // copy assign
     const tuple &operator=(const tuple &other)
     {
-        _size = other.size();
-        _ptr.reset(new int[size()]);
+        _length = other.length();
+        _ptr.reset(new int[length()]);
 
-        for (int i = 0; i < size(); i++)
+        for (int i = 0; i < length(); i++)
             _ptr[i] = other[i];
 
         return *this;
@@ -43,26 +67,26 @@ struct tuple
 
     // move constructor
     tuple(tuple &&other) :
-        _size(other.size()), 
+        _length(other.length()), 
         _ptr(std::move(other._ptr))
     {
-        other._size = 0;
+        other._length = 0;
     }
 
     // move assign
     const tuple &operator=(tuple &&other)
     {
-        _size = other.size();
+        _length = other.length();
         _ptr = std::move(other._ptr);
 
-        other._size = 0;
+        other._length = 0;
 
         return *this;
     }
 
-    int size() const
+    int length() const
     {
-        return _size;
+        return _length;
     }
 
     // TODO: Remove this function
@@ -71,13 +95,51 @@ struct tuple
         return _ptr.get();
     }
 
+	int at(int index) const
+	{
+		return _ptr[index];
+	}
+
     int operator[](int index) const
     {
-        return _ptr[index];
+        return at(index);
     }
 
+	// # Utility functions
+
+	int product() const
+	{
+		int result = 1;
+		for (int i = 0; i < length(); i++)
+			result *= at(i);
+
+		return result;
+	}
+
+	bool equals(const tuple &other) const
+	{
+		if (length() != other.length())
+			return false;
+
+		for (int i = 0; i < length(); i++)
+			if (at(i) != other.at(i))
+				return false;
+
+		return true;
+	}
+
+	bool operator==(const tuple &other) const
+	{
+		return equals(other);
+	}
+
+	bool operator!=(const tuple &other) const
+	{
+		return !equals(other);
+	}
+
 private:
-    int _size;
+    int _length;
     std::unique_ptr<int[]> _ptr;
 };
 
