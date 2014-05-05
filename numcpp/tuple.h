@@ -12,7 +12,7 @@ struct tuple
     { 
     }
 
-	tuple(int size0) :
+	explicit tuple(int size0) :
 		_length(1), 
 		_ptr(new int[1])
 	{

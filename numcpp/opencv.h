@@ -32,8 +32,7 @@ const cv::Mat to_cv_mat(const array_t<T> &array)
 
 inline base_array_t from_cv_mat(const cv::Mat &cv_mat)
 {
-	base_array_t result((int)cv_mat.elemSize());
-	result.setSize<heap_allocator>(cv_mat.cols, cv_mat.rows);
+	base_array_t result((int)cv_mat.elemSize(), tuple(cv_mat.cols, cv_mat.rows));
 
 	// TODO: Do not copy
 	memcpy(result.raw_ptr<void>(), cv_mat.data, result.byteSize());
@@ -51,7 +50,8 @@ template <typename T>
 void from_cv_mat(array_t<T> &dst, const cv::Mat &src)
 {
 	// TODO: check type of src
-	dst.setSize(src.cols, src.rows);
+	if (dst.size() != tuple(src.cols, src.rows))
+		dst = array_t<T>(src.cols, src.rows);
 
 	// TODO: Do not copy
 	memcpy(dst, src.data, dst.byteSize());

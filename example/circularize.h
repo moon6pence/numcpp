@@ -40,14 +40,15 @@ struct Circularize
 
 	void operator() (array_t<uint8_t> &dst, const array_t<uint8_t> &src, int DIAMETER)
 	{
-		dst.setSize(DIAMETER, DIAMETER);
+		const tuple expected(DIAMETER, DIAMETER);
+		if (dst.size() != expected) 
+			dst = array_t<uint8_t>(expected);
 
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
 
 		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
 	}
-
 };
 
 #ifdef USE_CUDA
@@ -58,7 +59,9 @@ struct Circularize_d : private Circularize
 
 	void operator() (device_array_t<uint8_t> &dst, const device_array_t<uint8_t> &src, int DIAMETER)
 	{
-		dst.setSize(DIAMETER, DIAMETER);
+		const tuple expected(DIAMETER, DIAMETER);
+		if (dst.size() != expected) 
+			dst = device_array_t<uint8_t>(expected);
 
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);

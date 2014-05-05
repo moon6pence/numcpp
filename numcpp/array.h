@@ -15,27 +15,28 @@ public:
 	{
 	}
 
-	array_t(int size0) : base_array_t(sizeof(T))
+	explicit array_t(int size0) : base_array_t(sizeof(T))
 	{
-		setSize(size0);
+		base_array_t::setSize<heap_allocator>(tuple(size0));
 	}
 
 	array_t(int size0, int size1) : base_array_t(sizeof(T))
 	{
-		setSize(size0, size1);
+		base_array_t::setSize<heap_allocator>(tuple(size0, size1));
 	}
 
 	array_t(int size0, int size1, int size2) : base_array_t(sizeof(T))
 	{
-		setSize(size0, size1, size2);
+		base_array_t::setSize<heap_allocator>(tuple(size0, size1, size2));
 	}
 
-	array_t(const tuple &size) : base_array_t(sizeof(T))
+	explicit array_t(const tuple &size) : base_array_t(sizeof(T))
 	{
-		setSize(size);
+		base_array_t::setSize<heap_allocator>(size);
 	}
 
 public:
+	// inherits copy constructor
 	explicit array_t(const base_array_t &other) : base_array_t(other)
 	{
 		assert(other.itemSize() == sizeof(T));
@@ -72,32 +73,6 @@ public:
 	{
 		base_array_t::operator=(std::move(other));
 		return *this;
-	}
-
-	void setSize(int size0)
-	{
-		base_array_t::setSize<heap_allocator>(size0);
-	}
-
-	void setSize(int size0, int size1)
-	{
-		base_array_t::setSize<heap_allocator>(size0, size1);
-	}
-
-	template <typename Allocator>
-	void setSize(int size0, int size1)
-	{
-		base_array_t::setSize<Allocator>(size0, size1);
-	}
-
-	void setSize(int size0, int size1, int size2)
-	{
-		base_array_t::setSize<heap_allocator>(size0, size1, size2);
-	}
-
-	void setSize(const tuple &size)
-	{
-		base_array_t::setSize<heap_allocator>(size);
 	}
 
 	// raw_ptr(): access raw pointer
@@ -197,7 +172,8 @@ public:
 	template <class LazyArray>
 	const array_t<T> &operator=(LazyArray lazy_array)
 	{
-		this->setSize(lazy_array.size());
+		if (this->size() != lazy_array.size())
+			(*this) = array_t<T>(lazy_array.size());
 
 		for (int i = 0; i < lazy_array.length(); i++)
 			this->at(i) = lazy_array.at(i);

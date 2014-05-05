@@ -37,11 +37,39 @@ public:
 	{
 	}
 
-	base_array_t(int itemSize) : 
+	explicit base_array_t(int itemSize) : 
 		_itemSize(itemSize), _origin(nullptr) 
 	{ 
 	}
 
+	base_array_t(int itemSize, const tuple &size) :
+		_itemSize(itemSize)
+	{
+		setSize<heap_allocator>(size);
+	}
+
+	// TODO: protected
+	// Actual constructor
+	template <class Allocator>
+	void setSize(const tuple &size)
+	{
+		// TODO: remove this line
+		if (this->size() == size)
+			return;
+
+		_size = size;
+		_stride.reset(new int[ndims()]);
+		_stride[0] = itemSize();
+		for (int i = 1; i < ndims(); i++)
+			_stride[i] = _stride[i - 1] * size[i - 1];
+
+		void *ptr = Allocator::allocate(size.product() * _itemSize);
+
+		_address = std::shared_ptr<void>(ptr, Allocator::free);
+		_origin = ptr;
+	}
+
+public:
 	// copy constructor
 	base_array_t(const base_array_t &other) : 
 		_itemSize(other._itemSize), 
@@ -91,43 +119,6 @@ public:
 		other._origin = nullptr;
 
 		return *this;
-	}
-
-public:
-	template <class Allocator>
-	void setSize(int size0)
-	{
-		setSize<Allocator>(tuple(size0));
-	}
-
-	template <class Allocator>
-	void setSize(int size0, int size1) 
-	{
-		setSize<Allocator>(tuple(size0, size1));
-	}
-
-	template <class Allocator>
-	void setSize(int size0, int size1, int size2)
-	{
-		setSize<Allocator>(tuple(size0, size1, size2));
-	}
-
-	template <class Allocator>
-	void setSize(const tuple &size)
-	{
-		if (this->size() == size)
-			return;
-
-		_size = size;
-		_stride.reset(new int[ndims()]);
-		_stride[0] = itemSize();
-		for (int i = 1; i < ndims(); i++)
-			_stride[i] = _stride[i - 1] * size[i - 1];
-
-		void *ptr = Allocator::allocate(size.product() * _itemSize);
-
-		_address = std::shared_ptr<void>(ptr, Allocator::free);
-		_origin = ptr;
 	}
 
 	base_array_t slice(int from, int to)

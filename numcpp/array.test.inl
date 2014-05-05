@@ -58,7 +58,7 @@ TEST(Array, DeclareArrayWithSize)
 TEST(Array, SetSize)
 {
 	array_t<int> a1;
-	a1.setSize(5);
+	a1 = array_t<int>(5);
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(sizeof(int), a1.itemSize());
@@ -70,11 +70,12 @@ TEST(Array, SetSize)
 	int *ptr = a1_same.raw_ptr();
 
 	// Do not allocate again
-	a1_same.setSize(5);
+	if (a1_same.size() != tuple(5))
+		a1_same = array_t<int>(5);
 	EXPECT_EQ(ptr, a1_same.raw_ptr());
 
 	array_t<int> a2;
-	a2.setSize(3, 2);
+	a2 = array_t<int>(3, 2);
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(sizeof(float), a2.itemSize());
@@ -84,7 +85,7 @@ TEST(Array, SetSize)
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	array_t<double> a3;
-	a3.setSize(4, 3, 2);
+	a3 = array_t<int>(4, 3, 2);
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -96,7 +97,7 @@ TEST(Array, SetSize)
 
 	array_t<int> a4;
 	int shape[4] = { 2, 2, 2, 2 };
-	a4.setSize(tuple(4, shape));
+	a4 = array_t<int>(tuple(4, shape));
 
 	EXPECT_FALSE(a4.empty());
 	ASSERT_EQ(4, a4.ndims());
@@ -141,8 +142,7 @@ TEST(Array, MoveFromBaseArray)
 {
 	// move constructor
 	{
-		base_array_t base1(sizeof(int));
-		base1.setSize<heap_allocator>(5);
+		base_array_t base1(sizeof(int), tuple(5));
 
 		EXPECT_FALSE(base1.empty());
 		EXPECT_EQ(1, base1.ndims());
@@ -162,8 +162,7 @@ TEST(Array, MoveFromBaseArray)
 
 	// move assign
 	{
-		base_array_t base2(sizeof(float));
-		base2.setSize<heap_allocator>(3, 2);
+		base_array_t base2(sizeof(float), tuple(3, 2));
 
 		array_t<int> a2(5);
 		a2 = std::move(base2);

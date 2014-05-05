@@ -31,19 +31,24 @@ public:
 	{
 	}
 
-	device_array_t(int size0) : base_array_t(sizeof(T))
+	explicit device_array_t(int size0) : base_array_t(sizeof(T))
 	{
-		setSize(size0);
+		base_array_t::setSize<device_allocator>(tuple(size0));
 	}
 
 	device_array_t(int size0, int size1) : base_array_t(sizeof(T))
 	{
-		setSize(size0, size1);
+		base_array_t::setSize<device_allocator>(tuple(size0, size1));
 	}
 
 	device_array_t(int size0, int size1, int size2) : base_array_t(sizeof(T))
 	{
-		setSize(size0, size1, size2);
+		base_array_t::setSize<device_allocator>(tuple(size0, size1, size2));
+	}
+
+	explicit device_array_t(const tuple &size) : base_array_t(sizeof(T))
+	{
+		base_array_t::setSize<device_allocator>(size);
 	}
 
 private:
@@ -68,26 +73,6 @@ public:
 	explicit device_array_t(const array_t<T> &array_h) : base_array_t(sizeof(T))
 	{
 		host_to_device(*this, array_h);
-	}
-
-	void setSize(int size0)
-	{
-		base_array_t::setSize<device_allocator>(size0);
-	}
-
-	void setSize(int size0, int size1)
-	{
-		base_array_t::setSize<device_allocator>(size0, size1);
-	}
-
-	void setSize(int size0, int size1, int size2)
-	{
-		base_array_t::setSize<device_allocator>(size0, size1, size2);
-	}
-
-	void setSize(const tuple &size)
-	{
-		base_array_t::setSize<device_allocator>(size);
 	}
 
 	// raw_ptr(): access raw pointer
@@ -116,7 +101,9 @@ public:
 template <typename T>
 void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 {
-	dst_d.setSize(src.size());
+	// TODO: similar()
+	if (dst_d.size() != src.size())
+		dst_d = device_array_t<T>(src.size());
 
 	cudaMemcpy(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice);
 }
@@ -124,7 +111,9 @@ void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 template <typename T>
 void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src, cudaStream_t stream)
 {
-	dst_d.setSize(src.size());
+	// TODO: similar()
+	if (dst_d.size() != src.size())
+		dst_d = device_array_t<T>(src.size());
 
 	cudaMemcpyAsync(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice, stream);
 }
@@ -132,7 +121,9 @@ void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src, cudaStream_
 template <typename T>
 void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 {
-	dst.setSize(src_d.size());
+	// TODO: similar()
+	if (dst.size() != src_d.size())
+		dst = array_t<T>(src_d.size());
 
 	cudaMemcpy(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost);
 }
@@ -140,7 +131,9 @@ void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 template <typename T>
 void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d, cudaStream_t stream)
 {
-	dst.setSize(src_d.size());
+	// TODO: similar()
+	if (dst.size() != src_d.size())
+		dst = array_t<T>(src_d.size());
 
 	cudaMemcpyAsync(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost, stream);
 }
