@@ -75,7 +75,7 @@ void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
 {
 	// TODO: similar()
 	if (dst.size() != src.size())
-		dst = array_t<T>(src);
+		dst = array_t<T>(src.size());
 
 	std::transform(begin(src), end(src), begin(dst), fn);
 }
