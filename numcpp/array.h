@@ -182,6 +182,12 @@ public:
 	}
 };
 
+template <typename T, typename U>
+array_t<T> similar(const array_t<U> &other)
+{
+	return array_t<T>(other.size());
+}
+
 } // namespace np
 
 #endif // NUMCPP_ARRAY_H_

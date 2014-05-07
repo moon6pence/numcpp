@@ -73,9 +73,8 @@ void fill(array_t<T> &dst, const T& value)
 template <typename T, typename U, class UnaryFunction>
 void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
 {
-	// TODO: similar()
-	if (dst.size() != src.size())
-		dst = array_t<T>(src.size());
+	if (dst.size() != src.size()) 
+		dst = similar<T>(src);
 
 	std::transform(begin(src), end(src), begin(dst), fn);
 }
@@ -96,9 +95,8 @@ void transform(
 	// assert(src1.ndims() == src2.ndims())
 	// assert(src1.shape() == src2.shape())
 
-	// TODO: similar()
 	if (dst.size() != src1.size())
-		dst = array_t<T>(src1.size());
+		dst = similar<T>(src1);
 
 	std::transform(begin(src1), end(src1), begin(src2), begin(dst), fn);
 }

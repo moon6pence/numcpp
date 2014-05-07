@@ -101,7 +101,6 @@ public:
 template <typename T>
 void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 {
-	// TODO: similar()
 	if (dst_d.size() != src.size())
 		dst_d = device_array_t<T>(src.size());
 
@@ -111,7 +110,6 @@ void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 template <typename T>
 void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src, cudaStream_t stream)
 {
-	// TODO: similar()
 	if (dst_d.size() != src.size())
 		dst_d = device_array_t<T>(src.size());
 
@@ -121,7 +119,6 @@ void host_to_device(device_array_t<T> &dst_d, const array_t<T> &src, cudaStream_
 template <typename T>
 void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 {
-	// TODO: similar()
 	if (dst.size() != src_d.size())
 		dst = array_t<T>(src_d.size());
 
@@ -131,7 +128,6 @@ void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d)
 template <typename T>
 void device_to_host(array_t<T> &dst, const device_array_t<T> &src_d, cudaStream_t stream)
 {
-	// TODO: similar()
 	if (dst.size() != src_d.size())
 		dst = array_t<T>(src_d.size());
 
