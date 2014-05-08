@@ -109,20 +109,29 @@ typedef ArrayFixture CUDA_F;
 TEST_F(CUDA_F, HostToDevice)
 {
 	device_array_t<int> a1_d(5);
-	host_to_device(a1_d, a1);
+	to_device(a1_d, a1);
 
 	array_t<int> a1_h(5);
-	device_to_host(a1_h, a1_d);
+	to_host(a1_h, a1_d);
 
 	int *ptr1 = data1;
 	for (auto i = begin(a1_h); i != end(a1_h); ++i, ++ptr1)
 		EXPECT_EQ(*i, *ptr1);
 
 	device_array_t<int> a2_d(2, 3);
-	host_to_device(a2_d, a2);
+	to_device(a2_d, a2);
 
 	device_array_t<int> a3_d(2, 3, 4);
-	host_to_device(a3_d, a3);
+	to_device(a3_d, a3);
+
+	// Asynchronous copy
+	cudaStream_t stream;
+	cudaStreamCreate(&stream);
+
+	to_device(a2_d, a2, stream);
+	to_host(a2, a2_d, stream);
+
+	cudaStreamSynchronize(stream);
 }
 
 TEST_F(CUDA_F, ConstructorWithHostArray)
@@ -135,7 +144,7 @@ TEST_F(CUDA_F, ConstructorWithHostArray)
 	EXPECT_NE(a1_d.raw_ptr(), nullptr);
 
 	array_t<int> a1_h(5);
-	device_to_host(a1_h, a1_d);
+	to_host(a1_h, a1_d);
 
 	int *ptr1 = data1;
 	for (auto i = begin(a1_h); i != end(a1_h); ++i, ++ptr1)
@@ -165,7 +174,7 @@ TEST(CUDA, RunKernel2)
 	cudaThreadSynchronize();
 
 	// Copy from device to host
-	device_to_host(c, c_d);
+	to_host(c, c_d);
 
 	// Verify result
 	for (int i = 0; i < N; i++)
