@@ -35,22 +35,12 @@ public:
 		base_array_t::setSize<heap_allocator>(size);
 	}
 
+private:
+	// delete copy constructor, assign
+	explicit array_t(const array_t &other)	{ }
+	const array_t &operator=(const base_array_t &other) { return *this; }
+
 public:
-	// inherits copy constructor
-	explicit array_t(const base_array_t &other) : base_array_t(other)
-	{
-		assert(other.itemSize() == sizeof(T));
-	}
-
-	// inherits copy assign
-	const array_t &operator=(const base_array_t &other)
-	{
-		assert(other.itemSize() == sizeof(T));
-
-		base_array_t::operator=(other);
-		return *this;
-	}
-
 	// move constructor (inherited)
 	array_t(array_t &&other) : base_array_t(std::move(other))
 	{

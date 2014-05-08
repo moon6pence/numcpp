@@ -48,6 +48,24 @@ public:
 		setSize<heap_allocator>(size);
 	}
 
+private:
+	// External constructors
+	friend base_array_t ref(const base_array_t &array);
+
+	base_array_t(int itemSize, 
+				 const tuple &size, 
+				 std::unique_ptr<int[]> stride, 
+				 std::shared_ptr<void> address, 
+				 void *origin) :
+		_itemSize(itemSize), 
+		_size(size), 
+		_stride(std::move(stride)), 
+		_address(address), 
+		_origin(origin)
+	{
+	}
+
+public:
 	// TODO: protected
 	// Actual constructor
 	template <class Allocator>
@@ -69,34 +87,12 @@ public:
 		_origin = ptr;
 	}
 
+private:
+	// delete copy constructor, assign
+	base_array_t(const base_array_t &other) : _itemSize(1) { }
+	const base_array_t &operator=(const base_array_t &other) { return *this; }
+
 public:
-	// copy constructor
-	base_array_t(const base_array_t &other) : 
-		_itemSize(other._itemSize), 
-		_size(other._size), 
-		_stride(new int[other.ndims()])
-	{
-		std::copy(other._stride.get(), other._stride.get() + ndims(), _stride.get());
-
-		_address = other._address; // add reference
-		_origin = other._origin;
-	}
-
-	// copy assign
-	const base_array_t &operator=(const base_array_t &other)
-	{
-		// TODO: assign _itemSize
-
-		_size = other._size;
-		_stride.reset(new int[other.ndims()]);
-		std::copy(other._stride.get(), other._stride.get() + ndims(), _stride.get());
-
-		_address = other._address; // add reference
-		_origin = other._origin;
-
-		return *this;
-	}
-
 	// move constructor
 	base_array_t(base_array_t &&other) : 
 		_itemSize(other._itemSize), 
@@ -302,6 +298,20 @@ public:
 		return *static_cast<const T *>(ptr_at(index0, index1, index2));
 	}
 };
+
+inline base_array_t ref(const base_array_t &array)
+{
+	int *stride = new int[array.ndims()];
+	for (int i = 0; i < array.ndims(); i++)
+		stride[i] = array.stride(i);
+
+	return base_array_t(
+		array._itemSize, 
+		array._size, 
+		std::unique_ptr<int[]>(stride), 
+		array._address, 
+		array._origin);
+}
 
 } // namespace np
 
