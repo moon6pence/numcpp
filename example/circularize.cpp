@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	circularize_d(result_image_d, image_d, DIAMETER);
 
 	array_t<uint8_t> result_image_h(DIAMETER, DIAMETER);
-	device_to_host(result_image_h, result_image_d);
+	to_host(result_image_h, result_image_d);
 	cout << "Finished!" << endl;
 
 	imshow(result_image_h); 
