@@ -88,7 +88,8 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	EXPECT_EQ(3, a2.size(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-	device_array_t<double> a3(2, 3, 4);
+	int shape[3] = { 2, 3, 4 };
+	device_array_t<double> a3(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -120,9 +121,6 @@ TEST_F(CUDA_F, HostToDevice)
 
 	device_array_t<int> a2_d(2, 3);
 	to_device(a2_d, a2);
-
-	device_array_t<int> a3_d(2, 3, 4);
-	to_device(a3_d, a3);
 
 	// Asynchronous copy
 	cudaStream_t stream;

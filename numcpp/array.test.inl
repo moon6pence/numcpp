@@ -33,7 +33,8 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(2, a2.size(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-	array_t<double> a3(4, 3, 2);
+	int shape[3] = { 4, 3, 2 };
+	array_t<double> a3(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -42,17 +43,6 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(2, a3.size(2));
 	EXPECT_NE(nullptr, a3.raw_ptr());
-
-	int shape[4] = { 2, 2, 2, 2 };
-	array_t<int> a4(tuple(4, shape));
-	
-	EXPECT_FALSE(a4.empty());
-	ASSERT_EQ(4, a4.ndims());
-	EXPECT_EQ(2, a4.size(0));
-	EXPECT_EQ(2, a4.size(1));
-	EXPECT_EQ(2, a4.size(2));
-	EXPECT_EQ(2, a4.size(3));
-	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 
 TEST(Array, SetSize)
@@ -85,7 +75,8 @@ TEST(Array, SetSize)
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	array_t<double> a3;
-	a3 = array_t<int>(4, 3, 2);
+	int shape[3] = { 4, 3, 2 };
+	a3 = array_t<int>(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -94,18 +85,6 @@ TEST(Array, SetSize)
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(2, a3.size(2));
 	EXPECT_NE(nullptr, a3.raw_ptr());
-
-	array_t<int> a4;
-	int shape[4] = { 2, 2, 2, 2 };
-	a4 = array_t<int>(tuple(4, shape));
-
-	EXPECT_FALSE(a4.empty());
-	ASSERT_EQ(4, a4.ndims());
-	EXPECT_EQ(2, a4.size(0));
-	EXPECT_EQ(2, a4.size(1));
-	EXPECT_EQ(2, a4.size(2));
-	EXPECT_EQ(2, a4.size(3));
-	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 
 TEST(Array, MoveSemantics)
@@ -202,7 +181,8 @@ TEST(Array, DerivedFunctions)
 	EXPECT_EQ(sizeof(float), a2.stride(0));
 	EXPECT_EQ(sizeof(float) * 3, a2.stride(1));
 
-	array_t<char> a3(4, 3, 2);
+	int shape[3] = { 4, 3, 2 };
+	array_t<char> a3(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(4 * 3 * 2, a3.length());
@@ -262,33 +242,6 @@ TEST(Array, AccessElements)
 
 	a2.at(2, 0) = 5;
 	EXPECT_EQ(5, a2.at(2, 0));
-
-	// 3d array
-	np::array_t<int> a3(4, 3, 2);
-
-	const int data3[24] = 
-	{
-		32, 19, 22, 10, 
-		81, 42, 71, 86, 
-		44, 66, 77, 88, 
-
-		98, 76, 54, 32, 
-		15, 16, 17, 18, 
-		21, 22, 23, 24
-	};	
-
-	memcpy(a3.raw_ptr(), data3, 24 * sizeof(int));
-
-	EXPECT_EQ(32, a3.at(0));
-	EXPECT_EQ(32, a3(15));
-	EXPECT_EQ(24, a3(23));
-
-	EXPECT_EQ(32, a3.at(0, 0, 0));
-	EXPECT_EQ(71, a3(2, 1, 0));
-	EXPECT_EQ(24, a3.at(3, 2, 1));
-
-	a3.at(3, 2, 0) = 99;
-	EXPECT_EQ(99, a3.at(3, 2, 0));
 }
 
 TEST(Array, Slice)

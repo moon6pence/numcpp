@@ -25,11 +25,6 @@ public:
 		base_array_t::setSize<heap_allocator>(tuple(size0, size1));
 	}
 
-	array_t(int size0, int size1, int size2) : base_array_t(sizeof(T))
-	{
-		base_array_t::setSize<heap_allocator>(tuple(size0, size1, size2));
-	}
-
 	explicit array_t(const tuple &size) : base_array_t(sizeof(T))
 	{
 		base_array_t::setSize<heap_allocator>(size);
@@ -99,11 +94,6 @@ public:
 		return base_array_t::at<T>(index0, index1);
 	}
 
-	T& at(int index0, int index1, int index2)
-	{
-		return base_array_t::at<T>(index0, index1, index2);
-	}
-
 	const T& at(int index0) const
 	{
 		return base_array_t::at<T>(index0);
@@ -112,11 +102,6 @@ public:
 	const T& at(int index0, int index1) const
 	{
 		return base_array_t::at<T>(index0, index1);
-	}
-
-	const T& at(int index0, int index1, int index2) const
-	{
-		return base_array_t::at<T>(index0, index1, index2);
 	}
 
 	T& operator() (int index0)
@@ -129,11 +114,6 @@ public:
 		return base_array_t::at<T>(index0, index1);
 	}
 
-	T& operator() (int index0, int index1, int index2)
-	{
-		return base_array_t::at<T>(index0, index1, index2);
-	}
-
 	const T& operator() (int index0) const
 	{
 		return base_array_t::at<T>(index0);
@@ -142,11 +122,6 @@ public:
 	const T& operator() (int index0, int index1) const
 	{
 		return base_array_t::at<T>(index0, index1);
-	}
-
-	const T& operator() (int index0, int index1, int index2) const
-	{
-		return base_array_t::at<T>(index0, index1, index2);
 	}
 
 	array_t<T> slice(int from, int to)

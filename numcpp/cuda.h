@@ -41,11 +41,6 @@ public:
 		base_array_t::setSize<device_allocator>(tuple(size0, size1));
 	}
 
-	device_array_t(int size0, int size1, int size2) : base_array_t(sizeof(T))
-	{
-		base_array_t::setSize<device_allocator>(tuple(size0, size1, size2));
-	}
-
 	explicit device_array_t(const tuple &size) : base_array_t(sizeof(T))
 	{
 		base_array_t::setSize<device_allocator>(size);

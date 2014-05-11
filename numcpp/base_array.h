@@ -242,11 +242,6 @@ public:
 		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1);
 	}
 
-	void *ptr_at(int index0, int index1, int index2)
-	{
-		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1) + index2 * stride(2);
-	}
-
 	const void *ptr_at(int index0) const
 	{
 		return raw_ptr<char>() + index0 * stride(0);
@@ -255,11 +250,6 @@ public:
 	const void *ptr_at(int index0, int index1) const
 	{
 		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1);
-	}
-
-	const void *ptr_at(int index0, int index1, int index2) const
-	{
-		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1) + index2 * stride(2);
 	}
 
 	template <typename T>
@@ -275,12 +265,6 @@ public:
 	}
 
 	template <typename T>
-	T& at(int index0, int index1, int index2)
-	{
-		return *static_cast<T *>(ptr_at(index0, index1, index2));
-	}
-
-	template <typename T>
 	const T& at(int index0) const
 	{
 		return *static_cast<const T *>(ptr_at(index0));
@@ -290,12 +274,6 @@ public:
 	const T& at(int index0, int index1) const
 	{
 		return *static_cast<const T *>(ptr_at(index0, index1));
-	}
-
-	template <typename T>
-	const T& at(int index0, int index1, int index2) const
-	{
-		return *static_cast<const T *>(ptr_at(index0, index1, index2));
 	}
 };
 
