@@ -8,21 +8,6 @@
 
 namespace np {
 
-struct device_allocator
-{
-	static void *allocate(int size)
-	{
-		void *ptr = nullptr;
-		cudaMalloc((void **)&ptr, size);
-		return ptr;
-	}
-
-	static void free(void *ptr)
-	{
-		cudaFree(ptr);
-	}
-};
-
 template <typename T>
 struct device_array_t : public base_array_t
 {
@@ -31,19 +16,18 @@ public:
 	{
 	}
 
-	explicit device_array_t(int size0) : base_array_t(sizeof(T))
-	{
-		base_array_t::setSize<device_allocator>(tuple(size0));
-	}
+private:
+	// External constructors
+	template <typename T>
+	friend device_array_t<T> DeviceArray(const tuple &size);
 
-	device_array_t(int size0, int size1) : base_array_t(sizeof(T))
+protected:
+	device_array_t(const tuple &size, 
+				   std::unique_ptr<int[]> stride, 
+				   std::shared_ptr<void> address, 
+				   void *origin) : 
+		base_array_t(sizeof(T), size, std::move(stride), std::move(address), origin)
 	{
-		base_array_t::setSize<device_allocator>(tuple(size0, size1));
-	}
-
-	explicit device_array_t(const tuple &size) : base_array_t(sizeof(T))
-	{
-		base_array_t::setSize<device_allocator>(size);
 	}
 
 private:
@@ -93,11 +77,58 @@ public:
 	}
 };
 
+struct device_allocator
+{
+	static void *allocate(int size)
+	{
+		void *ptr = nullptr;
+		cudaMalloc((void **)&ptr, size);
+		return ptr;
+	}
+
+	static void free(void *ptr)
+	{
+		cudaFree(ptr);
+	}
+};
+
+template <typename T>
+device_array_t<T> DeviceArray(const tuple &size)
+{
+	const int itemSize = sizeof(T);
+	const int ndims = size.length();
+
+	int *stride = new int[ndims];
+	stride[0] = itemSize;
+	for (int i = 1; i < ndims; i++)
+		stride[i] = stride[i - 1] * size[i - 1];
+
+	void *ptr = device_allocator::allocate(size.product() * itemSize);
+
+	return device_array_t<T>(
+		size, 
+		std::unique_ptr<int[]>(stride), 
+		std::shared_ptr<void>(ptr, device_allocator::free), 
+		ptr);
+}
+
+template <typename T>
+device_array_t<T> DeviceArray(int size0)
+{
+	return DeviceArray<T>(tuple(size0));
+}
+
+template <typename T>
+device_array_t<T> DeviceArray(int size0, int size1)
+{
+	return DeviceArray<T>(tuple(size0, size1));
+}
+
 template <typename T>
 void to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 {
 	if (dst_d.size() != src.size())
-		dst_d = device_array_t<T>(src.size());
+		dst_d = DeviceArray<T>(src.size());
 
 	cudaMemcpy(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice);
 }
@@ -106,7 +137,7 @@ template <typename T>
 void to_device(device_array_t<T> &dst_d, const array_t<T> &src, cudaStream_t stream)
 {
 	if (dst_d.size() != src.size())
-		dst_d = device_array_t<T>(src.size());
+		dst_d = DeviceArray<T>(src.size());
 
 	cudaMemcpyAsync(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice, stream);
 }

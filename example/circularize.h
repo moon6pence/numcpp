@@ -61,7 +61,7 @@ struct Circularize_d : private Circularize
 	{
 		const tuple expected(DIAMETER, DIAMETER);
 		if (dst.size() != expected) 
-			dst = device_array_t<uint8_t>(expected);
+			dst = DeviceArray<uint8_t>(expected);
 
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);

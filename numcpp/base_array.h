@@ -43,15 +43,28 @@ public:
 	}
 
 	base_array_t(int itemSize, const tuple &size) :
-		_itemSize(itemSize)
+		_itemSize(itemSize), 
+		_size(size)
 	{
-		setSize<heap_allocator>(size);
+		_stride.reset(new int[ndims()]);
+		_stride[0] = itemSize;
+		for (int i = 1; i < ndims(); i++)
+			_stride[i] = _stride[i - 1] * size[i - 1];
+
+		void *ptr = heap_allocator::allocate(size.product() * _itemSize);
+
+		_address = std::shared_ptr<void>(ptr, heap_allocator::free);
+		_origin = ptr;
 	}
 
 private:
 	// External constructors
 	friend base_array_t ref(const base_array_t &array);
 
+	template <class Allocator>
+	friend base_array_t BaseArray(int itemSize, const tuple &size);
+
+protected:
 	base_array_t(int itemSize, 
 				 const tuple &size, 
 				 std::unique_ptr<int[]> stride, 
@@ -63,28 +76,6 @@ private:
 		_address(address), 
 		_origin(origin)
 	{
-	}
-
-public:
-	// TODO: protected
-	// Actual constructor
-	template <class Allocator>
-	void setSize(const tuple &size)
-	{
-		// TODO: remove this line
-		if (this->size() == size)
-			return;
-
-		_size = size;
-		_stride.reset(new int[ndims()]);
-		_stride[0] = itemSize();
-		for (int i = 1; i < ndims(); i++)
-			_stride[i] = _stride[i - 1] * size[i - 1];
-
-		void *ptr = Allocator::allocate(size.product() * _itemSize);
-
-		_address = std::shared_ptr<void>(ptr, Allocator::free);
-		_origin = ptr;
 	}
 
 private:
@@ -276,6 +267,27 @@ public:
 		return *static_cast<const T *>(ptr_at(index0, index1));
 	}
 };
+
+// TODO: template <class Allocator = heap_allocator>
+template <class Allocator>
+inline base_array_t BaseArray(int itemSize, const tuple &size)
+{
+	const int ndims = size.length();
+
+	int *stride = new int[ndims];
+	stride[0] = itemSize;
+	for (int i = 1; i < ndims; i++)
+		stride[i] = stride[i - 1] * size[i - 1];
+
+	void *ptr = Allocator::allocate(size.product() * itemSize);
+
+	return base_array_t(
+		itemSize, 
+		size, 
+		std::unique_ptr<int[]>(stride), 
+		std::shared_ptr<void>(ptr, Allocator::free), 
+		ptr);
+}
 
 inline base_array_t ref(const base_array_t &array)
 {

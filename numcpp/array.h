@@ -15,19 +15,16 @@ public:
 	{
 	}
 
-	explicit array_t(int size0) : base_array_t(sizeof(T))
+	explicit array_t(int size0) : base_array_t(sizeof(T), tuple(size0))
 	{
-		base_array_t::setSize<heap_allocator>(tuple(size0));
 	}
 
-	array_t(int size0, int size1) : base_array_t(sizeof(T))
+	array_t(int size0, int size1) : base_array_t(sizeof(T), tuple(size0, size1))
 	{
-		base_array_t::setSize<heap_allocator>(tuple(size0, size1));
 	}
 
-	explicit array_t(const tuple &size) : base_array_t(sizeof(T))
+	explicit array_t(const tuple &size) : base_array_t(sizeof(T), size)
 	{
-		base_array_t::setSize<heap_allocator>(size);
 	}
 
 private:
@@ -44,6 +41,7 @@ public:
 	// move constructor (for base_array_t)
 	array_t(base_array_t &&other) : base_array_t(std::move(other))
 	{
+		assert(other.itemSize() == sizeof(T));
 	}
 
 	// move assign (inherited)
@@ -56,6 +54,8 @@ public:
 	// move assign (for base_array_t)
 	const array_t &operator=(base_array_t &&other)
 	{
+		assert(other.itemSize() == sizeof(T));
+
 		base_array_t::operator=(std::move(other));
 		return *this;
 	}

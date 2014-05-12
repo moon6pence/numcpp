@@ -38,7 +38,8 @@ TEST(BaseArray, SetSize)
 	EXPECT_EQ(3, a2.size(1));
 	EXPECT_NE(a2.raw_ptr(), nullptr);
 
-	base_array_t a3(sizeof(double), tuple(2, 3, 4));
+	int shape[3] = { 2, 3, 4 };
+	base_array_t a3(sizeof(double), tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -47,18 +48,6 @@ TEST(BaseArray, SetSize)
 	EXPECT_EQ(3, a3.size(1));
 	EXPECT_EQ(4, a3.size(2));
 	EXPECT_NE(nullptr, a3.raw_ptr());
-
-	int shape[4] = { 2, 2, 2, 2 };
-	base_array_t a4(sizeof(char), tuple(4, shape));
-
-	EXPECT_FALSE(a4.empty());
-	EXPECT_EQ(sizeof(char), a4.itemSize());
-	EXPECT_EQ(4, a4.ndims());
-	EXPECT_EQ(2, a4.size(0));
-	EXPECT_EQ(2, a4.size(1));
-	EXPECT_EQ(2, a4.size(2));
-	EXPECT_EQ(2, a4.size(3));
-	EXPECT_NE(nullptr, a4.raw_ptr());
 }
 
 } // anonymous namespace

@@ -52,7 +52,8 @@ struct CuFFT_R2C
 		}
 
 		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
-		if (dst.size() != expected) dst = device_array_t<float2>(expected);
+		if (dst.size() != expected) 
+			dst = DeviceArray<float2>(expected);
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecR2C(plan, src, dst));
@@ -95,7 +96,8 @@ struct CuFFT_C2C
 		}
 
 		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
-		if (dst.size() != expected) dst = device_array_t<float2>(expected);
+		if (dst.size() != expected) 
+			dst = DeviceArray<float2>(expected);
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecC2C(plan, src, dst, direction));
