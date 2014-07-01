@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <limits>
 
 template <typename Arg>
 struct signal
@@ -87,6 +88,74 @@ struct property
 private:
 	std::string _name;
 	T _value;
+};
+
+// template specialization for float
+template <>
+struct property<float>
+{
+	typedef float T;
+
+	signal<T> valueChanged;
+
+	property(const std::string name, 
+		T default_value, 
+		T step = 1.0f, 
+		T min = std::numeric_limits<T>::min(), 
+		T max = std::numeric_limits<T>::max()) : _name(name), _step(step), _min(min), _max(max)
+	{
+		set(default_value);
+	}
+
+	const T& get() const
+	{
+		return _value; 
+	}
+
+	void set(const T& new_value)
+	{
+		if (_value == new_value)
+			return; // do not fire update event
+		else if (new_value > max())
+			_value = max();
+		else if (new_value < min())
+			_value = min();
+		else
+			_value = new_value;
+
+		// Fire valueChanged event
+		valueChanged(new_value);
+	}
+
+	// getters
+	const std::string& name() const	{ return _name; }
+	T step() const { return _step; }
+	T min() const { return _min; }
+	T max() const { return _max; }
+
+	// Syntatic sugars
+	operator const T& () const
+	{
+		return _value;
+	}
+
+	const T& operator=(const T& new_value)
+	{
+		set(new_value);
+		return _value;
+	}
+
+	const T& operator=(const property<T> &property)
+	{
+		set(property.get());
+		return _value;
+	}
+
+private:
+	std::string _name;
+	
+	T _value;
+	const T _step, _min, _max;
 };
 
 struct operation

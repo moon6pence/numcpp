@@ -99,9 +99,9 @@ struct QuickDialog : public templated_property_visitor<QuickDialog>
 	void visit(property<float> &property) const
 	{
 		QDoubleSpinBox *spinBox = new QDoubleSpinBoxIgnoreWheel(widget);
-		// TODO: property range?
-		spinBox->setRange((double)std::numeric_limits<int>::min(), (double)std::numeric_limits<int>::max());
-		spinBox->setValue((double)property.get());
+		spinBox->setRange(property.min(), property.max());
+		spinBox->setSingleStep(property.step());
+		spinBox->setValue(property.get());
 		spinBox->setFocusPolicy(Qt::StrongFocus);
 
 		// Update property when spinbox is changed
