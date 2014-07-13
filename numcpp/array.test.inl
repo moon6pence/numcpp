@@ -121,7 +121,7 @@ TEST(Array, MoveFromBaseArray)
 {
 	// move constructor
 	{
-		base_array_t base1(sizeof(int), tuple(5));
+		BaseArray base1(sizeof(int), tuple(5));
 
 		EXPECT_FALSE(base1.empty());
 		EXPECT_EQ(1, base1.ndims());
@@ -141,7 +141,7 @@ TEST(Array, MoveFromBaseArray)
 
 	// move assign
 	{
-		base_array_t base2(sizeof(float), tuple(3, 2));
+		BaseArray base2(sizeof(float), tuple(3, 2));
 
 		array_t<int> a2(5);
 		a2 = std::move(base2);

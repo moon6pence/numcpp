@@ -21,7 +21,7 @@ struct heap_allocator
 	}
 };
 
-struct base_array_t
+struct BaseArray
 {
 //private:
 public:
@@ -32,17 +32,17 @@ public:
 	void *_origin;
 
 public:
-	base_array_t() : 
+	BaseArray() : 
 		_itemSize(1), _origin(nullptr)
 	{
 	}
 
-	explicit base_array_t(int itemSize) : 
+	explicit BaseArray(int itemSize) : 
 		_itemSize(itemSize), _origin(nullptr) 
 	{ 
 	}
 
-	base_array_t(int itemSize, const tuple &size) :
+	BaseArray(int itemSize, const tuple &size) :
 		_itemSize(itemSize), 
 		_size(size)
 	{
@@ -59,17 +59,17 @@ public:
 
 private:
 	// External constructors
-	friend base_array_t ref(const base_array_t &array);
+	friend BaseArray ref(const BaseArray &array);
 
 	template <class Allocator>
-	friend base_array_t BaseArray(int itemSize, const tuple &size);
+	friend BaseArray baseArrayWithAllocator(int itemSize, const tuple &size);
 
 protected:
-	base_array_t(int itemSize, 
-				 const tuple &size, 
-				 std::unique_ptr<int[]> stride, 
-				 std::shared_ptr<void> address, 
-				 void *origin) :
+	BaseArray(int itemSize, 
+			  const tuple &size, 
+			  std::unique_ptr<int[]> stride, 
+			  std::shared_ptr<void> address, 
+			  void *origin) : 
 		_itemSize(itemSize), 
 		_size(size), 
 		_stride(std::move(stride)), 
@@ -80,12 +80,12 @@ protected:
 
 private:
 	// delete copy constructor, assign
-	base_array_t(const base_array_t &other) : _itemSize(1) { }
-	const base_array_t &operator=(const base_array_t &other) { return *this; }
+	BaseArray(const BaseArray &other) : _itemSize(1) { }
+	const BaseArray &operator=(const BaseArray &other) { return *this; }
 
 public:
 	// move constructor
-	base_array_t(base_array_t &&other) : 
+	BaseArray(BaseArray &&other) : 
 		_itemSize(other._itemSize), 
 		_size(std::move(other._size)), 
 		_stride(std::move(other._stride)), 
@@ -96,7 +96,7 @@ public:
 	}
 
 	// move assign
-	const base_array_t &operator=(base_array_t &&other)
+	const BaseArray &operator=(BaseArray &&other)
 	{
 		_size = std::move(other._size);
 		_stride = std::move(other._stride);
@@ -108,11 +108,11 @@ public:
 		return *this;
 	}
 
-	base_array_t slice(int from, int to)
+	BaseArray slice(int from, int to)
 	{
 		assert(from <= to);	
 
-		base_array_t result(itemSize());
+		BaseArray result(itemSize());
 
 		int *shape = new int[1];
 		shape[0] = to - from;
@@ -131,12 +131,12 @@ public:
 		return result;
 	}
 
-	base_array_t slice(int from0, int from1, int to0, int to1)
+	BaseArray slice(int from0, int from1, int to0, int to1)
 	{
 		assert(from0 <= to0);	
 		assert(from1 <= to1);	
 
-		base_array_t result(itemSize());
+		BaseArray result(itemSize());
 
 		int *shape = new int[2];
 		shape[0] = to0 - from0;
@@ -268,9 +268,8 @@ public:
 	}
 };
 
-// TODO: template <class Allocator = heap_allocator>
 template <class Allocator>
-inline base_array_t BaseArray(int itemSize, const tuple &size)
+inline BaseArray baseArrayWithAllocator(int itemSize, const tuple &size)
 {
 	const int ndims = size.length();
 
@@ -281,7 +280,7 @@ inline base_array_t BaseArray(int itemSize, const tuple &size)
 
 	void *ptr = Allocator::allocate(size.product() * itemSize);
 
-	return base_array_t(
+	return BaseArray(
 		itemSize, 
 		size, 
 		std::unique_ptr<int[]>(stride), 
@@ -289,13 +288,13 @@ inline base_array_t BaseArray(int itemSize, const tuple &size)
 		ptr);
 }
 
-inline base_array_t ref(const base_array_t &array)
+inline BaseArray ref(const BaseArray &array)
 {
 	int *stride = new int[array.ndims()];
 	for (int i = 0; i < array.ndims(); i++)
 		stride[i] = array.stride(i);
 
-	return base_array_t(
+	return BaseArray(
 		array._itemSize, 
 		array._size, 
 		std::unique_ptr<int[]>(stride), 

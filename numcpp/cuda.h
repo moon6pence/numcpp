@@ -9,10 +9,10 @@
 namespace np {
 
 template <typename T>
-struct device_array_t : public base_array_t
+struct device_array_t : public BaseArray
 {
 public:
-	device_array_t() : base_array_t(sizeof(T))
+	device_array_t() : BaseArray(sizeof(T))
 	{
 	}
 
@@ -26,7 +26,7 @@ protected:
 				   std::unique_ptr<int[]> stride, 
 				   std::shared_ptr<void> address, 
 				   void *origin) : 
-		base_array_t(sizeof(T), size, std::move(stride), std::move(address), origin)
+		BaseArray(sizeof(T), size, std::move(stride), std::move(address), origin)
 	{
 	}
 
@@ -37,19 +37,19 @@ private:
 
 public:
 	// inherits move constructor
-	device_array_t(device_array_t &&other) : base_array_t(std::move(other))
+	device_array_t(device_array_t &&other) : BaseArray(std::move(other))
 	{
 	}
 
 	// inherits move assign
 	const device_array_t &operator=(device_array_t &&other)
 	{
-		base_array_t::operator=(std::move(other));
+		BaseArray::operator=(std::move(other));
 		return *this;
 	}
 
 	// Convert from host array
-	explicit device_array_t(const array_t<T> &array_h) : base_array_t(sizeof(T))
+	explicit device_array_t(const array_t<T> &array_h) : BaseArray(sizeof(T))
 	{
 		to_device(*this, array_h);
 	}
@@ -58,22 +58,22 @@ public:
 
 	T *raw_ptr()
 	{
-		return base_array_t::raw_ptr<T>();
+		return BaseArray::raw_ptr<T>();
 	}
 
 	const T *raw_ptr() const
 	{
-		return base_array_t::raw_ptr<T>();
+		return BaseArray::raw_ptr<T>();
 	}
 
 	operator T * ()
 	{
-		return base_array_t::raw_ptr<T>();
+		return BaseArray::raw_ptr<T>();
 	}
 
 	operator const T * () const
 	{
-		return base_array_t::raw_ptr<T>();
+		return BaseArray::raw_ptr<T>();
 	}
 };
 

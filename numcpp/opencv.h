@@ -30,9 +30,9 @@ const cv::Mat to_cv_mat(const array_t<T> &array)
 		array.stride(1));
 }
 
-inline base_array_t from_cv_mat(const cv::Mat &cv_mat)
+inline BaseArray from_cv_mat(const cv::Mat &cv_mat)
 {
-	base_array_t result((int)cv_mat.elemSize(), tuple(cv_mat.cols, cv_mat.rows));
+	BaseArray result((int)cv_mat.elemSize(), tuple(cv_mat.cols, cv_mat.rows));
 
 	// TODO: Do not copy
 	memcpy(result.raw_ptr<void>(), cv_mat.data, result.byteSize());

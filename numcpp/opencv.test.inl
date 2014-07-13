@@ -108,7 +108,7 @@ TEST(OpenCV, FromCvMatRuntime)
 	cv_mat.at<uint8_t>(3, 2) = 123;
 	cv_mat.at<uint8_t>(1, 4) = 7;
 
-	base_array_t a1 = from_cv_mat(cv_mat);
+	BaseArray a1 = from_cv_mat(cv_mat);
 	ASSERT_FALSE(a1.empty());
 	ASSERT_EQ(cv_mat.rows, a1.size(0));
 	ASSERT_EQ(cv_mat.cols, a1.size(1));
