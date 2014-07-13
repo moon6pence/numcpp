@@ -89,7 +89,7 @@ if (BUILD_TEST)
 
 	# test executable
 	add_executable(
-		test 
+		numcpp.test 
 		test.cpp
 
 		numcpp/base_array.test.inl
@@ -107,7 +107,7 @@ if (BUILD_TEST)
 
 	find_package(Threads)
 	include_directories("thirdparty/gtest-1.7.0/include")
-	target_link_libraries(test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
+	target_link_libraries(numcpp.test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
 
 	# Copy files for test
 	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
