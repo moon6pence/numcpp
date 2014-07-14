@@ -60,13 +60,13 @@ void from_cv_mat(Array<T> &dst, const cv::Mat &src)
 #ifdef USE_CUDA
 
 template <typename T>
-inline cv::gpu::GpuMat to_cv_gpu_mat(device_array_t<T> &array_d)
+inline cv::gpu::GpuMat to_cv_gpu_mat(GpuArray<T> &array_d)
 {
 	return cv::gpu::GpuMat(array_d.size(0), array_d.size(1), cv::DataType<T>::type, array_d.raw_ptr());
 }
 
 template <typename T>
-inline const cv::gpu::GpuMat to_cv_gpu_mat(const device_array_t<T> &array_d)
+inline const cv::gpu::GpuMat to_cv_gpu_mat(const GpuArray<T> &array_d)
 {
 	return cv::gpu::GpuMat(array_d.size(0), array_d.size(1), cv::DataType<T>::type, const_cast<T *>(array_d.raw_ptr()));
 }

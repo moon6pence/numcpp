@@ -40,7 +40,7 @@ struct CuFFT_R2C
 		if (plan) { cufftDestroy(plan); plan = 0; }
 	}
 
-	void operator() (device_array_t<float2> &dst, device_array_t<float> &src, cudaStream_t stream = 0)
+	void operator() (GpuArray<float2> &dst, GpuArray<float> &src, cudaStream_t stream = 0)
 	{
 		// Lazy initialization
 		if (plan == 0)
@@ -53,7 +53,7 @@ struct CuFFT_R2C
 
 		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
 		if (dst.size() != expected) 
-			dst = DeviceArray<float2>(expected);
+			dst = gpuArray<float2>(expected);
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecR2C(plan, src, dst));
@@ -74,17 +74,17 @@ struct CuFFT_C2C
 		if (plan) { cufftDestroy(plan); plan = 0; }
 	}
 
-	void forward(device_array_t<float2> &dst, device_array_t<float2> &src, cudaStream_t stream = 0)
+	void forward(GpuArray<float2> &dst, GpuArray<float2> &src, cudaStream_t stream = 0)
 	{
 		operator() (dst, src, CUFFT_FORWARD, stream);
 	}
 
-	void inverse(device_array_t<float2> &dst, device_array_t<float2> &src, cudaStream_t stream = 0)
+	void inverse(GpuArray<float2> &dst, GpuArray<float2> &src, cudaStream_t stream = 0)
 	{
 		operator() (dst, src, CUFFT_INVERSE, stream);
 	}
 
-	void operator() (device_array_t<float2> &dst, device_array_t<float2> &src, int direction, cudaStream_t stream = 0)
+	void operator() (GpuArray<float2> &dst, GpuArray<float2> &src, int direction, cudaStream_t stream = 0)
 	{
 		// Lazy initialization
 		if (plan == 0)
@@ -97,7 +97,7 @@ struct CuFFT_C2C
 
 		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
 		if (dst.size() != expected) 
-			dst = DeviceArray<float2>(expected);
+			dst = gpuArray<float2>(expected);
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecC2C(plan, src, dst, direction));

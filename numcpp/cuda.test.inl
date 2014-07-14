@@ -61,7 +61,7 @@ TEST(CUDA, RunKernel)
 
 TEST(CUDA, DeclareEmptyDeviceArray)
 {
-	device_array_t<int> a0;
+	GpuArray<int> a0;
 
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(sizeof(int), a0.itemSize());
@@ -71,7 +71,7 @@ TEST(CUDA, DeclareEmptyDeviceArray)
 
 TEST(CUDA, DeclareDeviceArrayWithSize)
 {
-	auto a1 = DeviceArray<int>(5);
+	GpuArray<int> a1 = gpuArray<int>(5);
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(sizeof(int), a1.itemSize());
@@ -79,7 +79,7 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-	auto a2 = DeviceArray<float>(2, 3);
+	auto a2 = gpuArray<float>(2, 3);
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(sizeof(float), a2.itemSize());
@@ -89,7 +89,7 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	int shape[3] = { 2, 3, 4 };
-	auto a3 = DeviceArray<double>(tuple(3, shape));
+	auto a3 = gpuArray<double>(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -109,7 +109,7 @@ typedef ArrayFixture CUDA_F;
 
 TEST_F(CUDA_F, HostToDevice)
 {
-	auto a1_d = DeviceArray<int>(5);
+	auto a1_d = gpuArray<int>(5);
 	to_device(a1_d, a1);
 
 	Array<int> a1_h(5);
@@ -119,7 +119,7 @@ TEST_F(CUDA_F, HostToDevice)
 	for (auto i = begin(a1_h); i != end(a1_h); ++i, ++ptr1)
 		EXPECT_EQ(*i, *ptr1);
 
-	auto a2_d = DeviceArray<int>(2, 3);
+	auto a2_d = gpuArray<int>(2, 3);
 	to_device(a2_d, a2);
 
 	// Asynchronous copy
@@ -134,7 +134,7 @@ TEST_F(CUDA_F, HostToDevice)
 
 TEST_F(CUDA_F, ConstructorWithHostArray)
 {
-	device_array_t<int> a1_d(a1);
+	GpuArray<int> a1_d(a1);
 
 	EXPECT_FALSE(a1_d.empty());
 	EXPECT_EQ(a1_d.ndims(), 1);
@@ -163,8 +163,8 @@ TEST(CUDA, RunKernel2)
 	b(0) = 3; b(1) = 3; b(2) = 3; b(3) = 3; b(4) = 3;
 
 	// Data on the device memory
-	device_array_t<int> a_d(a), b_d(b);
-	auto c_d = DeviceArray<int>(N);
+	GpuArray<int> a_d(a), b_d(b);
+	auto c_d = gpuArray<int>(N);
 
 	// Run kernel
 	vecAdd(a_d, b_d, c_d, N);

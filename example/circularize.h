@@ -55,21 +55,21 @@ struct Circularize
 
 struct Circularize_d : private Circularize
 {
-	device_array_t<float> x_map_d, y_map_d;
+	GpuArray<float> x_map_d, y_map_d;
 
-	void operator() (device_array_t<uint8_t> &dst, const device_array_t<uint8_t> &src, int DIAMETER)
+	void operator() (GpuArray<uint8_t> &dst, const GpuArray<uint8_t> &src, int DIAMETER)
 	{
 		const tuple expected(DIAMETER, DIAMETER);
 		if (dst.size() != expected) 
-			dst = DeviceArray<uint8_t>(expected);
+			dst = gpuArray<uint8_t>(expected);
 
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
 
 		if (x_map_d.empty() || y_map_d.empty())
 		{
-			x_map_d = device_array_t<float>(x_map);
-			y_map_d = device_array_t<float>(y_map);
+			x_map_d = GpuArray<float>(x_map);
+			y_map_d = GpuArray<float>(y_map);
 		}
 
 		cv::gpu::GpuMat cv_dst = to_cv_gpu_mat(dst);

@@ -9,20 +9,20 @@
 namespace np {
 
 template <typename T>
-struct device_array_t : public BaseArray
+struct GpuArray : public BaseArray
 {
 public:
-	device_array_t() : BaseArray(sizeof(T))
+	GpuArray() : BaseArray(sizeof(T))
 	{
 	}
 
 private:
 	// External constructors
 	template <typename T>
-	friend device_array_t<T> DeviceArray(const tuple &size);
+	friend GpuArray<T> gpuArray(const tuple &size);
 
 protected:
-	device_array_t(const tuple &size, 
+	GpuArray(const tuple &size, 
 				   std::unique_ptr<int[]> stride, 
 				   std::shared_ptr<void> address, 
 				   void *origin) : 
@@ -32,24 +32,24 @@ protected:
 
 private:
 	// delete copy constructor, assign
-	device_array_t(device_array_t &) { }
-	const device_array_t &operator=(const device_array_t &) { return *this; }
+	GpuArray(GpuArray &) { }
+	const GpuArray &operator=(const GpuArray &) { return *this; }
 
 public:
 	// inherits move constructor
-	device_array_t(device_array_t &&other) : BaseArray(std::move(other))
+	GpuArray(GpuArray &&other) : BaseArray(std::move(other))
 	{
 	}
 
 	// inherits move assign
-	const device_array_t &operator=(device_array_t &&other)
+	const GpuArray &operator=(GpuArray &&other)
 	{
 		BaseArray::operator=(std::move(other));
 		return *this;
 	}
 
 	// Convert from host array
-	explicit device_array_t(const Array<T> &array_h) : BaseArray(sizeof(T))
+	explicit GpuArray(const Array<T> &array_h) : BaseArray(sizeof(T))
 	{
 		to_device(*this, array_h);
 	}
@@ -92,8 +92,9 @@ struct device_allocator
 	}
 };
 
+// TODO: Use 'this constructor' forwarding (with VS2013)
 template <typename T>
-device_array_t<T> DeviceArray(const tuple &size)
+GpuArray<T> gpuArray(const tuple &size)
 {
 	const int itemSize = sizeof(T);
 	const int ndims = size.length();
@@ -105,7 +106,7 @@ device_array_t<T> DeviceArray(const tuple &size)
 
 	void *ptr = device_allocator::allocate(size.product() * itemSize);
 
-	return device_array_t<T>(
+	return GpuArray<T>(
 		size, 
 		std::unique_ptr<int[]>(stride), 
 		std::shared_ptr<void>(ptr, device_allocator::free), 
@@ -113,37 +114,37 @@ device_array_t<T> DeviceArray(const tuple &size)
 }
 
 template <typename T>
-device_array_t<T> DeviceArray(int size0)
+GpuArray<T> gpuArray(int size0)
 {
-	return DeviceArray<T>(tuple(size0));
+	return gpuArray<T>(tuple(size0));
 }
 
 template <typename T>
-device_array_t<T> DeviceArray(int size0, int size1)
+GpuArray<T> gpuArray(int size0, int size1)
 {
-	return DeviceArray<T>(tuple(size0, size1));
+	return gpuArray<T>(tuple(size0, size1));
 }
 
 template <typename T>
-void to_device(device_array_t<T> &dst_d, const Array<T> &src)
+void to_device(GpuArray<T> &dst_d, const Array<T> &src)
 {
 	if (dst_d.size() != src.size())
-		dst_d = DeviceArray<T>(src.size());
+		dst_d = gpuArray<T>(src.size());
 
 	cudaMemcpy(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice);
 }
 
 template <typename T>
-void to_device(device_array_t<T> &dst_d, const Array<T> &src, cudaStream_t stream)
+void to_device(GpuArray<T> &dst_d, const Array<T> &src, cudaStream_t stream)
 {
 	if (dst_d.size() != src.size())
-		dst_d = DeviceArray<T>(src.size());
+		dst_d = gpuArray<T>(src.size());
 
 	cudaMemcpyAsync(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice, stream);
 }
 
 template <typename T>
-void to_host(Array<T> &dst, const device_array_t<T> &src_d)
+void to_host(Array<T> &dst, const GpuArray<T> &src_d)
 {
 	if (dst.size() != src_d.size())
 		dst = Array<T>(src_d.size());
@@ -152,7 +153,7 @@ void to_host(Array<T> &dst, const device_array_t<T> &src_d)
 }
 
 template <typename T>
-void to_host(Array<T> &dst, const device_array_t<T> &src_d, cudaStream_t stream)
+void to_host(Array<T> &dst, const GpuArray<T> &src_d, cudaStream_t stream)
 {
 	if (dst.size() != src_d.size())
 		dst = Array<T>(src_d.size());
