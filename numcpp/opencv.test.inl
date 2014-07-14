@@ -17,7 +17,7 @@ TEST(OpenCV, HelloOpenCV)
 
 TEST(OpenCV, ToCvMat)
 {
-	array_t<uint8_t> mat(5, 8);
+	Array<uint8_t> mat(5, 8);
 	fill(mat, (uint8_t)128);
 	mat(2, 3) = 255;
 	mat(4, 1) = 0;
@@ -31,7 +31,7 @@ TEST(OpenCV, ToCvMat)
 		for (int x = 0; x < mat.size(0); x++)
 			ASSERT_EQ(mat(y, x), cv_mat.at<uint8_t>(x, y));
 
-	array_t<float> mat2(5, 8);
+	Array<float> mat2(5, 8);
 	fill(mat2, 0.5f);
 	mat2(2, 3) = 1.0f;
 	mat2(4, 1) = 0.0f;
@@ -79,7 +79,7 @@ TEST(OpenCV, FromCvMatVoid)
 	cv_mat.at<uint8_t>(3, 2) = 123;
 	cv_mat.at<uint8_t>(1, 4) = 7;
 
-	array_t<uint8_t> mat;
+	Array<uint8_t> mat;
 	from_cv_mat(mat, cv_mat);
 	ASSERT_EQ(cv_mat.cols, mat.size(0));
 	ASSERT_EQ(cv_mat.rows, mat.size(1));
@@ -93,7 +93,7 @@ TEST(OpenCV, FromCvMatVoid)
 	cv_mat2.at<float>(3, 2) = 1.0f;
 	cv_mat2.at<float>(1, 4) = 0.0f;
 
-	array_t<float> mat2;
+	Array<float> mat2;
 	from_cv_mat(mat2, cv_mat2);
 	ASSERT_EQ(cv_mat2.cols, mat2.size(0));
 	ASSERT_EQ(cv_mat2.rows, mat2.size(1));
@@ -138,7 +138,7 @@ TEST(OpenCV, ImRead)
 	EXPECT_EQ(image(0, 0), cv_grayscale.at<uint8_t>(0, 0));
 	EXPECT_EQ(image(511, 511), cv_grayscale.at<uint8_t>(511, 511));
 
-	array_t<uint8_t> image2;
+	Array<uint8_t> image2;
 	imread(image2, "Lena.bmp");
 	ASSERT_EQ(cv_image.rows, image2.size(0));
 	ASSERT_EQ(cv_image.cols, image2.size(1));

@@ -7,13 +7,13 @@
 namespace np {
 
 template <typename T>
-int stepBytes(const array_t<T> &image)
+int stepBytes(const Array<T> &image)
 {
 	return image.size(0) * sizeof(T);
 }
 
 template <typename T>
-inline IppiSize ippiSize(const array_t<T> &image)
+inline IppiSize ippiSize(const Array<T> &image)
 {
 	IppiSize result = { image.size(0), image.size(1) };
 	return result;
@@ -26,7 +26,7 @@ inline IppiRect ippiRect(int width, int height)
 }
 
 template <typename T>
-inline IppiRect ippiRect(const array_t<T> &image)
+inline IppiRect ippiRect(const Array<T> &image)
 {
 	return ippiRect(image.width(), image.height());
 }

@@ -10,14 +10,14 @@ namespace np {
 
 struct Circularize
 {
-	array_t<float> x_map, y_map;
+	Array<float> x_map, y_map;
 
 	void buildCircularizeMap(const int HEIGHT, const int WIDTH, const int DIAMETER)
 	{
 		const float PI = 3.1415927f;
 		
-		array_t<float> X, Y;
-		array_t<float> theta, rho;
+		Array<float> X, Y;
+		Array<float> theta, rho;
 		
 		meshgrid(X, Y, colon(0.f, DIAMETER - 1.f), colon(0.f, DIAMETER - 1.f));
 
@@ -38,11 +38,11 @@ struct Circularize
 		y_map = rho * ((float)(HEIGHT-1) / (DIAMETER/2));
 	}
 
-	void operator() (array_t<uint8_t> &dst, const array_t<uint8_t> &src, int DIAMETER)
+	void operator() (Array<uint8_t> &dst, const Array<uint8_t> &src, int DIAMETER)
 	{
 		const tuple expected(DIAMETER, DIAMETER);
 		if (dst.size() != expected) 
-			dst = array_t<uint8_t>(expected);
+			dst = Array<uint8_t>(expected);
 
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);

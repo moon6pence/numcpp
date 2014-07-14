@@ -49,7 +49,7 @@ public:
 	}
 
 	// Convert from host array
-	explicit device_array_t(const array_t<T> &array_h) : BaseArray(sizeof(T))
+	explicit device_array_t(const Array<T> &array_h) : BaseArray(sizeof(T))
 	{
 		to_device(*this, array_h);
 	}
@@ -125,7 +125,7 @@ device_array_t<T> DeviceArray(int size0, int size1)
 }
 
 template <typename T>
-void to_device(device_array_t<T> &dst_d, const array_t<T> &src)
+void to_device(device_array_t<T> &dst_d, const Array<T> &src)
 {
 	if (dst_d.size() != src.size())
 		dst_d = DeviceArray<T>(src.size());
@@ -134,7 +134,7 @@ void to_device(device_array_t<T> &dst_d, const array_t<T> &src)
 }
 
 template <typename T>
-void to_device(device_array_t<T> &dst_d, const array_t<T> &src, cudaStream_t stream)
+void to_device(device_array_t<T> &dst_d, const Array<T> &src, cudaStream_t stream)
 {
 	if (dst_d.size() != src.size())
 		dst_d = DeviceArray<T>(src.size());
@@ -143,19 +143,19 @@ void to_device(device_array_t<T> &dst_d, const array_t<T> &src, cudaStream_t str
 }
 
 template <typename T>
-void to_host(array_t<T> &dst, const device_array_t<T> &src_d)
+void to_host(Array<T> &dst, const device_array_t<T> &src_d)
 {
 	if (dst.size() != src_d.size())
-		dst = array_t<T>(src_d.size());
+		dst = Array<T>(src_d.size());
 
 	cudaMemcpy(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost);
 }
 
 template <typename T>
-void to_host(array_t<T> &dst, const device_array_t<T> &src_d, cudaStream_t stream)
+void to_host(Array<T> &dst, const device_array_t<T> &src_d, cudaStream_t stream)
 {
 	if (dst.size() != src_d.size())
-		dst = array_t<T>(src_d.size());
+		dst = Array<T>(src_d.size());
 
 	cudaMemcpyAsync(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost, stream);
 }

@@ -10,12 +10,12 @@ namespace np {
 
 /** One-dimensional array from j to k, such as {j, j+1, ..., k} */
 template <typename T>
-array_t<T> colon(T j, T k)
+Array<T> colon(T j, T k)
 {
 	if (k < j) 
-		return array_t<T>();
+		return Array<T>();
 
-	array_t<T> result((int)(k - j + 1));
+	Array<T> result((int)(k - j + 1));
 	for (int index = 0; index < result.size(0); index++)
 		result(index) = j + index;
 
@@ -24,12 +24,12 @@ array_t<T> colon(T j, T k)
 
 /** One-dimensional array from j to k step i, such as {j, j+i, j+2i, ... } */
 template <typename T>
-array_t<T> colon(T j, T i, T k)
+Array<T> colon(T j, T i, T k)
 {
 	if (i == 0 || (i > 0 && j > k) || (i < 0 && j < k))
-		return array_t<T>();
+		return Array<T>();
 
-	array_t<T> result((int)((k - j) / i) + 1);
+	Array<T> result((int)((k - j) / i) + 1);
 	for (int index = 0; index < result.size(0); index++)
 		result(index) = j + index * i;
 
@@ -38,9 +38,9 @@ array_t<T> colon(T j, T i, T k)
 
 /** Generate linearly spaced vectors */
 template <typename T>
-array_t<T> linspace(T a, T b, int n)
+Array<T> linspace(T a, T b, int n)
 {
-	array_t<T> result(n);
+	Array<T> result(n);
 	for (int index = 0; index < result.size(0); index++)
 		result(index) = a + (b - a) * index / (n - 1);
 
@@ -49,13 +49,13 @@ array_t<T> linspace(T a, T b, int n)
 
 template <typename T>
 void meshgrid(
-	array_t<T> &X, array_t<T> &Y, 
-	const array_t<T> &xgv, const array_t<T> &ygv)
+	Array<T> &X, Array<T> &Y, 
+	const Array<T> &xgv, const Array<T> &ygv)
 {
 	tuple expected_size(xgv.length(), ygv.length());
 
-	if (X.size() != expected_size) X = array_t<T>(expected_size);
-	if (Y.size() != expected_size) Y = array_t<T>(expected_size);
+	if (X.size() != expected_size) X = Array<T>(expected_size);
+	if (Y.size() != expected_size) Y = Array<T>(expected_size);
 
 	for (int y = 0; y < ygv.length(); y++)
 		for (int x = 0; x < xgv.length(); x++)
@@ -66,13 +66,13 @@ void meshgrid(
 }
 
 template <typename T>
-array_t<T> fromfile(const std::string &filename)
+Array<T> fromfile(const std::string &filename)
 {
 	using namespace std;
 
 	std::ifstream file(filename);
 	if (!file.is_open())
-		return array_t<T>();
+		return Array<T>();
 
 	vector<T> buffer;
 	while (!file.eof())
@@ -84,7 +84,7 @@ array_t<T> fromfile(const std::string &filename)
 			buffer.push_back(value);
 	}
 
-	array_t<T> result((int)buffer.size());
+	Array<T> result((int)buffer.size());
 	std::copy(begin(buffer), end(buffer), begin(result));
 	return std::move(result);
 }

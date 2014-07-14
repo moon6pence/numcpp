@@ -112,7 +112,7 @@ TEST_F(CUDA_F, HostToDevice)
 	auto a1_d = DeviceArray<int>(5);
 	to_device(a1_d, a1);
 
-	array_t<int> a1_h(5);
+	Array<int> a1_h(5);
 	to_host(a1_h, a1_d);
 
 	int *ptr1 = data1;
@@ -141,7 +141,7 @@ TEST_F(CUDA_F, ConstructorWithHostArray)
 	EXPECT_EQ(a1_d.size(0), 5);
 	EXPECT_NE(a1_d.raw_ptr(), nullptr);
 
-	array_t<int> a1_h(5);
+	Array<int> a1_h(5);
 	to_host(a1_h, a1_d);
 
 	int *ptr1 = data1;
@@ -156,7 +156,7 @@ TEST(CUDA, RunKernel2)
 	const int N = 5;
 
 	// Data on the host memory
-	array_t<int> a(N), b(N), c(N);
+	Array<int> a(N), b(N), c(N);
 
 	// TODO: initialize in better way
 	a(0) = 1; a(1) = 2; a(2) = 3; a(3) = 4; a(4) = 5;

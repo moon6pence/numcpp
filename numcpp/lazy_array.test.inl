@@ -2,7 +2,7 @@
 
 TEST(LazyArray, AddArrays)
 {
-	array_t<int> a1(5), a2(5), result;
+	Array<int> a1(5), a2(5), result;
 	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
 	a2(0) = 3; a2(1) = 3; a2(2) = 3; a2(3) = 3; a2(4) = 3;
 
@@ -15,7 +15,7 @@ TEST(LazyArray, AddArrays)
 
 TEST(LazyArray, AddConstantToArray)
 {
-	array_t<int> a1(5), result;
+	Array<int> a1(5), result;
 	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
 
 	result = a1 + 3;
@@ -27,7 +27,7 @@ TEST(LazyArray, AddConstantToArray)
 
 TEST(LazyArray, InvertArraySign)
 {
-	array_t<int> a1(5), result;
+	Array<int> a1(5), result;
 	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
 
 	result = minus(a1);
@@ -39,7 +39,7 @@ TEST(LazyArray, InvertArraySign)
 
 TEST(LazyArray, ArrayExpression)
 {
-	array_t<int> a1(5), a2(5), result;
+	Array<int> a1(5), a2(5), result;
 	a1(0) = 1; a1(1) = 2; a1(2) = 3; a1(3) = 4; a1(4) = 5;
 	a2(0) = 3; a2(1) = 3; a2(2) = 3; a2(3) = 3; a2(4) = 3;
 
@@ -52,8 +52,8 @@ TEST(LazyArray, ArrayExpression)
 
 TEST(LazyArray, ArrayCast)
 {
-	array_t<float> a1(5);
-	array_t<int> result;
+	Array<float> a1(5);
+	Array<int> result;
 	a1(0) = 1.5; a1(1) = 2.5; a1(2) = 3.5; a1(3) = 4.5; a1(4) = 5.5;
 
 	result = array_cast<int>(a1);
@@ -64,12 +64,12 @@ TEST(LazyArray, ArrayCast)
 }
 
 template <typename T>
-array_t<T> add_without_lazy(const array_t<T> &a1, const array_t<T> &a2)
+Array<T> add_without_lazy(const Array<T> &a1, const Array<T> &a2)
 {
 	// TODO: assert shape
 	assert(a1.size() == a2.size());
 
-	array_t<T> result(a1.size());
+	Array<T> result(a1.size());
 	transform(result, a1, a2, [](T _a1, T _a2) -> T { return _a1 + _a2; });
 	return std::move(result);
 }
@@ -79,7 +79,7 @@ TEST(LazyArray, Performance)
 	// const int N = 10000000;
 	const int N = 1000;
 
-	array_t<int> a1(N);
+	Array<int> a1(N);
 	fill(a1, 1);
 
 	puts("Start without lazy array");
@@ -103,7 +103,7 @@ TEST(LazyArray, Performance)
 	puts("Start with lazy array");
 	for (int i = 0; i < 10; i++)
 	{
-		array_t<int> result;
+		Array<int> result;
 		// result = add(a1, 
 		// 	add(a1, 
 		// 	add(a1, 

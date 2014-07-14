@@ -51,14 +51,14 @@ TEST_F(NumcppSTL, Fill)
 
 TEST_F(NumcppSTL, Transform)
 {
-	array_t<int> result1(a1.size(0));
+	Array<int> result1(a1.size(0));
 	transform(result1, a1, [](int _a1) { return _a1 + 1; });
 
 	const int *p1 = data1;
 	for (auto i = begin(result1); i != end(result1); ++i)
 		EXPECT_EQ(*i, *(p1++) + 1);
 
-	array_t<int> result2(a1.size(0));
+	Array<int> result2(a1.size(0));
 	transform(result2, a1, a1, [](int _a1, int _a2) { return _a1 + _a2; });
 }
 
@@ -73,7 +73,7 @@ TEST_F(NumcppSTL, Sum)
 	int result2 = sum(a2);
 	EXPECT_EQ(25, result2);
 
-	array_t<int> a0(3);
+	Array<int> a0(3);
 	a0(0) = 2;
 	a0(1) = 7;
 	a0(2) = 6;

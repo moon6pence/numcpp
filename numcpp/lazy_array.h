@@ -214,7 +214,7 @@ lazy_array_cast<T, Array1> array_cast(const Array1 &a1)
 
 // Wake up lazy array
 template <typename T, class LazyArray>
-void assign(array_t<T> &dst, const LazyArray &lazy_array)
+void assign(Array<T> &dst, const LazyArray &lazy_array)
 {
 	// dst.setSize(lazy_array.size());
 	dst.setSize(lazy_array.size());

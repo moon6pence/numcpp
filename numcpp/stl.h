@@ -12,26 +12,26 @@
 namespace np {
 
 template <typename T>
-T *begin(array_t<T> &array)
+T *begin(Array<T> &array)
 {
 	return array.raw_ptr();
 }
 
 template <typename T>
-const T *begin(const array_t<T> &array)
+const T *begin(const Array<T> &array)
 {
 	return array.raw_ptr();
 }
 
 template <typename T>
-T *end(array_t<T> &array)
+T *end(Array<T> &array)
 {
 	// TODO: this is wrong for array with custom stride
 	return array.raw_ptr() + array.length();
 }
 
 template <typename T>
-const T *end(const array_t<T> &array)
+const T *end(const Array<T> &array)
 {
 	// TODO: this is wrong for array with custom stride
 	return array.raw_ptr() + array.length();
@@ -39,13 +39,13 @@ const T *end(const array_t<T> &array)
 
 // std::for_each
 template <typename T, class Function>
-void for_each(const array_t<T> &array, Function fn)
+void for_each(const Array<T> &array, Function fn)
 {
 	std::for_each(begin(array), end(array), fn);
 }
 
 template <typename T>
-void print(const array_t<T> &array)
+void print(const Array<T> &array)
 {
 	using namespace std;
 
@@ -54,7 +54,7 @@ void print(const array_t<T> &array)
 }
 
 template <>
-inline void print(const array_t<uint8_t> &array)
+inline void print(const Array<uint8_t> &array)
 {
 	using namespace std;
 
@@ -64,14 +64,14 @@ inline void print(const array_t<uint8_t> &array)
 
 // std::fill
 template <typename T>
-void fill(array_t<T> &dst, const T& value)
+void fill(Array<T> &dst, const T& value)
 {
 	std::fill(begin(dst), end(dst), value);	
 }
 
 // std::transform
 template <typename T, typename U, class UnaryFunction>
-void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
+void transform(Array<T> &dst, const Array<U> &src, UnaryFunction fn)
 {
 	if (dst.size() != src.size()) 
 		dst = similar<T>(src);
@@ -80,16 +80,16 @@ void transform(array_t<T> &dst, const array_t<U> &src, UnaryFunction fn)
 }
 
 template <typename T, class UnaryFunction>
-void transform(array_t<T> &srcDst, UnaryFunction fn)
+void transform(Array<T> &srcDst, UnaryFunction fn)
 {
 	std::transform(begin(srcDst), end(srcDst), begin(srcDst), fn);
 }
 
 template <typename T, typename U, typename V, class BinaryFunction>
 void transform(
-	array_t<T> &dst, 
-	const array_t<U> &src1, 
-	const array_t<V> &src2, 
+	Array<T> &dst, 
+	const Array<U> &src1, 
+	const Array<V> &src2, 
 	BinaryFunction fn)
 {
 	// assert(src1.ndims() == src2.ndims())
@@ -103,19 +103,19 @@ void transform(
 
 // std::accumulate
 template <typename T, class BinaryFunction>
-T accumulate(const array_t<T> &array, T init, BinaryFunction binary_op)
+T accumulate(const Array<T> &array, T init, BinaryFunction binary_op)
 {
 	return std::accumulate(begin(array), end(array), init, binary_op);
 }
 
 template <typename T>
-T sum(const array_t<T> &array)
+T sum(const Array<T> &array)
 {
 	return accumulate(array, T(), std::plus<T>());
 }
 
 template <typename T>
-T mean(const array_t<T> &array)
+T mean(const Array<T> &array)
 {
 	return sum(array) / array.length();
 }

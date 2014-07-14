@@ -6,7 +6,7 @@ using namespace np;
 
 TEST(Array, DeclareEmptyArray)
 {
-	array_t<int> a0;
+	Array<int> a0;
 
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(sizeof(int), a0.itemSize());
@@ -16,7 +16,7 @@ TEST(Array, DeclareEmptyArray)
 
 TEST(Array, DeclareArrayWithSize)
 {
-	array_t<int> a1(5);
+	Array<int> a1(5);
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(sizeof(int), a1.itemSize());
@@ -24,7 +24,7 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-	array_t<float> a2(3, 2);
+	Array<float> a2(3, 2);
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(sizeof(float), a2.itemSize());
@@ -34,7 +34,7 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	int shape[3] = { 4, 3, 2 };
-	array_t<double> a3(tuple(3, shape));
+	Array<double> a3(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -47,8 +47,8 @@ TEST(Array, DeclareArrayWithSize)
 
 TEST(Array, SetSize)
 {
-	array_t<int> a1;
-	a1 = array_t<int>(5);
+	Array<int> a1;
+	a1 = Array<int>(5);
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(sizeof(int), a1.itemSize());
@@ -56,16 +56,16 @@ TEST(Array, SetSize)
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-	array_t<int> a1_same(5);
+	Array<int> a1_same(5);
 	int *ptr = a1_same.raw_ptr();
 
 	// Do not allocate again
 	if (a1_same.size() != tuple(5))
-		a1_same = array_t<int>(5);
+		a1_same = Array<int>(5);
 	EXPECT_EQ(ptr, a1_same.raw_ptr());
 
-	array_t<int> a2;
-	a2 = array_t<int>(3, 2);
+	Array<int> a2;
+	a2 = Array<int>(3, 2);
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(sizeof(float), a2.itemSize());
@@ -74,9 +74,9 @@ TEST(Array, SetSize)
 	EXPECT_EQ(2, a2.size(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-	array_t<double> a3;
+	Array<double> a3;
 	int shape[3] = { 4, 3, 2 };
-	a3 = array_t<int>(tuple(3, shape));
+	a3 = Array<int>(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -90,7 +90,7 @@ TEST(Array, SetSize)
 TEST(Array, MoveSemantics)
 {
 	// move constructor
-	array_t<int> a1(5);
+	Array<int> a1(5);
 	auto moved = std::move(a1);
 
 	EXPECT_TRUE(a1.empty());
@@ -103,7 +103,7 @@ TEST(Array, MoveSemantics)
 	EXPECT_NE(nullptr, moved.raw_ptr());
 
 	// move assign
-	array_t<int> a2(3, 2), moved2;
+	Array<int> a2(3, 2), moved2;
 	moved2 = std::move(a2);
 
 	EXPECT_TRUE(a2.empty());
@@ -127,7 +127,7 @@ TEST(Array, MoveFromBaseArray)
 		EXPECT_EQ(1, base1.ndims());
 		EXPECT_NE(nullptr, base1.raw_ptr());
 
-		array_t<int> a1(std::move(base1));
+		Array<int> a1(std::move(base1));
 
 		EXPECT_TRUE(base1.empty());
 		EXPECT_EQ(0, base1.ndims());
@@ -143,7 +143,7 @@ TEST(Array, MoveFromBaseArray)
 	{
 		BaseArray base2(sizeof(float), tuple(3, 2));
 
-		array_t<int> a2(5);
+		Array<int> a2(5);
 		a2 = std::move(base2);
 
 		EXPECT_TRUE(base2.empty());
@@ -160,20 +160,20 @@ TEST(Array, MoveFromBaseArray)
 
 TEST(Array, DerivedFunctions)
 {
-	array_t<int> a0;
+	Array<int> a0;
 
 	EXPECT_TRUE(a0.empty());
 	EXPECT_EQ(1, a0.length()); // Be careful, not 0
 	EXPECT_EQ(1 * sizeof(int), a0.byteSize());
 
-	array_t<int> a1(5);
+	Array<int> a1(5);
 
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(5, a1.length());
 	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
 	EXPECT_EQ(sizeof(int), a1.stride(0));
 
-	array_t<float> a2(3, 2);
+	Array<float> a2(3, 2);
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(3 * 2, a2.length());
@@ -182,7 +182,7 @@ TEST(Array, DerivedFunctions)
 	EXPECT_EQ(sizeof(float) * 3, a2.stride(1));
 
 	int shape[3] = { 4, 3, 2 };
-	array_t<char> a3(tuple(3, shape));
+	Array<char> a3(tuple(3, shape));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(4 * 3 * 2, a3.length());
@@ -195,7 +195,7 @@ TEST(Array, DerivedFunctions)
 TEST(Array, AccessElements)
 {
 	// 1d array
-	np::array_t<int> a1(5);
+	np::Array<int> a1(5);
 
 	const int data1[5] = 
 	{ 
@@ -222,7 +222,7 @@ TEST(Array, AccessElements)
 	EXPECT_EQ(ptr, ptr2);
 
 	// 2d array
-	np::array_t<int> a2(3, 2);
+	np::Array<int> a2(3, 2);
 
 	const int data2[6] = 
 	{ 
@@ -247,7 +247,7 @@ TEST(Array, AccessElements)
 TEST(Array, Slice)
 {
 	// 1d array
-	np::array_t<int> a1(5);
+	np::Array<int> a1(5);
 
 	const int data1[5] = 
 	{ 
@@ -266,7 +266,7 @@ TEST(Array, Slice)
 	EXPECT_EQ(1, slice1(2));
 
 	// 2d array
-	np::array_t<int> a2(3, 2);
+	np::Array<int> a2(3, 2);
 
 	const int data2[6] = 
 	{ 

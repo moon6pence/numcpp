@@ -10,7 +10,7 @@ public:
 	ArrayFixture() : a1(5), a2(2, 3)
 	{
 		int shape[3] = { 2, 3, 4 };
-		a3 = np::array_t<int>(tuple(3, shape));
+		a3 = np::Array<int>(tuple(3, shape));
 	}
 
 protected:
@@ -49,7 +49,7 @@ protected:
 
 	virtual void TearDown() {}
 
-	np::array_t<int> a1, a2, a3;
+	np::Array<int> a1, a2, a3;
 	int data1[5], data2[6], data3[24];
 };
 

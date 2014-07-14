@@ -57,8 +57,8 @@ TEST(Functions, Linspace)
 
 TEST(Functions, MeshGrid)
 {
-	array_t<int> xgv = colon(1, 7), ygv = colon(2, 10);
-	array_t<int> X(7, 5), Y(7, 5);
+	Array<int> xgv = colon(1, 7), ygv = colon(2, 10);
+	Array<int> X(7, 5), Y(7, 5);
 
 	meshgrid(X, Y, xgv, ygv);
 

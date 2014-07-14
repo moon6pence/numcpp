@@ -11,7 +11,7 @@
 namespace np {
 
 template <typename T>
-cv::Mat to_cv_mat(array_t<T> &array)
+cv::Mat to_cv_mat(Array<T> &array)
 {
 	return cv::Mat(
 		array.size(1), array.size(0), 
@@ -21,7 +21,7 @@ cv::Mat to_cv_mat(array_t<T> &array)
 }
 
 template <typename T>
-const cv::Mat to_cv_mat(const array_t<T> &array)
+const cv::Mat to_cv_mat(const Array<T> &array)
 {
 	return cv::Mat(
 		array.size(1), array.size(0), 
@@ -41,17 +41,17 @@ inline BaseArray from_cv_mat(const cv::Mat &cv_mat)
 }
 
 template <typename T>
-array_t<T> from_cv_mat(const cv::Mat &cv_mat)
+Array<T> from_cv_mat(const cv::Mat &cv_mat)
 {
-	return array_t<T>(from_cv_mat(cv_mat));
+	return Array<T>(from_cv_mat(cv_mat));
 }
 
 template <typename T>
-void from_cv_mat(array_t<T> &dst, const cv::Mat &src)
+void from_cv_mat(Array<T> &dst, const cv::Mat &src)
 {
 	// TODO: check type of src
 	if (dst.size() != tuple(src.cols, src.rows))
-		dst = array_t<T>(src.cols, src.rows);
+		dst = Array<T>(src.cols, src.rows);
 
 	// TODO: Do not copy
 	memcpy(dst, src.data, dst.byteSize());
@@ -73,7 +73,7 @@ inline const cv::gpu::GpuMat to_cv_gpu_mat(const device_array_t<T> &array_d)
 
 #endif // USE_CUDA
 
-inline array_t<uint8_t> imread(const std::string &filename)
+inline Array<uint8_t> imread(const std::string &filename)
 {
 	cv::Mat cv_image = cv::imread(filename);
 
@@ -83,7 +83,7 @@ inline array_t<uint8_t> imread(const std::string &filename)
 	return from_cv_mat<uint8_t>(cv_grayscale);
 }
 
-inline bool imread(array_t<uint8_t> &dst, const std::string &filename)
+inline bool imread(Array<uint8_t> &dst, const std::string &filename)
 {
 	cv::Mat cv_image = cv::imread(filename);
 	if (cv_image.empty()) 
@@ -96,12 +96,12 @@ inline bool imread(array_t<uint8_t> &dst, const std::string &filename)
 	return true;
 }
 
-inline bool imwrite(const array_t<uint8_t> &image, const std::string &filename)
+inline bool imwrite(const Array<uint8_t> &image, const std::string &filename)
 {
 	return cv::imwrite(filename, to_cv_mat(image));
 }
 
-inline void imshow(const array_t<uint8_t> &image)
+inline void imshow(const Array<uint8_t> &image)
 {
 	cv::imshow("image", to_cv_mat(image));
 	cv::waitKey(0);
