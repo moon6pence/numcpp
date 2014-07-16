@@ -47,7 +47,8 @@ struct Circularize
 		if (x_map.empty() || y_map.empty())
 			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
 
-		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
+		// cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
+		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_NN);
 	}
 };
 
@@ -73,7 +74,8 @@ struct Circularize_d : private Circularize
 		}
 
 		cv::gpu::GpuMat cv_dst = to_cv_gpu_mat(dst);
-		cv::gpu::remap(to_cv_gpu_mat(src), cv_dst, to_cv_gpu_mat(x_map_d), to_cv_gpu_mat(y_map_d), CV_INTER_LINEAR);
+		// cv::gpu::remap(to_cv_gpu_mat(src), cv_dst, to_cv_gpu_mat(x_map_d), to_cv_gpu_mat(y_map_d), CV_INTER_LINEAR);
+		cv::gpu::remap(to_cv_gpu_mat(src), cv_dst, to_cv_gpu_mat(x_map_d), to_cv_gpu_mat(y_map_d), CV_INTER_NN);
 	}
 };
 
