@@ -40,7 +40,7 @@ struct property
 {
 	signal<T> valueChanged;
 
-	property(const std::string name, T default_value = T()) :
+	property(const std::string &name, T default_value = T()) :
 		_name(name)
 	{
 		set(default_value);
@@ -98,7 +98,12 @@ struct property<float>
 
 	signal<T> valueChanged;
 
-	property(const std::string name, 
+	property(const std::string &name) : 
+		_name(name), _step(1.0f), _min(std::numeric_limits<T>::min()), _max(std::numeric_limits<T>::max())
+	{
+	}
+
+	property(const std::string &name, 
 		T default_value, 
 		T step = 1.0f, 
 		T min = std::numeric_limits<T>::min(), 
