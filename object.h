@@ -43,8 +43,9 @@ class Object
 public:
 	virtual ~Object() { }
 
-	virtual void accept(property_visitor &visitor) = 0;
 	virtual const std::string getTypeName() = 0;
+	virtual void accept(property_visitor &visitor) = 0;
+	virtual Object *clone() = 0;
 
 	const std::string &getName() const { return _name; }
 	void setName(const std::string &name) { _name = name; }
