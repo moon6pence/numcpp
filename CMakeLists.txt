@@ -17,10 +17,12 @@ add_library(QuickDialog
 
 	object.h
 	property.h
+	context.h
 
 	print.cpp
 	json.cpp
 	widget.cpp
+	context.cpp
 )
 
 qt5_use_modules(QuickDialog Core Widgets)

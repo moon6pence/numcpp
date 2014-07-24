@@ -3,5 +3,6 @@
 
 #include "property.h"
 #include "object.h"
+#include "context.h"
 
 #endif // QUICK_OBJECT_H_
