@@ -12,6 +12,7 @@ class Context
 public:
 	void addPrototype(const std::string &typeName, Object *prototype);
 	Object *create(const std::string &typeName);
+	void addObject(Object *object);
 
 	Object *object(const std::string &name);
 

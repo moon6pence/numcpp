@@ -15,11 +15,14 @@ Object *Context::create(const std::string &typeName)
 	}
 
 	Object *new_object = _prototypes[typeName]->clone();
-
-	// add object
-	_objects.push_back(std::unique_ptr<Object>(new_object));
+	addObject(new_object);
 
 	return new_object;
+}
+
+void Context::addObject(Object *object)
+{
+	_objects.push_back(std::unique_ptr<Object>(object));
 }
 
 Object *Context::object(const std::string &name)
