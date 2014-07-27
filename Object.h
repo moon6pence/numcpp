@@ -57,18 +57,4 @@ private:
 // print object to console
 void print(Object &object);
 
-// Json serialize
-namespace Json
-{
-	class Value;
-};
-
-void readJson(Object &object, const Json::Value &json);
-void writeJson(Object &object, Json::Value &json);
-
-// create Qt widget
-class QWidget;
-
-QWidget *createWidget(Object &object, QWidget *parent = 0);
-
 #endif // QO_OBJECT_H_

@@ -13,16 +13,16 @@ include_directories("jsoncpp/include")
 find_package(Qt5Widgets REQUIRED)
 
 add_library(QuickDialog
-	QuickDialog.h
-
-	object.h
 	property.h
-	context.h
+	Object.h
+	Context.h
+	Context.cpp
+	QuickDialog.h
+	QuickDialog.cpp
+	QuickJSON.h
+	QuickJSON.cpp
 
 	print.cpp
-	json.cpp
-	widget.cpp
-	context.cpp
 )
 
 qt5_use_modules(QuickDialog Core Widgets)

@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include <QuickDialog/object.h>
+#include "object.h"
 
 class Context
 {
@@ -22,9 +22,6 @@ public:
 	}
 
 	std::vector<std::unique_ptr<Object>> &objects() { return _objects; }
-
-	void load(const std::string &filename);
-	void save(const std::string &filename);
 
 private:
 	std::map<std::string, std::unique_ptr<Object>> _prototypes;

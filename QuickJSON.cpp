@@ -1,5 +1,9 @@
-#include "QuickDialog.h"
+#include "QuickJSON.h"
+
+#include <fstream>
 #include <json/json.h>
+
+using namespace std;
 
 struct json_reader : public property_visitor
 {
@@ -71,4 +75,64 @@ void writeJson(Object &object, Json::Value &json)
 {
 	json_writer writer(json);
 	object.accept(writer);
+}
+
+void load(Context &context, const std::string &filename)
+{
+	cout << "Load json file: " << filename << endl;
+	fstream json_file(filename, ios::in);
+	if (!json_file.is_open())
+	{
+		cout << "Failed to open json file." << endl;
+		return;
+	}
+
+	Json::Value root;
+	Json::Reader reader;
+
+	if (!reader.parse(json_file, root))
+	{
+		cout  << "Failed to parse configuration\n" << reader.getFormatedErrorMessages();
+		return;
+	}
+
+	for (auto i = begin(root); i != end(root); ++i)
+	{
+		Json::Value &instance = *i;
+		const string name = instance["name"].asString();
+		const string &typeName = instance["typeName"].asString();
+
+		// Create object
+		Object *new_object = context.create(typeName);
+		new_object->setName(name);
+
+		// Read object properties
+		readJson(*new_object, instance["properties"]);
+	}
+}
+
+void save(Context &context, const std::string &filename)
+{
+	cout << "Save json file: " << filename << endl;
+	Json::Value root;
+
+	for (unique_ptr<Object> &object : context.objects())
+	{
+		Json::Value instance;
+		{
+			instance["name"] = object->getName();
+			instance["typeName"] = object->getTypeName();
+
+			Json::Value json_properties;
+			writeJson(*object, json_properties);
+
+			instance["properties"] = json_properties;
+		}
+
+		root.append(instance);
+	}
+
+	Json::StyledWriter writer;
+	fstream json_file(filename, ios::out);
+	json_file << writer.write(root);
 }

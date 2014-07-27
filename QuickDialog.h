@@ -1,8 +1,12 @@
-#ifndef QUICK_OBJECT_H_
-#define QUICK_OBJECT_H_
+#ifndef QUICK_DIALOG_H_
+#define QUICK_DIALOG_H_
 
-#include "property.h"
-#include "object.h"
-#include "context.h"
+#include "Object.h"
+#include "Context.h"
 
-#endif // QUICK_OBJECT_H_
+// create Qt widget
+class QWidget;
+
+QWidget *createWidget(Object &object, QWidget *parent = 0);
+
+#endif // QUICK_DIALOG_H_
