@@ -41,16 +41,19 @@ struct templated_property_visitor : public property_visitor
 class Object
 {
 public:
+	Object(const std::string &typeName) : _typeName(typeName) { }
 	virtual ~Object() { }
 
-	virtual const std::string getTypeName() = 0;
 	virtual void accept(property_visitor &visitor) = 0;
 	virtual Object *clone() = 0;
+
+	const std::string getTypeName() { return _typeName; }
 
 	const std::string &getName() const { return _name; }
 	void setName(const std::string &name) { _name = name; }
 
 private:
+	const std::string _typeName;
 	std::string _name;
 };
 
