@@ -44,6 +44,11 @@ public:
 	Object(const std::string &typeName) : _typeName(typeName) { }
 	virtual ~Object() { }
 
+private: // no copy constructor, assign
+	Object(Object &) { }
+	void operator=(Object &) { }
+
+public:
 	virtual void accept(property_visitor &visitor) = 0;
 	virtual Object *clone() = 0;
 
