@@ -15,14 +15,13 @@ find_package(Qt5Widgets REQUIRED)
 add_library(QuickDialog
 	property.h
 	Object.h
+	Object.cpp
 	Context.h
 	Context.cpp
 	QuickDialog.h
 	QuickDialog.cpp
 	QuickJSON.h
 	QuickJSON.cpp
-
-	print.cpp
 )
 
 qt5_use_modules(QuickDialog Core Widgets)

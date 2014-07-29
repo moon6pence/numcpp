@@ -49,8 +49,8 @@ private: // no copy constructor, assign
 	void operator=(Object &) { }
 
 public:
-	virtual void accept(property_visitor &visitor) = 0;
 	virtual Object *clone() = 0;
+	virtual void accept(property_visitor &visitor) = 0;
 
 	const std::string getTypeName() { return _typeName; }
 
@@ -64,5 +64,14 @@ private:
 
 // print object to console
 void print(Object &object);
+
+// copy object properties
+Object *clone(Object &object);
+
+template <class ObjectType>
+ObjectType *clone(Object &object)
+{
+	return static_cast<ObjectType *>(clone(object));
+}
 
 #endif // QO_OBJECT_H_
