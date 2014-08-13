@@ -10,6 +10,14 @@
 class Context
 {
 public:
+	Context() { }
+
+private:
+	// Not copyable
+	Context(Context &) { }
+	void operator=(Context &) { }
+
+public:
 	void addPrototype(const std::string &typeName, Object *prototype);
 	Object *create(const std::string &typeName);
 	void addObject(Object *object);
