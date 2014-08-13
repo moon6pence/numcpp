@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="MainWindow">
+    <file>images/Actions-document-save-icon.png</file>
+    <file>images/Actions-document-new-icon.png</file>
+    <file>images/Actions-document-open-icon.png</file>
+  </qresource>
+</RCC>
