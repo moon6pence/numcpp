@@ -54,7 +54,7 @@ if (USE_CUDA)
 	target_link_libraries(numcpp ${CUDA_LIBRARIES})
 
 	# Generate 2.0 code
-	# set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
+	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
 
 	if (${MSVC})
 		# VS2012 + CUDA 5.0
