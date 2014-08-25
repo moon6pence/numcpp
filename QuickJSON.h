@@ -13,7 +13,7 @@ namespace Json
 void readJson(Object &object, const Json::Value &json);
 void writeJson(Object &object, Json::Value &json);
 
-void load(Context &context, const std::string &filename);
-void save(Context &context, const std::string &filename);
+bool readJson(Context &context, const std::string &filename);
+void writeJson(Context &context, const std::string &filename);
 
 #endif // QUICK_JSON_H_

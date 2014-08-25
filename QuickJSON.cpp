@@ -77,14 +77,14 @@ void writeJson(Object &object, Json::Value &json)
 	object.accept(writer);
 }
 
-void load(Context &context, const std::string &filename)
+bool readJson(Context &context, const std::string &filename)
 {
 	cout << "Load json file: " << filename << endl;
 	fstream json_file(filename, ios::in);
 	if (!json_file.is_open())
 	{
-		cout << "Failed to open json file." << endl;
-		return;
+		cout << "Failed to open json file!" << endl;
+		return false;
 	}
 
 	Json::Value root;
@@ -92,8 +92,8 @@ void load(Context &context, const std::string &filename)
 
 	if (!reader.parse(json_file, root))
 	{
-		cout  << "Failed to parse configuration\n" << reader.getFormatedErrorMessages();
-		return;
+		cout  << "Failed to parse context json file!\n" << reader.getFormatedErrorMessages() << endl;
+		return false;
 	}
 
 	for (auto i = begin(root); i != end(root); ++i)
@@ -104,14 +104,21 @@ void load(Context &context, const std::string &filename)
 
 		// Create object
 		Object *new_object = context.create(typeName);
-		new_object->setName(name);
+		if (new_object == nullptr)
+		{
+			cout << "Cannot find object type: " << typeName << endl;
+			return false;
+		}
 
 		// Read object properties
+		new_object->setName(name);
 		readJson(*new_object, instance["properties"]);
 	}
+
+	return true;
 }
 
-void save(Context &context, const std::string &filename)
+void writeJson(Context &context, const std::string &filename)
 {
 	cout << "Save json file: " << filename << endl;
 	Json::Value root;

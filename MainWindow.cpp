@@ -133,15 +133,13 @@ void MainWindow::actionOpen()
 	unique_ptr<Context> context(new Context);
 
 	// Load context from json file
-	load(*context, filename.toStdString()); // TODO: exception
-	
-	// Set context
-	setContext(std::move(context), filename.toStdString());
+	if (readJson(*context, filename.toStdString()))
+		setContext(std::move(context), filename.toStdString());
 }
 
 void MainWindow::actionSave()
 {
 	puts("Action: Save");
 
-	save(*_context, _filename);
+	writeJson(*_context, _filename);
 }
