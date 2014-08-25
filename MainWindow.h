@@ -26,7 +26,6 @@ private slots:
 	void actionNew();
 	void actionOpen();
 	void actionSave();
-	void actionSaveAs();
 
 private:
 	void setupEvents();

@@ -28,7 +28,6 @@ void MainWindow::setupEvents()
 	QObject::connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew);
 	QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
 	QObject::connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave);
-	QObject::connect(ui->actionSaveAs, &QAction::triggered, this, &MainWindow::actionSaveAs);
 }
 
 void MainWindow::setContext(std::unique_ptr<Context> context, const std::string &filename)
@@ -145,9 +144,4 @@ void MainWindow::actionSave()
 	puts("Action: Save");
 
 	save(*_context, _filename);
-}
-
-void MainWindow::actionSaveAs()
-{
-	puts("Action: SaveAs");
 }
