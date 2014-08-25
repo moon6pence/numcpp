@@ -83,7 +83,7 @@ struct QuickDialog : public templated_property_visitor<QuickDialog>
 	public:
 		QDoubleSpinBoxIgnoreWheel(QWidget *parent = 0) : QDoubleSpinBox(parent) { }
 
-		void wheelEvent(QWheelEvent *event) 
+		void wheelEvent(QWheelEvent *event) override
 		{
 			if (!hasFocus()) 
 			{
@@ -93,6 +93,19 @@ struct QuickDialog : public templated_property_visitor<QuickDialog>
 			{
 				QDoubleSpinBox::wheelEvent(event);
 			}
+		}
+
+		// To prevent too long spin box
+		QSize sizeHint () const override
+		{
+			QSize size = QDoubleSpinBox::sizeHint();
+			return QSize(0, size.height());
+		}
+
+		QSize minimumSizeHint () const override
+		{
+			QSize size = QDoubleSpinBox::minimumSizeHint();
+			return QSize(0, size.height());
 		}
 	};
 
