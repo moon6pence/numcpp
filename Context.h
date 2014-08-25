@@ -18,7 +18,7 @@ private:
 	void operator=(Context &) { }
 
 public:
-	void addPrototype(const std::string &typeName, Object *prototype);
+	void addPrototype(Object *prototype);
 	Object *create(const std::string &typeName);
 	void addObject(Object *object);
 
@@ -33,7 +33,7 @@ public:
 	std::vector<std::unique_ptr<Object>> &objects() { return _objects; }
 
 private:
-	std::map<std::string, std::unique_ptr<Object>> _prototypes;
+	std::vector<std::unique_ptr<Object>> _prototypes;
 	std::vector<std::unique_ptr<Object>> _objects;
 };
 

@@ -1,23 +1,23 @@
 #include "Context.h"
 
-void Context::addPrototype(const std::string &typeName, Object *prototype)
+void Context::addPrototype(Object *prototype)
 {
-	_prototypes[typeName] = std::unique_ptr<Object>(prototype);
+	_prototypes.push_back(std::unique_ptr<Object>(prototype));
 }
 
 Object *Context::create(const std::string &typeName)
 {
-	// find prototype
-	if (_prototypes.find(typeName) == _prototypes.end())
-	{
-		// TODO: exception
-		return nullptr;
-	}
+	for (std::unique_ptr<Object> &prototype: _prototypes)
+		if (prototype->getTypeName() == typeName)
+		{
+			Object *new_object = prototype->clone();
+			addObject(new_object);
 
-	Object *new_object = _prototypes[typeName]->clone();
-	addObject(new_object);
+			return new_object;
+		}
 
-	return new_object;
+	// TODO: exception
+	return nullptr;
 }
 
 void Context::addObject(Object *object)
@@ -31,5 +31,6 @@ Object *Context::object(const std::string &name)
 		if (object->getName() == name)
 			return object.get();
 
+	// TODO: exception
 	return nullptr;
 }
