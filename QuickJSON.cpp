@@ -1,7 +1,8 @@
 #include "QuickJSON.h"
 
-#include <fstream>
 #include <json/json.h>
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -92,7 +93,7 @@ bool readJson(Context &context, const std::string &filename)
 
 	if (!reader.parse(json_file, root))
 	{
-		cout  << "Failed to parse context json file!\n" << reader.getFormatedErrorMessages() << endl;
+		cout  << "Failed to parse context json file!\n" << reader.getFormattedErrorMessages() << endl;
 		return false;
 	}
 
