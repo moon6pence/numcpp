@@ -23,7 +23,6 @@ struct heap_allocator
 
 struct BaseArray
 {
-//private:
 public:
 	const int _itemSize;
 	tuple _size;
