@@ -53,7 +53,7 @@ struct CuFFT_R2C
 
 		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
 		if (dst.size() != expected) 
-			dst = gpuArray<float2>(expected);
+			dst = GpuArray<float2>(expected);
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecR2C(plan, src, dst));
@@ -97,7 +97,7 @@ struct CuFFT_C2C
 
 		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
 		if (dst.size() != expected) 
-			dst = gpuArray<float2>(expected);
+			dst = GpuArray<float2>(expected);
 
 		// Execute CuFFT
 		CUFFT_ERROR(cufftExecC2C(plan, src, dst, direction));

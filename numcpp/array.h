@@ -23,6 +23,10 @@ public:
 	{
 	}
 
+	Array(int size0, int size1, int size2) : BaseArray(sizeof(T), tuple(size0, size1, size2))
+	{
+	}
+
 	explicit Array(const tuple &size) : BaseArray(sizeof(T), size)
 	{
 	}

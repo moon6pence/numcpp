@@ -56,30 +56,35 @@ public:
 		_origin = ptr;
 	}
 
-private:
-	// External constructors
-	friend BaseArray ref(const BaseArray &array);
-
-	template <class Allocator>
-	friend BaseArray baseArrayWithAllocator(int itemSize, const tuple &size);
-
-protected:
-	BaseArray(int itemSize, 
-			  const tuple &size, 
-			  std::unique_ptr<int[]> stride, 
-			  std::shared_ptr<void> address, 
-			  void *origin) : 
+	BaseArray(int itemSize, const tuple &size, void *(*allocate)(int), void (*free)(void *)) :
 		_itemSize(itemSize), 
-		_size(size), 
-		_stride(std::move(stride)), 
-		_address(address), 
-		_origin(origin)
+		_size(size)
 	{
+		_stride.reset(new int[ndims()]);
+		_stride[0] = itemSize;
+		for (int i = 1; i < ndims(); i++)
+			_stride[i] = _stride[i - 1] * size[i - 1];
+
+		void *ptr = allocate(size.product() * _itemSize);
+
+		_address = std::shared_ptr<void>(ptr, free);
+		_origin = ptr;
+	}
+
+	// copy constructor: shallow copy
+	explicit BaseArray(const BaseArray &other) :
+		_itemSize(other._itemSize), 
+		_size(other._size), 
+		_stride(new int[other.ndims()]), 
+		_address(other._address), 
+		_origin(other._origin)
+	{
+		for (int i = 0; i < ndims(); i++)
+			_stride[i] = other.stride(i);
 	}
 
 private:
-	// delete copy constructor, assign
-	BaseArray(const BaseArray &other) : _itemSize(1) { }
+	// delete implicit copy assign, use move assign of copy constructed instance
 	const BaseArray &operator=(const BaseArray &other) { return *this; }
 
 public:
@@ -266,40 +271,6 @@ public:
 		return *static_cast<const T *>(ptr_at(index0, index1));
 	}
 };
-
-template <class Allocator>
-inline BaseArray baseArrayWithAllocator(int itemSize, const tuple &size)
-{
-	const int ndims = size.length();
-
-	int *stride = new int[ndims];
-	stride[0] = itemSize;
-	for (int i = 1; i < ndims; i++)
-		stride[i] = stride[i - 1] * size[i - 1];
-
-	void *ptr = Allocator::allocate(size.product() * itemSize);
-
-	return BaseArray(
-		itemSize, 
-		size, 
-		std::unique_ptr<int[]>(stride), 
-		std::shared_ptr<void>(ptr, Allocator::free), 
-		ptr);
-}
-
-inline BaseArray ref(const BaseArray &array)
-{
-	int *stride = new int[array.ndims()];
-	for (int i = 0; i < array.ndims(); i++)
-		stride[i] = array.stride(i);
-
-	return BaseArray(
-		array._itemSize, 
-		array._size, 
-		std::unique_ptr<int[]>(stride), 
-		array._address, 
-		array._origin);
-}
 
 } // namespace np
 

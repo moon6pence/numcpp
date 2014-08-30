@@ -8,6 +8,21 @@
 
 namespace np {
 
+struct device_allocator
+{
+	static void *allocate(int size)
+	{
+		void *ptr = nullptr;
+		cudaMalloc((void **)&ptr, size);
+		return ptr;
+	}
+
+	static void free(void *ptr)
+	{
+		cudaFree(ptr);
+	}
+};
+
 template <typename T>
 struct GpuArray : public BaseArray
 {
@@ -16,17 +31,23 @@ public:
 	{
 	}
 
-private:
-	// External constructors
-	template <typename T>
-	friend GpuArray<T> gpuArray(const tuple &size);
+	explicit GpuArray(int size0) : 
+		BaseArray(sizeof(T), tuple(size0), device_allocator::allocate, device_allocator::free)
+	{
+	}
 
-protected:
-	GpuArray(const tuple &size, 
-				   std::unique_ptr<int[]> stride, 
-				   std::shared_ptr<void> address, 
-				   void *origin) : 
-		BaseArray(sizeof(T), size, std::move(stride), std::move(address), origin)
+	GpuArray(int size0, int size1) : 
+		BaseArray(sizeof(T), tuple(size0, size1), device_allocator::allocate, device_allocator::free)
+	{
+	}
+
+	GpuArray(int size0, int size1, int size2) : 
+		BaseArray(sizeof(T), tuple(size0, size1, size2), device_allocator::allocate, device_allocator::free)
+	{
+	}
+
+	explicit GpuArray(const tuple &size) : 
+		BaseArray(sizeof(T), size, device_allocator::allocate, device_allocator::free)
 	{
 	}
 
@@ -77,59 +98,11 @@ public:
 	}
 };
 
-struct device_allocator
-{
-	static void *allocate(int size)
-	{
-		void *ptr = nullptr;
-		cudaMalloc((void **)&ptr, size);
-		return ptr;
-	}
-
-	static void free(void *ptr)
-	{
-		cudaFree(ptr);
-	}
-};
-
-// TODO: Use 'this constructor' forwarding (with VS2013)
-template <typename T>
-GpuArray<T> gpuArray(const tuple &size)
-{
-	const int itemSize = sizeof(T);
-	const int ndims = size.length();
-
-	int *stride = new int[ndims];
-	stride[0] = itemSize;
-	for (int i = 1; i < ndims; i++)
-		stride[i] = stride[i - 1] * size[i - 1];
-
-	void *ptr = device_allocator::allocate(size.product() * itemSize);
-
-	return GpuArray<T>(
-		size, 
-		std::unique_ptr<int[]>(stride), 
-		std::shared_ptr<void>(ptr, device_allocator::free), 
-		ptr);
-}
-
-template <typename T>
-GpuArray<T> gpuArray(int size0)
-{
-	return gpuArray<T>(tuple(size0));
-}
-
-template <typename T>
-GpuArray<T> gpuArray(int size0, int size1)
-{
-	return gpuArray<T>(tuple(size0, size1));
-}
-
 template <typename T>
 void to_device(GpuArray<T> &dst_d, const Array<T> &src)
 {
 	if (dst_d.size() != src.size())
-		dst_d = gpuArray<T>(src.size());
+		dst_d = GpuArray<T>(src.size());
 
 	cudaMemcpy(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice);
 }
@@ -138,7 +111,7 @@ template <typename T>
 void to_device(GpuArray<T> &dst_d, const Array<T> &src, cudaStream_t stream)
 {
 	if (dst_d.size() != src.size())
-		dst_d = gpuArray<T>(src.size());
+		dst_d = GpuArray<T>(src.size());
 
 	cudaMemcpyAsync(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice, stream);
 }

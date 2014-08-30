@@ -27,6 +27,15 @@ struct tuple
 		_ptr[1] = size1;
 	}
 
+	tuple(int size0, int size1, int size2) :
+		_length(3), 
+		_ptr(new int[3])
+	{
+		_ptr[0] = size0;
+		_ptr[1] = size1;
+		_ptr[2] = size2;
+	}
+
 	tuple(int size, int *ptr) : 
         _length(size), 
         _ptr(new int[size])
