@@ -31,6 +31,7 @@ public:
 	}
 
 	std::vector<std::unique_ptr<Object>> &objects() { return _objects; }
+	void clear() { _objects.clear(); }
 
 private:
 	std::vector<std::unique_ptr<Object>> _prototypes;

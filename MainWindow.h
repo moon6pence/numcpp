@@ -16,24 +16,30 @@ public:
 	MainWindow();
 	~MainWindow();
 
-	// operations
-	void setContext(std::unique_ptr<Context> context, const std::string &filename);
+	void setFileName(const std::string &filepath);
 
-	// User interface
-	Ui::MainWindowClass *ui;
+	void resetContext();
+	void loadContextFile(const std::string &filepath);
+	Context &getContext() { return _context; }
 
 private slots:
 	void actionNew();
 	void actionOpen();
 	void actionSave();
 
+protected:
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dragMoveEvent(QDragMoveEvent* event) override;
+	void dragLeaveEvent(QDragLeaveEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
+
 private:
-	void setupEvents();
+	Context _context;
+	std::string _filepath;
 
+	// User interface
+	Ui::MainWindowClass *ui;
 	void addObjectUI(Object &object);
-
-	std::string _filename;
-	std::unique_ptr<Context> _context;
 };
 
 #endif // MAINWINDOW_H_

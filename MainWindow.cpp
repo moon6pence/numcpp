@@ -5,6 +5,9 @@
 #include <QuickDialog/QuickDialog.h>
 #include <QuickDialog/QuickJSON.h>
 
+#include <QFileInfo>
+#include <filesystem>
+
 using namespace std;
 
 MainWindow::MainWindow() : ui(nullptr)
@@ -14,8 +17,13 @@ MainWindow::MainWindow() : ui(nullptr)
 	// Build user interface
 	ui->setupUi(this);
 
+	// Enable drag & drop file
+	this->setAcceptDrops(true);
+
 	// Connect signal/slots
-	setupEvents();
+	QObject::connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew);
+	QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
+	QObject::connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave);
 }
 
 MainWindow::~MainWindow()
@@ -23,40 +31,42 @@ MainWindow::~MainWindow()
 	if (ui) { delete ui; ui = nullptr; }
 }
 
-void MainWindow::setupEvents()
+void MainWindow::loadContextFile(const std::string &filepath)
 {
-	QObject::connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew);
-	QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
-	QObject::connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave);
-}
-
-void MainWindow::setContext(std::unique_ptr<Context> context, const std::string &filename)
-{
-	if (_context)
+	// Clear current context UI
+	QLayoutItem *item;
+	while ((item = ui->panel_objectList->layout()->takeAt(0)) != nullptr)
 	{
-		// Clear UI
-		auto remove_all_children = [](QLayout *layout)
-		{
-			while (QLayoutItem *item = layout->takeAt(0))
-				layout->removeItem(item);
-		};
-
-		remove_all_children(ui->panel_objectList->layout());
+		delete item->widget();
+		delete item;
 	}
 
-	_context = std::move(context);
+	// Clear context
+	_context.clear();
 
-	// Add UI for objects
-	for (unique_ptr<Object> &object : _context->objects())
-		addObjectUI(*object);
-
-	// Set filename and window title
-	_filename = filename;
-
-	if (_filename == "")
+	// Set filepath and window title
+	_filepath = filepath;
+	if (_filepath == "")
+	{
+		// Just clean context if filepath == ""
 		setWindowTitle("Untitled - Erasmus3");
+	}
 	else
-		setWindowTitle(QString((_filename + " - Erasmus3").c_str()));
+	{
+		setWindowTitle(QFileInfo(_filepath.c_str()).fileName() + " - Erasmus3");
+
+		// Load context from json file
+		if (!readJson(_context, filepath))
+			return;
+
+		// Add UI for objects
+		for (unique_ptr<Object> &object : _context.objects())
+			addObjectUI(*object);
+	}
+
+	// Change current directory to json file dir
+	using namespace std::tr2::sys;
+	current_path(path(filepath).parent_path());
 }
 
 void MainWindow::addObjectUI(Object &object)
@@ -119,8 +129,7 @@ void MainWindow::actionNew()
 {
 	puts("Action: New");
 
-	// Set new context
-	setContext(unique_ptr<Context>(new Context), "");
+	loadContextFile("");
 }
 
 void MainWindow::actionOpen()
@@ -130,16 +139,38 @@ void MainWindow::actionOpen()
 	QString filename = QFileDialog::getOpenFileName(this, "Open", "", "Context File (*.json)");
 	if (filename == "") return;
 
-	unique_ptr<Context> context(new Context);
-
-	// Load context from json file
-	if (readJson(*context, filename.toStdString()))
-		setContext(std::move(context), filename.toStdString());
+	loadContextFile(filename.toStdString());
 }
 
 void MainWindow::actionSave()
 {
 	puts("Action: Save");
 
-	writeJson(*_context, _filename);
+	writeJson(_context, _filepath);
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+	event->acceptProposedAction();
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent* event)
+{
+	event->acceptProposedAction();
+}
+
+void MainWindow::dragLeaveEvent(QDragLeaveEvent* event)
+{
+	event->accept();
+}
+
+void MainWindow::dropEvent(QDropEvent* event)
+{
+	const QMimeData* mimeData = event->mimeData();
+
+	if (mimeData->hasUrls())
+	{
+		// Open first file
+		loadContextFile(mimeData->urls().at(0).toLocalFile().toStdString());
+	}
 }
