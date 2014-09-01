@@ -16,11 +16,9 @@ public:
 	MainWindow();
 	~MainWindow();
 
-	// operations
-	void setContext(std::unique_ptr<Context> context, const std::string &filename);
-
-	// User interface
-	Ui::MainWindowClass *ui;
+	void resetContext();
+	void loadContextFile(const std::string &filename);
+	Context &getContext() { return _context; }
 
 private slots:
 	void actionNew();
@@ -28,12 +26,12 @@ private slots:
 	void actionSave();
 
 private:
-	void setupEvents();
-
-	void addObjectUI(Object &object);
-
+	Context _context;
 	std::string _filename;
-	std::unique_ptr<Context> _context;
+
+	// User interface
+	Ui::MainWindowClass *ui;
+	void addObjectUI(Object &object);
 };
 
 #endif // MAINWINDOW_H_

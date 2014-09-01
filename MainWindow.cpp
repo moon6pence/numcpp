@@ -5,6 +5,8 @@
 #include <QuickDialog/QuickDialog.h>
 #include <QuickDialog/QuickJSON.h>
 
+#include <filesystem>
+
 using namespace std;
 
 MainWindow::MainWindow() : ui(nullptr)
@@ -15,7 +17,9 @@ MainWindow::MainWindow() : ui(nullptr)
 	ui->setupUi(this);
 
 	// Connect signal/slots
-	setupEvents();
+	QObject::connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew);
+	QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
+	QObject::connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave);
 }
 
 MainWindow::~MainWindow()
@@ -23,40 +27,26 @@ MainWindow::~MainWindow()
 	if (ui) { delete ui; ui = nullptr; }
 }
 
-void MainWindow::setupEvents()
+void MainWindow::loadContextFile(const std::string &filename)
 {
-	QObject::connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew);
-	QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
-	QObject::connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave);
-}
+	// Load context from json file
+	if (!readJson(_context, filename))
+		return;
 
-void MainWindow::setContext(std::unique_ptr<Context> context, const std::string &filename)
-{
-	if (_context)
-	{
-		// Clear UI
-		auto remove_all_children = [](QLayout *layout)
-		{
-			while (QLayoutItem *item = layout->takeAt(0))
-				layout->removeItem(item);
-		};
-
-		remove_all_children(ui->panel_objectList->layout());
-	}
-
-	_context = std::move(context);
-
-	// Add UI for objects
-	for (unique_ptr<Object> &object : _context->objects())
-		addObjectUI(*object);
-
-	// Set filename and window title
+	// Parsing json file ok, set filename
 	_filename = filename;
-
 	if (_filename == "")
 		setWindowTitle("Untitled - Erasmus3");
 	else
 		setWindowTitle(QString((_filename + " - Erasmus3").c_str()));
+
+	// Add UI for objects
+	for (unique_ptr<Object> &object : _context.objects())
+		addObjectUI(*object);
+
+	// Change current directory to json file dir
+	using namespace std::tr2::sys;
+	current_path(path(filename).parent_path());
 }
 
 void MainWindow::addObjectUI(Object &object)
@@ -119,8 +109,7 @@ void MainWindow::actionNew()
 {
 	puts("Action: New");
 
-	// Set new context
-	setContext(unique_ptr<Context>(new Context), "");
+	// TODO: implement new action
 }
 
 void MainWindow::actionOpen()
@@ -130,16 +119,12 @@ void MainWindow::actionOpen()
 	QString filename = QFileDialog::getOpenFileName(this, "Open", "", "Context File (*.json)");
 	if (filename == "") return;
 
-	unique_ptr<Context> context(new Context);
-
-	// Load context from json file
-	if (readJson(*context, filename.toStdString()))
-		setContext(std::move(context), filename.toStdString());
+	// TODO: implement open action
 }
 
 void MainWindow::actionSave()
 {
 	puts("Action: Save");
 
-	writeJson(*_context, _filename);
+	writeJson(_context, _filename);
 }
