@@ -27,6 +27,12 @@ private slots:
 	void actionOpen();
 	void actionSave();
 
+protected:
+	void dragEnterEvent(QDragEnterEvent* event) override;
+	void dragMoveEvent(QDragMoveEvent* event) override;
+	void dragLeaveEvent(QDragLeaveEvent* event) override;
+	void dropEvent(QDropEvent* event) override;
+
 private:
 	Context _context;
 	std::string _filepath;

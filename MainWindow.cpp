@@ -17,6 +17,9 @@ MainWindow::MainWindow() : ui(nullptr)
 	// Build user interface
 	ui->setupUi(this);
 
+	// Enable drag & drop file
+	this->setAcceptDrops(true);
+
 	// Connect signal/slots
 	QObject::connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew);
 	QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
@@ -144,4 +147,30 @@ void MainWindow::actionSave()
 	puts("Action: Save");
 
 	writeJson(_context, _filepath);
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+{
+	event->acceptProposedAction();
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent* event)
+{
+	event->acceptProposedAction();
+}
+
+void MainWindow::dragLeaveEvent(QDragLeaveEvent* event)
+{
+	event->accept();
+}
+
+void MainWindow::dropEvent(QDropEvent* event)
+{
+	const QMimeData* mimeData = event->mimeData();
+
+	if (mimeData->hasUrls())
+	{
+		// Open first file
+		loadContextFile(mimeData->urls().at(0).toLocalFile().toStdString());
+	}
 }
