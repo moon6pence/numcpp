@@ -5,6 +5,7 @@
 #include <QuickDialog/QuickDialog.h>
 #include <QuickDialog/QuickJSON.h>
 
+#include <QFileInfo>
 #include <filesystem>
 
 using namespace std;
@@ -27,26 +28,42 @@ MainWindow::~MainWindow()
 	if (ui) { delete ui; ui = nullptr; }
 }
 
-void MainWindow::loadContextFile(const std::string &filename)
+void MainWindow::loadContextFile(const std::string &filepath)
 {
-	// Load context from json file
-	if (!readJson(_context, filename))
-		return;
+	// Clear current context UI
+	QLayoutItem *item;
+	while ((item = ui->panel_objectList->layout()->takeAt(0)) != nullptr)
+	{
+		delete item->widget();
+		delete item;
+	}
 
-	// Parsing json file ok, set filename
-	_filename = filename;
-	if (_filename == "")
+	// Clear context
+	_context.clear();
+
+	// Set filepath and window title
+	_filepath = filepath;
+	if (_filepath == "")
+	{
+		// Just clean context if filepath == ""
 		setWindowTitle("Untitled - Erasmus3");
+	}
 	else
-		setWindowTitle(QString((_filename + " - Erasmus3").c_str()));
+	{
+		setWindowTitle(QFileInfo(_filepath.c_str()).fileName() + " - Erasmus3");
 
-	// Add UI for objects
-	for (unique_ptr<Object> &object : _context.objects())
-		addObjectUI(*object);
+		// Load context from json file
+		if (!readJson(_context, filepath))
+			return;
+
+		// Add UI for objects
+		for (unique_ptr<Object> &object : _context.objects())
+			addObjectUI(*object);
+	}
 
 	// Change current directory to json file dir
 	using namespace std::tr2::sys;
-	current_path(path(filename).parent_path());
+	current_path(path(filepath).parent_path());
 }
 
 void MainWindow::addObjectUI(Object &object)
@@ -109,7 +126,7 @@ void MainWindow::actionNew()
 {
 	puts("Action: New");
 
-	// TODO: implement new action
+	loadContextFile("");
 }
 
 void MainWindow::actionOpen()
@@ -119,12 +136,12 @@ void MainWindow::actionOpen()
 	QString filename = QFileDialog::getOpenFileName(this, "Open", "", "Context File (*.json)");
 	if (filename == "") return;
 
-	// TODO: implement open action
+	loadContextFile(filename.toStdString());
 }
 
 void MainWindow::actionSave()
 {
 	puts("Action: Save");
 
-	writeJson(_context, _filename);
+	writeJson(_context, _filepath);
 }

@@ -16,8 +16,10 @@ public:
 	MainWindow();
 	~MainWindow();
 
+	void setFileName(const std::string &filepath);
+
 	void resetContext();
-	void loadContextFile(const std::string &filename);
+	void loadContextFile(const std::string &filepath);
 	Context &getContext() { return _context; }
 
 private slots:
@@ -27,7 +29,7 @@ private slots:
 
 private:
 	Context _context;
-	std::string _filename;
+	std::string _filepath;
 
 	// User interface
 	Ui::MainWindowClass *ui;
