@@ -29,7 +29,7 @@ template <typename PropertyType>
 struct get_property : templated_property_visitor<get_property<PropertyType>>
 {
 	std::string name;
-	mutable PropertyType value;
+	mutable typename property<PropertyType>::value_type value;
 
 	get_property(const std::string &name) : name(name)
 	{
@@ -57,9 +57,9 @@ template <typename PropertyType>
 struct set_property : templated_property_visitor<set_property<PropertyType>>
 {
 	std::string name;
-	PropertyType value;
+	typename property<PropertyType>::value_type value;
 
-	set_property(const std::string &name, const PropertyType &value) : name(name), value(value)
+	set_property(const std::string &name, const typename property<PropertyType>::value_type &value) : name(name), value(value)
 	{
 	}
 

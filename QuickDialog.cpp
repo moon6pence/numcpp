@@ -1,7 +1,7 @@
 #include "QuickDialog.h"
 #include <QtWidgets>
 
-struct QuickDialog : public templated_property_visitor<QuickDialog>
+struct QuickDialog : public property_visitor
 {
 	QWidget *widget;
     QFormLayout *layout;
@@ -12,27 +12,27 @@ struct QuickDialog : public templated_property_visitor<QuickDialog>
         layout = new QFormLayout(widget);
 	}
 
-	void visit(property<std::string> &property) const
+	void visit(property<bool> &property) const
 	{
-		QLineEdit *edit = new QLineEdit(widget);
-		edit->setText(QString(property.get().c_str()));
+		QCheckBox *checkBox = new QCheckBox(" ", widget);
+		checkBox->setChecked(property);
 
-		// Update property when textbox is changed
+		// Update property when checkbox is clicked
 		QObject::connect(
-			edit, 
-			&QLineEdit::textEdited, 
-			[&property](const QString &text)
+			checkBox, 
+			&QCheckBox::clicked,  
+			[&property](bool checked)
 			{
-				property.set(text.toStdString());
+				property.set(checked);
 			});
 
-		// Update textbox when property is changed
-		property.valueChanged += [edit](std::string value)
+		// Update checkbox if property is changed
+		property.valueChanged += [checkBox](bool value)
 		{
-			edit->setText(QString(value.c_str()));
+			checkBox->setChecked(value);
 		};
 
-		addFormWidget(property.name(), edit);
+		addFormWidget(property.name(), checkBox);
 	}
 
 	class QuickSpinBox : public QSpinBox
@@ -135,29 +135,52 @@ struct QuickDialog : public templated_property_visitor<QuickDialog>
 		addFormWidget(property.name(), spinBox);
 	}
 
-	void visit(property<bool> &property) const
+	void visit(property<std::string> &property) const
 	{
-		QCheckBox *checkBox = new QCheckBox(" ", widget);
-		checkBox->setChecked(property);
+		QLineEdit *edit = new QLineEdit(widget);
+		edit->setText(QString(property.get().c_str()));
 
-		// Update property when checkbox is clicked
+		// Update property when textbox is changed
 		QObject::connect(
-			checkBox, 
-			&QCheckBox::clicked,  
-			[&property](bool checked)
+			edit, 
+			&QLineEdit::textEdited, 
+			[&property](const QString &text)
 			{
-				property.set(checked);
+				property.set(text.toStdString());
 			});
 
-		// Update checkbox if property is changed
-		property.valueChanged += [checkBox](bool value)
+		// Update textbox when property is changed
+		property.valueChanged += [edit](std::string value)
 		{
-			checkBox->setChecked(value);
+			edit->setText(QString(value.c_str()));
 		};
 
-		addFormWidget(property.name(), checkBox);
+		addFormWidget(property.name(), edit);
 	}
 
+	void visit(property<Object> &property) const
+	{
+		QLineEdit *edit = new QLineEdit(widget);
+		edit->setText(QString(property.get().c_str()));
+
+		// Update property when textbox is changed
+		QObject::connect(
+			edit, 
+			&QLineEdit::textEdited, 
+			[&property](const QString &text)
+			{
+				property.set(text.toStdString());
+			});
+
+		// Update textbox when property is changed
+		property.valueChanged += [edit](std::string value)
+		{
+			edit->setText(QString(value.c_str()));
+		};
+
+		addFormWidget(property.name(), edit);
+	}
+	
 	void visit(operation &operation) const
 	{
 		int rowCount = layout->rowCount();

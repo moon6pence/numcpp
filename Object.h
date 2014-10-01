@@ -1,5 +1,5 @@
-#ifndef QO_OBJECT_H_
-#define QO_OBJECT_H_
+#ifndef QD_OBJECT_H_
+#define QD_OBJECT_H_
 
 #include "property.h"
 
@@ -9,6 +9,7 @@ struct property_visitor
 	virtual void visit(property<int> &property) const = 0;
 	virtual void visit(property<float> &property) const = 0;
 	virtual void visit(property<std::string> &property) const = 0;
+	virtual void visit(property<Object> &property) const = 0;
 	virtual void visit(operation &operation) const = 0;
 };
 
@@ -32,6 +33,11 @@ struct templated_property_visitor : public property_visitor
 
 	void visit(property<std::string> &property) const
 	{ 
+		static_cast<const visitor *>(this)->visit(property); 
+	}
+
+	void visit(property<Object> &property) const
+	{
 		static_cast<const visitor *>(this)->visit(property); 
 	}
 

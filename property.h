@@ -1,5 +1,5 @@
-#ifndef QO_PROPERTY_H_
-#define QO_PROPERTY_H_
+#ifndef QD_PROPERTY_H_
+#define QD_PROPERTY_H_
 
 #include <string>
 #include <vector>
@@ -38,20 +38,22 @@ private:
 template <typename T>
 struct property
 {
-	signal<T> valueChanged;
+	typedef T value_type;
 
-	property(const std::string &name, T default_value = T()) :
+	signal<value_type> valueChanged;
+
+	property(const std::string &name, value_type default_value = value_type()) :
 		_name(name)
 	{
 		set(default_value);
 	}
 
-	const T& get() const
+	const value_type& get() const
 	{
 		return _value; 
 	}
 
-	void set(const T& new_value)
+	void set(const value_type& new_value)
 	{
 		if (_value != new_value)
 		{
@@ -68,18 +70,18 @@ struct property
 	}
 
 	// Syntatic sugars
-	operator const T& () const
+	operator const value_type& () const
 	{
 		return _value;
 	}
 
-	const T& operator=(const T& new_value)
+	const value_type& operator=(const value_type& new_value)
 	{
 		set(new_value);
 		return _value;
 	}
 
-	const T& operator=(const property<T> &property)
+	const value_type& operator=(const property<T> &property)
 	{
 		set(property.get());
 		return _value;
@@ -94,30 +96,30 @@ private:
 template <>
 struct property<float>
 {
-	typedef float T;
+	typedef float value_type;
 
-	signal<T> valueChanged;
+	signal<value_type> valueChanged;
 
 	property(const std::string &name) : 
-		_name(name), _step(1.0f), _min(std::numeric_limits<T>::min()), _max(std::numeric_limits<T>::max())
+		_name(name), _step(1.0f), _min(std::numeric_limits<value_type>::min()), _max(std::numeric_limits<value_type>::max())
 	{
 	}
 
 	property(const std::string &name, 
-		T default_value, 
-		T step = 1.0f, 
-		T min = std::numeric_limits<T>::min(), 
-		T max = std::numeric_limits<T>::max()) : _name(name), _step(step), _min(min), _max(max)
+		value_type default_value, 
+		value_type step = 1.0f, 
+		value_type min = std::numeric_limits<value_type>::min(), 
+		value_type max = std::numeric_limits<value_type>::max()) : _name(name), _step(step), _min(min), _max(max)
 	{
 		set(default_value);
 	}
 
-	const T& get() const
+	const value_type& get() const
 	{
 		return _value; 
 	}
 
-	void set(const T& new_value)
+	void set(const value_type& new_value)
 	{
 		if (_value == new_value)
 			return; // do not fire update event
@@ -134,23 +136,23 @@ struct property<float>
 
 	// getters
 	const std::string& name() const	{ return _name; }
-	T step() const { return _step; }
-	T min() const { return _min; }
-	T max() const { return _max; }
+	value_type step() const { return _step; }
+	value_type min() const { return _min; }
+	value_type max() const { return _max; }
 
 	// Syntatic sugars
-	operator const T& () const
+	operator const value_type& () const
 	{
 		return _value;
 	}
 
-	const T& operator=(const T& new_value)
+	const value_type& operator=(const value_type& new_value)
 	{
 		set(new_value);
 		return _value;
 	}
 
-	const T& operator=(const property<T> &property)
+	const value_type& operator=(const property<value_type> &property)
 	{
 		set(property.get());
 		return _value;
@@ -159,8 +161,76 @@ struct property<float>
 private:
 	std::string _name;
 	
-	T _value;
-	const T _step, _min, _max;
+	value_type _value;
+	const value_type _step, _min, _max;
+};
+
+class Object;
+class Context;
+
+template<>
+struct property<Object>
+{
+	typedef std::string value_type;
+
+	signal<value_type> valueChanged;
+
+	property(Context &context, const std::string &name, value_type default_value = value_type()) :
+		_context(context), _name(name)
+	{
+		set(default_value);
+	}
+
+	const value_type& get() const
+	{
+		return _value; 
+	}
+
+	void set(const value_type& new_value)
+	{
+		if (_value != new_value)
+		{
+			_value = new_value;
+
+			// Fire valueChanged event
+			valueChanged(new_value);
+		}
+	}
+
+	const std::string& name() const
+	{
+		return _name;
+	}
+
+	//// NO Syntatic sugars
+	//operator const T& () const
+	//{
+	//	return _value;
+	//}
+
+	//const T& operator=(const T& new_value)
+	//{
+	//	set(new_value);
+	//	return _value;
+	//}
+
+	//const T& operator=(const property<T> &property)
+	//{
+	//	set(property.get());
+	//	return _value;
+	//}
+
+	// Get object pointer
+	template <class ObjectType>
+	ObjectType *getObject() const
+	{
+		return _context.object<ObjectType>(_value);
+	}
+
+private:
+	Context &_context;
+	std::string _name;
+	value_type _value;
 };
 
 struct operation

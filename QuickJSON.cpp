@@ -44,6 +44,14 @@ struct json_reader : public property_visitor
 			std::cout << "Warning: cannot find property \"" << property.name() << "\"" << std::endl;
 	}
 
+	void visit(property<Object> &property) const
+	{
+		if (dictionary.isMember(property.name()))
+			property.set(dictionary[property.name()].asString());
+		else
+			std::cout << "Warning: cannot find property \"" << property.name() << "\"" << std::endl;
+	}
+
 	void visit(operation &operation) const
     {
     }
