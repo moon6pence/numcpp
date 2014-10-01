@@ -1,6 +1,8 @@
 #include "QuickDialog.h"
 #include <QtWidgets>
 
+#include <iostream>
+
 struct QuickDialog : public property_visitor
 {
 	QWidget *widget;
@@ -160,25 +162,36 @@ struct QuickDialog : public property_visitor
 
 	void visit(property<Object> &property) const
 	{
-		QLineEdit *edit = new QLineEdit(widget);
-		edit->setText(QString(property.get().c_str()));
+		QComboBox *comboBox = new QComboBox(widget);
+
+		Context &context = property.getContext();
+		for (auto &object : context.objects())
+		{
+			std::cout << object->getName() << std::endl;
+			comboBox->addItem(QString(object->getName().c_str()));
+
+			if (property.get().compare(object->getName()) == 0)
+				comboBox->setCurrentIndex(comboBox->count() - 1);
+		}
 
 		// Update property when textbox is changed
 		QObject::connect(
-			edit, 
-			&QLineEdit::textEdited, 
+			comboBox, 
+	        static_cast<void (QComboBox::*)(const QString &)>(&QComboBox::currentIndexChanged),
 			[&property](const QString &text)
 			{
 				property.set(text.toStdString());
 			});
 
 		// Update textbox when property is changed
-		property.valueChanged += [edit](std::string value)
+		property.valueChanged += [comboBox](std::string value)
 		{
-			edit->setText(QString(value.c_str()));
+			for (int i = 0; i < comboBox->count(); i++)
+				if (comboBox->itemText(i).toStdString().compare(value) == 0)
+					comboBox->setCurrentIndex(i);
 		};
 
-		addFormWidget(property.name(), edit);
+		addFormWidget(property.name(), comboBox);
 	}
 	
 	void visit(operation &operation) const

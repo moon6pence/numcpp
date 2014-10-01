@@ -197,6 +197,11 @@ struct property<Object>
 		}
 	}
 
+	Context &getContext() const
+	{
+		return _context;
+	}
+
 	const std::string& name() const
 	{
 		return _name;
