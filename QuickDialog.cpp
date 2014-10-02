@@ -145,10 +145,10 @@ struct QuickDialog : public property_visitor
 		// Update property when textbox is changed
 		QObject::connect(
 			edit, 
-			&QLineEdit::textEdited, 
-			[&property](const QString &text)
+			&QLineEdit::editingFinished, 
+			[&property, edit]()
 			{
-				property.set(text.toStdString());
+				property.set(edit->text().toStdString());
 			});
 
 		// Update textbox when property is changed
@@ -167,9 +167,9 @@ struct QuickDialog : public property_visitor
 		Context &context = property.getContext();
 		for (auto &object : context.objects())
 		{
-			std::cout << object->getName() << std::endl;
 			comboBox->addItem(QString(object->getName().c_str()));
 
+			// Select current value
 			if (property.get().compare(object->getName()) == 0)
 				comboBox->setCurrentIndex(comboBox->count() - 1);
 		}
