@@ -163,6 +163,7 @@ struct QuickDialog : public property_visitor
 	void visit(property<Object> &property) const
 	{
 		QComboBox *comboBox = new QComboBox(widget);
+		comboBox->addItem("");
 
 		Context &context = property.getContext();
 		for (auto &object : context.objects())
