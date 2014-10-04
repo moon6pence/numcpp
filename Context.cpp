@@ -31,6 +31,5 @@ Object *Context::object(const std::string &name)
 		if (object->getName() == name)
 			return object.get();
 
-	// TODO: exception
-	return nullptr;
+	throw std::exception("Unknown object name");
 }

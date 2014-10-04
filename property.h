@@ -5,6 +5,7 @@
 #include <vector>
 #include <functional>
 #include <limits>
+#include <iostream>
 
 template <typename Arg>
 struct signal
@@ -256,7 +257,14 @@ struct operation
 
 	void run() const
 	{
-		_function();
+		try
+		{
+			_function();
+		}
+		catch (std::exception &e)
+		{
+			std::cout << "[" << _name << "] Exception: " << e.what() << std::endl;
+		}
 	}
 
 	const std::string& name() const
