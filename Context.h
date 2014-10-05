@@ -30,6 +30,14 @@ public:
 		return static_cast<T *>(object(name));
 	}
 
+	Object &getObject(const std::string &name);
+
+	template <typename T>
+	T &getObject(const std::string &name) 
+	{ 
+		return static_cast<T &>(getObject(name));
+	}
+
 	std::vector<std::unique_ptr<Object>> &objects() { return _objects; }
 	void clear() { _objects.clear(); }
 

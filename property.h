@@ -228,9 +228,9 @@ struct property<Object>
 
 	// Get object pointer
 	template <class ObjectType>
-	ObjectType *getObject() const
+	ObjectType &getObject() const
 	{
-		return _context.object<ObjectType>(_value);
+		return _context.getObject<ObjectType>(_value);
 	}
 
 private:

@@ -16,7 +16,6 @@ Object *Context::create(const std::string &typeName)
 			return new_object;
 		}
 
-	// TODO: exception
 	return nullptr;
 }
 
@@ -30,6 +29,15 @@ Object *Context::object(const std::string &name)
 	for (std::unique_ptr<Object> &object: _objects)
 		if (object->getName() == name)
 			return object.get();
+
+	throw std::exception("Unknown object name");
+}
+
+Object &Context::getObject(const std::string &name)
+{
+	for (std::unique_ptr<Object> &object: _objects)
+		if (object->getName() == name)
+			return *object.get();
 
 	throw std::exception("Unknown object name");
 }
