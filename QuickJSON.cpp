@@ -116,7 +116,7 @@ bool readJson(Context &context, const std::string &filename)
 		if (new_object == nullptr)
 		{
 			cout << "Cannot find object type: " << typeName << endl;
-			return false;
+			continue;
 		}
 
 		// Read object properties
