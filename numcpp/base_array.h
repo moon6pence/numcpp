@@ -84,6 +84,7 @@ public:
 	}
 
 private:
+	// FIXME: Just implement it
 	// delete implicit copy assign, use move assign of copy constructed instance
 	const BaseArray &operator=(const BaseArray &other) { return *this; }
 
@@ -102,6 +103,7 @@ public:
 	// move assign
 	const BaseArray &operator=(BaseArray &&other)
 	{
+		(int &)_itemSize = other._itemSize;
 		_size = std::move(other._size);
 		_stride = std::move(other._stride);
 		_address = std::move(other._address);
