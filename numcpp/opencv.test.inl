@@ -151,4 +151,26 @@ TEST(OpenCV, ImWrite)
 	ASSERT_TRUE(imwrite(image, "result_imwrite.bmp"));
 }
 
+TEST(OpenCV, ColorImage)
+{
+	using namespace std;
+
+	cv::Mat cv_image = cv::imread("Lena.bmp");
+	//cout << cv_image.type() << endl;
+	//cout << CV_8UC3 << endl;
+	ASSERT_EQ(cv_image.type(), CV_8UC3);
+
+	np::BaseArray image = np::from_cv_mat(cv_image);
+	//cout << image.itemSize() << endl;
+	ASSERT_EQ(image.itemSize(), 3);
+
+	np::Array<cv::Vec3b> image3b(std::move(image));
+	cv::Vec3b point = image3b.at(0, 0);
+	//cout << point << endl;
+	ASSERT_EQ(point, cv::Vec3b(125, 137, 226));
+
+	// np::imshow(image3b);
+	ASSERT_TRUE(imwrite(image3b, "result_imwrite.bmp"));
+}
+
 } // anonymous namespace

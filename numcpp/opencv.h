@@ -26,7 +26,27 @@ const cv::Mat to_cv_mat(const Array<T> &array)
 	return cv::Mat(
 		array.size(1), array.size(0), 
 		cv::DataType<T>::type, 
-		const_cast<uint8_t *>(array.raw_ptr()), 
+		const_cast<T *>(array.raw_ptr()), 
+		array.stride(1));
+}
+
+template <>
+inline cv::Mat to_cv_mat(Array<cv::Vec3b> &array)
+{
+	return cv::Mat(
+		array.size(1), array.size(0), 
+		CV_8UC3, 
+		array.raw_ptr(), 
+		array.stride(1));
+}
+
+template <>
+inline const cv::Mat to_cv_mat(const Array<cv::Vec3b> &array)
+{
+	return cv::Mat(
+		array.size(1), array.size(0), 
+		CV_8UC3, 
+		const_cast<cv::Vec3b *>(array.raw_ptr()), 
 		array.stride(1));
 }
 
@@ -101,7 +121,18 @@ inline bool imwrite(const Array<uint8_t> &image, const std::string &filename)
 	return cv::imwrite(filename, to_cv_mat(image));
 }
 
+inline bool imwrite(const Array<cv::Vec3b> &image, const std::string &filename)
+{
+	return cv::imwrite(filename, to_cv_mat(image));
+}
+
 inline void imshow(const Array<uint8_t> &image)
+{
+	cv::imshow("image", to_cv_mat(image));
+	cv::waitKey(0);
+}
+
+inline void imshow(const Array<cv::Vec3b> &image)
 {
 	cv::imshow("image", to_cv_mat(image));
 	cv::waitKey(0);
