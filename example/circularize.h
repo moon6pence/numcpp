@@ -45,7 +45,7 @@ struct Circularize
 			dst = Array<uint8_t>(expected);
 
 		if (x_map.empty() || y_map.empty())
-			buildCircularizeMap(src.size(0), src.size(1), DIAMETER);
+			buildCircularizeMap(src.size(1), src.size(0), DIAMETER);
 
 		// cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_LINEAR);
 		cv::remap(to_cv_mat(src), to_cv_mat(dst), to_cv_mat(x_map), to_cv_mat(y_map), CV_INTER_NN);
