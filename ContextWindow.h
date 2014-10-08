@@ -1,20 +1,20 @@
-#ifndef MAINWINDOW_H_
-#define MAINWINDOW_H_
+#ifndef QD_CONTEXT_WINDOW_H_
+#define QD_CONTEXT_WINDOW_H_
 
 #include "Object.h"
 #include "Context.h"
 
 #include <QtWidgets>
 
-namespace Ui { class MainWindowClass; }
+namespace Ui { class ContextWindowClass; }
 
-class MainWindow : public QMainWindow
+class ContextWindow : public QMainWindow
 {
 	Q_OBJECT
 
 public:
-	MainWindow();
-	~MainWindow();
+	ContextWindow();
+	~ContextWindow();
 
 	void setFileName(const std::string &filepath);
 
@@ -38,8 +38,8 @@ private:
 	std::string _filepath;
 
 	// User interface
-	Ui::MainWindowClass *ui;
+	Ui::ContextWindowClass *ui;
 	void addObjectUI(Object &object);
 };
 
-#endif // MAINWINDOW_H_
+#endif // QD_CONTEXT_WINDOW_H_

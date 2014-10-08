@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindowClass</class>
- <widget class="QMainWindow" name="MainWindowClass">
+ <class>ContextWindowClass</class>
+ <widget class="QMainWindow" name="ContextWindowClass">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -147,7 +147,7 @@
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
+    <iconset resource="ContextWindow.qrc">
      <normaloff>:/MainWindow/images/Actions-document-new-icon.png</normaloff>:/MainWindow/images/Actions-document-new-icon.png</iconset>
    </property>
    <property name="text">
@@ -159,7 +159,7 @@
   </action>
   <action name="actionOpen">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
+    <iconset resource="ContextWindow.qrc">
      <normaloff>:/MainWindow/images/Actions-document-open-icon.png</normaloff>:/MainWindow/images/Actions-document-open-icon.png</iconset>
    </property>
    <property name="text">
@@ -176,7 +176,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="MainWindow.qrc">
+    <iconset resource="ContextWindow.qrc">
      <normaloff>:/MainWindow/images/Actions-document-save-icon.png</normaloff>:/MainWindow/images/Actions-document-save-icon.png</iconset>
    </property>
    <property name="text">
@@ -189,7 +189,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="MainWindow.qrc"/>
+  <include location="ContextWindow.qrc"/>
  </resources>
  <connections/>
  <slots>

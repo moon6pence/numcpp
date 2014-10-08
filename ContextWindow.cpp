@@ -1,6 +1,6 @@
-﻿#include "MainWindow.h"
-#include "ui_MainWindow.h"
-#include "moc_MainWindow.cpp"
+﻿#include "ContextWindow.h"
+#include "ui_ContextWindow.h"
+#include "moc_ContextWindow.cpp"
 
 #include <QuickDialog/QuickDialog.h>
 #include <QuickDialog/QuickJSON.h>
@@ -10,9 +10,9 @@
 
 using namespace std;
 
-MainWindow::MainWindow() : ui(nullptr)
+ContextWindow::ContextWindow() : ui(nullptr)
 {
-	ui = new Ui::MainWindowClass();
+	ui = new Ui::ContextWindowClass();
 
 	// Build user interface
 	ui->setupUi(this);
@@ -21,17 +21,17 @@ MainWindow::MainWindow() : ui(nullptr)
 	this->setAcceptDrops(true);
 
 	// Connect signal/slots
-	QObject::connect(ui->actionNew, &QAction::triggered, this, &MainWindow::actionNew);
-	QObject::connect(ui->actionOpen, &QAction::triggered, this, &MainWindow::actionOpen);
-	QObject::connect(ui->actionSave, &QAction::triggered, this, &MainWindow::actionSave);
+	QObject::connect(ui->actionNew, &QAction::triggered, this, &ContextWindow::actionNew);
+	QObject::connect(ui->actionOpen, &QAction::triggered, this, &ContextWindow::actionOpen);
+	QObject::connect(ui->actionSave, &QAction::triggered, this, &ContextWindow::actionSave);
 }
 
-MainWindow::~MainWindow()
+ContextWindow::~ContextWindow()
 {
 	if (ui) { delete ui; ui = nullptr; }
 }
 
-void MainWindow::loadContextFile(const std::string &filepath)
+void ContextWindow::loadContextFile(const std::string &filepath)
 {
 	// Clear current context UI
 	QLayoutItem *item;
@@ -69,7 +69,7 @@ void MainWindow::loadContextFile(const std::string &filepath)
 	current_path(path(filepath).parent_path());
 }
 
-void MainWindow::addObjectUI(Object &object)
+void ContextWindow::addObjectUI(Object &object)
 {
 	const std::string label = object.getName() + " : " + object.getTypeName();
 
@@ -125,14 +125,14 @@ void MainWindow::addObjectUI(Object &object)
 	ui->panel_objectList->layout()->addWidget(panel);
 }
 
-void MainWindow::actionNew()
+void ContextWindow::actionNew()
 {
 	puts("Action: New");
 
 	loadContextFile("");
 }
 
-void MainWindow::actionOpen()
+void ContextWindow::actionOpen()
 {
 	puts("Action: Open");
 
@@ -142,29 +142,29 @@ void MainWindow::actionOpen()
 	loadContextFile(filename.toStdString());
 }
 
-void MainWindow::actionSave()
+void ContextWindow::actionSave()
 {
 	puts("Action: Save");
 
 	writeJson(_context, _filepath);
 }
 
-void MainWindow::dragEnterEvent(QDragEnterEvent* event)
+void ContextWindow::dragEnterEvent(QDragEnterEvent* event)
 {
 	event->acceptProposedAction();
 }
 
-void MainWindow::dragMoveEvent(QDragMoveEvent* event)
+void ContextWindow::dragMoveEvent(QDragMoveEvent* event)
 {
 	event->acceptProposedAction();
 }
 
-void MainWindow::dragLeaveEvent(QDragLeaveEvent* event)
+void ContextWindow::dragLeaveEvent(QDragLeaveEvent* event)
 {
 	event->accept();
 }
 
-void MainWindow::dropEvent(QDropEvent* event)
+void ContextWindow::dropEvent(QDropEvent* event)
 {
 	const QMimeData* mimeData = event->mimeData();
 

@@ -17,8 +17,8 @@ include_directories(${jsoncpp_INCLUDE_DIRS})
 # Qt
 find_package(Qt5Widgets REQUIRED)
 
-qt5_wrap_ui(UI_FILES MainWindow.ui)
-qt5_add_resources(QRC_FILES MainWindow.qrc)
+qt5_wrap_ui(UI_FILES ContextWindow.ui)
+qt5_add_resources(QRC_FILES ContextWindow.qrc)
 
 # Library: QuickDialog
 add_library(QuickDialog
@@ -32,8 +32,8 @@ add_library(QuickDialog
 	QuickJSON.h
 	QuickJSON.cpp
 
-	MainWindow.h
-	MainWindow.cpp
+	ContextWindow.h
+	ContextWindow.cpp
 	${UI_FILES}
 	${QRC_FILES}
 )
