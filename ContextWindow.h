@@ -16,11 +16,12 @@ public:
 	ContextWindow();
 	~ContextWindow();
 
-	void setFileName(const std::string &filepath);
-
 	void resetContext();
 	void loadContextFile(const std::string &filepath);
+	void updateContextUI();
+
 	Context &getContext() { return _context; }
+	bool FoldAllPanelsByDefault;
 
 private slots:
 	void actionNew();

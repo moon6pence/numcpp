@@ -10,7 +10,7 @@
 
 using namespace std;
 
-ContextWindow::ContextWindow() : ui(nullptr)
+ContextWindow::ContextWindow() : ui(nullptr), FoldAllPanelsByDefault(true)
 {
 	ui = new Ui::ContextWindowClass();
 
@@ -69,6 +69,21 @@ void ContextWindow::loadContextFile(const std::string &filepath)
 	current_path(path(filepath).parent_path());
 }
 
+void ContextWindow::updateContextUI()
+{
+	// Clear current context UI
+	QLayoutItem *item;
+	while ((item = ui->panel_objectList->layout()->takeAt(0)) != nullptr)
+	{
+		delete item->widget();
+		delete item;
+	}
+
+	// Add UI for objects
+	for (unique_ptr<Object> &object : _context.objects())
+		addObjectUI(*object);
+}
+
 void ContextWindow::addObjectUI(Object &object)
 {
 	const std::string label = object.getName() + " : " + object.getTypeName();
@@ -110,7 +125,7 @@ void ContextWindow::addObjectUI(Object &object)
 		clicked);
 
 	// Fold all objects except main process
-	if (object.getName() == "main")
+	if (object.getName() == "main" || !FoldAllPanelsByDefault)
 	{
 		button_fold->setChecked(true);
 		clicked(true);
