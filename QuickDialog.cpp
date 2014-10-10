@@ -116,6 +116,7 @@ struct QuickDialog : public property_visitor
 		QDoubleSpinBox *spinBox = new QDoubleSpinBoxIgnoreWheel(widget);
 		spinBox->setRange(property.min(), property.max());
 		spinBox->setSingleStep(property.step());
+		spinBox->setDecimals(3);
 		spinBox->setValue(property.get());
 		spinBox->setFocusPolicy(Qt::StrongFocus);
 
