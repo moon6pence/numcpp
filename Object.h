@@ -11,6 +11,18 @@ struct property_visitor
 	virtual void visit(property<std::string> &property) const = 0;
 	virtual void visit(property<Object> &property) const = 0;
 	virtual void visit(operation &operation) const = 0;
+
+	// syntatic sugars
+	template <typename T>
+	void operator() (property<T> &property) const
+	{
+		visit(property);
+	}
+
+	void operator() (operation &operation) const
+	{
+		visit(operation);
+	}
 };
 
 template <class visitor>
