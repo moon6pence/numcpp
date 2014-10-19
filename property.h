@@ -42,9 +42,10 @@ struct property
 	typedef T value_type;
 
 	signal<value_type> valueChanged;
+	bool readonly;
 
 	property(const std::string &name, value_type default_value = value_type()) :
-		_name(name)
+		_name(name), readonly(false)
 	{
 		set(default_value);
 	}
@@ -100,9 +101,10 @@ struct property<float>
 	typedef float value_type;
 
 	signal<value_type> valueChanged;
+	bool readonly;
 
 	property(const std::string &name) : 
-		_name(name), _step(1.0f), _min(std::numeric_limits<value_type>::min()), _max(std::numeric_limits<value_type>::max())
+		_name(name), readonly(false), _step(1.0f), _min(std::numeric_limits<value_type>::min()), _max(std::numeric_limits<value_type>::max())
 	{
 	}
 
@@ -110,7 +112,7 @@ struct property<float>
 		value_type default_value, 
 		value_type step = 1.0f, 
 		value_type min = std::numeric_limits<value_type>::min(), 
-		value_type max = std::numeric_limits<value_type>::max()) : _name(name), _step(step), _min(min), _max(max)
+		value_type max = std::numeric_limits<value_type>::max()) : _name(name), readonly(false), _step(step), _min(min), _max(max)
 	{
 		set(default_value);
 	}
@@ -175,9 +177,10 @@ struct property<Object>
 	typedef std::string value_type;
 
 	signal<value_type> valueChanged;
+	bool readonly;
 
 	property(Context &context, const std::string &name, value_type default_value = value_type()) :
-		_context(context), _name(name)
+		_context(context), _name(name), readonly(false)
 	{
 		set(default_value);
 	}

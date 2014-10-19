@@ -18,6 +18,7 @@ struct QuickDialog : public property_visitor
 	{
 		QCheckBox *checkBox = new QCheckBox(" ", widget);
 		checkBox->setChecked(property);
+		checkBox->setEnabled(property.readonly);
 
 		// Update property when checkbox is clicked
 		QObject::connect(
@@ -59,7 +60,8 @@ struct QuickDialog : public property_visitor
 	{
 		QuickSpinBox *spinBox = new QuickSpinBox(widget);
 		spinBox->setRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-		spinBox->setValue(property.get());
+		spinBox->setValue(property);
+		spinBox->setReadOnly(property.readonly);
 		spinBox->setFocusPolicy(Qt::StrongFocus);
 
 		// Update property when spinbox is changed
@@ -117,7 +119,8 @@ struct QuickDialog : public property_visitor
 		spinBox->setRange(property.min(), property.max());
 		spinBox->setSingleStep(property.step());
 		spinBox->setDecimals(3);
-		spinBox->setValue(property.get());
+		spinBox->setValue(property);
+		spinBox->setReadOnly(property.readonly);
 		spinBox->setFocusPolicy(Qt::StrongFocus);
 
 		// Update property when spinbox is changed
@@ -142,6 +145,7 @@ struct QuickDialog : public property_visitor
 	{
 		QLineEdit *edit = new QLineEdit(widget);
 		edit->setText(QString(property.get().c_str()));
+		edit->setReadOnly(property.readonly);
 
 		// Update property when textbox is changed
 		QObject::connect(
