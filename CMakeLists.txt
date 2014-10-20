@@ -11,8 +11,8 @@ include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_PATH "$ENV{ProgramFiles}/Windows Kits/8.0/Lib/win8/um/x86")
 
 # JsonCPP
-find_package(jsoncpp)
-include_directories(${jsoncpp_INCLUDE_DIRS})
+include_directories(jsoncpp/include)
+get_filename_component(jsoncpp_LIB "jsoncpp/lib/jsoncpp.lib" REALPATH) # to absolute path
 
 # Qt
 find_package(Qt5Widgets REQUIRED)
@@ -38,7 +38,7 @@ add_library(QuickDialog
 	${QRC_FILES}
 )
 
-target_link_libraries(QuickDialog ${jsoncpp_LIBRARIES})
+target_link_libraries(QuickDialog ${jsoncpp_LIB})
 qt5_use_modules(QuickDialog Core Widgets)
 
 # Auto moc
