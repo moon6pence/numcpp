@@ -83,12 +83,18 @@ public:
 	{
 	}
 
-private:
-	// FIXME: Just implement it
-	// delete implicit copy assign, use move assign of copy constructed instance
-	const BaseArray &operator=(const BaseArray &other) { return *this; }
+	// copy assign
+	const BaseArray &operator=(const BaseArray &other) 
+	{ 
+		(int &)_itemSize = other._itemSize;
+		_size = other._size;
+		_stride = other._stride;
+		_address = other._address; // add refrence count here
+		_origin = other._origin;
 
-public:
+		return *this; 
+	}
+
 	// move constructor
 	BaseArray(BaseArray &&other) : 
 		_itemSize(other._itemSize), 
