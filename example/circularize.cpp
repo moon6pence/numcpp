@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	}
 
 	const int DIAMETER = 1024;
-	array_t<uint8_t> result_image;
+	Array<uint8_t> result_image;
 
 	Circularize circularize;
 
@@ -31,10 +31,10 @@ int main(int argc, char *argv[])
 	Circularize_d circularize_d;
 
 	cout << "Running GPU version..." << endl;
-	device_array_t<uint8_t> image_d(image), result_image_d;
+	GpuArray<uint8_t> image_d(image), result_image_d;
 	circularize_d(result_image_d, image_d, DIAMETER);
 
-	array_t<uint8_t> result_image_h(DIAMETER, DIAMETER);
+	Array<uint8_t> result_image_h(DIAMETER, DIAMETER);
 	to_host(result_image_h, result_image_d);
 	cout << "Finished!" << endl;
 
