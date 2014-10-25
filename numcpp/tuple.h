@@ -5,9 +5,14 @@
 
 namespace np {
 
-// tuple to store array size, immutable
+// tuple to store array size, stride
 struct tuple
 {
+private:
+    int _length;
+    std::unique_ptr<int[]> _ptr;
+
+public:
     tuple() : _length(0)
     { 
     }
@@ -89,18 +94,22 @@ struct tuple
         return _length;
     }
 
-    // TODO: Remove this function
-    int *ptr() const
-    {
-        return _ptr.get();
-    }
-
-	int at(int index) const
+	int& at(int index)
 	{
 		return _ptr[index];
 	}
 
-    int operator[](int index) const
+	const int& at(int index) const
+	{
+		return _ptr[index];
+	}
+
+    int& operator[](int index)
+    {
+        return at(index);
+    }
+
+    const int& operator[](int index) const
     {
         return at(index);
     }
@@ -137,10 +146,6 @@ struct tuple
 	{
 		return !equals(other);
 	}
-
-private:
-    int _length;
-    std::unique_ptr<int[]> _ptr;
 };
 
 } // namespace np

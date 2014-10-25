@@ -21,12 +21,22 @@ struct heap_allocator
 	}
 };
 
+inline tuple build_stride(int itemSize, const tuple &size)
+{
+	// FIXME: similar()?
+	tuple stride(size);
+	stride[0] = itemSize;
+	for (int i = 1; i < stride.length(); i++)
+		stride[i] = stride[i - 1] * size[i - 1];
+
+	return std::move(stride);
+}
+
 struct BaseArray
 {
 public:
 	const int _itemSize;
-	tuple _size;
-	std::unique_ptr<int[]> _stride;
+	tuple _size, _stride;
 	std::shared_ptr<void> _address;
 	void *_origin;
 
@@ -43,14 +53,10 @@ public:
 
 	BaseArray(int itemSize, const tuple &size) :
 		_itemSize(itemSize), 
-		_size(size)
+		_size(size), 
+		_stride(build_stride(itemSize, size))
 	{
-		_stride.reset(new int[ndims()]);
-		_stride[0] = itemSize;
-		for (int i = 1; i < ndims(); i++)
-			_stride[i] = _stride[i - 1] * size[i - 1];
-
-		void *ptr = heap_allocator::allocate(size.product() * _itemSize);
+		void *ptr = heap_allocator::allocate(_size.product() * _itemSize);
 
 		_address = std::shared_ptr<void>(ptr, heap_allocator::free);
 		_origin = ptr;
@@ -58,13 +64,9 @@ public:
 
 	BaseArray(int itemSize, const tuple &size, void *(*allocate)(int), void (*free)(void *)) :
 		_itemSize(itemSize), 
-		_size(size)
+		_size(size), 
+		_stride(build_stride(itemSize, size))
 	{
-		_stride.reset(new int[ndims()]);
-		_stride[0] = itemSize;
-		for (int i = 1; i < ndims(); i++)
-			_stride[i] = _stride[i - 1] * size[i - 1];
-
 		void *ptr = allocate(size.product() * _itemSize);
 
 		_address = std::shared_ptr<void>(ptr, free);
@@ -75,12 +77,10 @@ public:
 	explicit BaseArray(const BaseArray &other) :
 		_itemSize(other._itemSize), 
 		_size(other._size), 
-		_stride(new int[other.ndims()]), 
+		_stride(other._stride), 
 		_address(other._address), 
 		_origin(other._origin)
 	{
-		for (int i = 0; i < ndims(); i++)
-			_stride[i] = other.stride(i);
 	}
 
 private:
@@ -124,9 +124,7 @@ public:
 		shape[0] = to - from;
 		result._size = tuple(1, shape);
 
-		int *stride = new int[1];
-		stride[0] = this->stride(0);
-		result._stride = std::unique_ptr<int[]>(stride);
+		result._stride = this->_stride;
 
 		// add reference count here
 		result._address = this->_address;
@@ -149,10 +147,7 @@ public:
 		shape[1] = to1 - from1;
 		result._size = tuple(2, shape);
 
-		int *stride = new int[2];
-		stride[0] = this->stride(0);
-		stride[1] = this->stride(1);
-		result._stride = std::unique_ptr<int[]>(stride);
+		result._stride = this->_stride;
 
 		// add reference count here
 		result._address = this->_address;
