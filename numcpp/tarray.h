@@ -59,7 +59,14 @@ public:
 	{
 	}
 
-	// ## Access to premitive properties
+	// move constructor
+	TArray(TArray &&other) :
+		_size0(other._size0), 
+		_address(std::move(other._address)), 
+		_origin(other._origin)
+	{
+		other._origin = nullptr;
+	}
 
 	int itemSize() const
 	{

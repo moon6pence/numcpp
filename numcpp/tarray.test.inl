@@ -58,14 +58,6 @@ TEST(TArray, SetSize)
 	// a1.size<1>();
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-//	Array<int> a1_same(5);
-//	int *ptr = a1_same.raw_ptr();
-//
-//	// Do not allocate again
-//	if (a1_same.size() != tuple(5))
-//		a1_same = Array<int>(5);
-//	EXPECT_EQ(ptr, a1_same.raw_ptr());
-//
 //	Array<int> a2;
 //	a2 = Array<int>(3, 2);
 //
@@ -89,21 +81,20 @@ TEST(TArray, SetSize)
 //	EXPECT_NE(nullptr, a3.raw_ptr());
 }
 
-//TEST(Array, MoveSemantics)
-//{
-//	// move constructor
-//	Array<int> a1(5);
-//	auto moved = std::move(a1);
-//
-//	EXPECT_TRUE(a1.empty());
-//	EXPECT_EQ(0, a1.ndims());
-//	EXPECT_EQ(nullptr, a1.raw_ptr());
-//
-//	EXPECT_FALSE(moved.empty());
-//	ASSERT_EQ(1, moved.ndims());
-//	EXPECT_EQ(5, moved.size(0));
-//	EXPECT_NE(nullptr, moved.raw_ptr());
-//
+TEST(TArray, MoveSemantics)
+{
+	// move constructor
+	TArray<int> a1(5);
+	auto moved = std::move(a1);
+
+	EXPECT_TRUE(a1.empty());
+	EXPECT_EQ(nullptr, a1.raw_ptr());
+
+	EXPECT_FALSE(moved.empty());
+	ASSERT_EQ(1, moved.ndims());
+	EXPECT_EQ(5, moved.size<0>());
+	EXPECT_NE(nullptr, moved.raw_ptr());
+
 //	// move assign
 //	Array<int> a2(3, 2), moved2;
 //	moved2 = std::move(a2);
@@ -117,8 +108,8 @@ TEST(TArray, SetSize)
 //	EXPECT_EQ(3, moved2.size(0));
 //	EXPECT_EQ(2, moved2.size(1));
 //	EXPECT_NE(nullptr, moved2.raw_ptr());
-//}
-//
+}
+
 //TEST(Array, MoveFromBaseArray)
 //{
 //	// move constructor
