@@ -177,12 +177,12 @@ public:
 		return sizeof(value_type);
 	}
 
-	void *raw_ptr()
+	value_type *raw_ptr()
 	{
 		return _origin;
 	}
 
-	const void *raw_ptr() const
+	const value_type *raw_ptr() const
 	{
 		return _origin;
 	}
@@ -208,18 +208,6 @@ public:
 	{
 		return length() * itemSize();
 	}
-
-	//template <typename T>
-	//T *raw_ptr()
-	//{
-	//	return static_cast<T *>(raw_ptr());
-	//}
-
-	//template <typename T>
-	//const T *raw_ptr() const
-	//{
-	//	return static_cast<const T *>(raw_ptr());
-	//}
 };
 
 } // namespace np
