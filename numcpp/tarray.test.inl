@@ -21,7 +21,7 @@ TEST(TArray, DeclareArrayWithSize)
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(sizeof(int), a1.itemSize());
 	ASSERT_EQ(1, a1.ndims());
-	EXPECT_EQ(5, a1.size(0));
+	EXPECT_EQ(5, a1.size<0>());
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
 //	Array<float> a2(3, 2);
@@ -45,17 +45,19 @@ TEST(TArray, DeclareArrayWithSize)
 //	EXPECT_NE(nullptr, a3.raw_ptr());
 }
 
-//TEST(Array, SetSize)
-//{
-//	Array<int> a1;
-//	a1 = Array<int>(5);
-//
-//	EXPECT_FALSE(a1.empty());
-//	EXPECT_EQ(sizeof(int), a1.itemSize());
-//	ASSERT_EQ(1, a1.ndims());
-//	EXPECT_EQ(5, a1.size(0));
-//	EXPECT_NE(nullptr, a1.raw_ptr());
-//
+TEST(TArray, SetSize)
+{
+	TArray<int> a1;
+	a1 = TArray<int>(5);
+
+	EXPECT_FALSE(a1.empty());
+	EXPECT_EQ(sizeof(int), a1.itemSize());
+	ASSERT_EQ(1, a1.ndims());
+	EXPECT_EQ(5, a1.size<0>());
+	// This line have to cause COMPILE error
+	// a1.size<1>();
+	EXPECT_NE(nullptr, a1.raw_ptr());
+
 //	Array<int> a1_same(5);
 //	int *ptr = a1_same.raw_ptr();
 //
@@ -85,8 +87,8 @@ TEST(TArray, DeclareArrayWithSize)
 //	EXPECT_EQ(3, a3.size(1));
 //	EXPECT_EQ(2, a3.size(2));
 //	EXPECT_NE(nullptr, a3.raw_ptr());
-//}
-//
+}
+
 //TEST(Array, MoveSemantics)
 //{
 //	// move constructor
@@ -171,7 +173,9 @@ TEST(TArray, DerivedFunctions)
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(5, a1.length());
 	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
-	EXPECT_EQ(sizeof(int), a1.stride(0));
+	EXPECT_EQ(sizeof(int), a1.stride<0>());
+	// this line have to cause compile error
+	// EXPECT_EQ(sizeof(int), a1.stride<1>());
 
 //	Array<float> a2(3, 2);
 //

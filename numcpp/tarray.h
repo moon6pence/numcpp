@@ -1,6 +1,8 @@
 #ifndef NUMCPP_TARRAY_H_
 #define NUMCPP_TARRAY_H_
 
+#include <array>
+
 namespace np {
 
 template <typename T, int Dim = 1>
@@ -109,24 +111,32 @@ public:
 	typedef T value_type;
 
 private:
-	int _size;
+	int _size0;
 	std::shared_ptr<value_type> _address;
 	value_type *_origin;
 
 public:
 	TArray() : 
-		_size(0), 
+		_size0(0), 
 		_address(), 
 		_origin(nullptr)
 	{
 	}
 
 	TArray(int size0) : 
-		_size(size0), 
+		_size0(size0), 
 		_address(default_allocator<value_type>::allocate(size0)), 
 		_origin(nullptr)
 	{
 		_origin = _address.get();
+	}
+
+	// copy constructor: shallow copy
+	explicit TArray(const TArray &other) :
+		_size0(other._size), 
+		_address(other._address), 
+		_origin(other._origin)
+	{
 	}
 
 	// ## Access to premitive properties
@@ -136,23 +146,35 @@ public:
 		return sizeof(value_type);
 	}
 
-	//const tuple &size() const
-	//{
-	//	return _size;
-	//}
-
-	int size(int dim) const
+	std::array<int, 1> size() const
 	{
-		assert(dim == 0);
-
-		return _size;
+		std::array<int, 1> size;
+		size[0] = size0;
+		return std::move(size);
 	}
 
-	int stride(int dim) const
+	template <int N>
+	int size() const
 	{
-		assert(dim == 0);
+		ArrayIndexOutOfBounds;	
+	}
 
-		return itemSize();
+	template <>
+	int size<0>() const
+	{
+		return _size0;
+	}
+
+	template <int N>
+	int stride() const
+	{
+		ArrayIndexOutOfBounds;	
+	}
+
+	template <>
+	int stride<0>() const
+	{
+		return sizeof(value_type);
 	}
 
 	void *raw_ptr()
@@ -179,7 +201,7 @@ public:
 
 	int length() const
 	{
-		return _size;
+		return _size0;
 	}
 
 	int byteSize() const
