@@ -10,6 +10,7 @@ TEST(Main, HelloGoogleTest)
 
 #include "numcpp/base_array.test.inl"
 #include "numcpp/array.test.inl"
+#include "numcpp/tarray.test.inl"
 #include "numcpp/stl.test.inl"
 #include "numcpp/functions.test.inl"
 #include "numcpp/lazy_array.test.inl"

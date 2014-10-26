@@ -34,6 +34,7 @@ add_library(
 	numcpp/tuple.h
 	numcpp/base_array.h
 	numcpp/array.h
+	numcpp/tarray.h
 	numcpp/stl.h
 	numcpp/functions.h
 	numcpp/lazy_array.h
@@ -97,6 +98,7 @@ if (BUILD_TEST)
 
 		numcpp/base_array.test.inl
 		numcpp/array.test.inl
+		numcpp/tarray.test.inl
 		numcpp/stl.test.inl
 		numcpp/functions.test.inl
 		numcpp/lazy_array.test.inl
