@@ -120,6 +120,61 @@ public:
 		return *this;
 	}
 
+	int itemSize() const
+	{
+		return _itemSize;
+	}
+
+	int ndims() const
+	{
+		return _size.length();
+	}
+
+	const tuple &size() const
+	{
+		return _size;
+	}
+
+	int size(int dim) const
+	{
+		return _size[dim];
+	}
+
+	int length() const
+	{
+		return size().product();
+	}
+
+	int byteSize() const
+	{
+		return length() * itemSize();
+	}
+
+	int stride(int dim) const
+	{
+		return _stride[dim];
+	}
+
+	void *raw_ptr()
+	{
+		return _origin;
+	}
+
+	const void *raw_ptr() const
+	{
+		return _origin;
+	}
+
+	bool empty() const
+	{
+		return raw_ptr() == nullptr;
+	}
+
+
+
+
+	// # deprecate the functions below
+
 	BaseArray slice(int from, int to)
 	{
 		assert(from <= to);	
@@ -162,60 +217,6 @@ public:
 		result._origin = this->ptr_at(from0, from1);
 
 		return result;
-	}
-
-	// ## Access to premitive properties
-
-	int itemSize() const
-	{
-		return _itemSize;
-	}
-
-	const tuple &size() const
-	{
-		return _size;
-	}
-
-	int size(int dim) const
-	{
-		return _size[dim];
-	}
-
-	int stride(int dim) const
-	{
-		return _stride[dim];
-	}
-
-	void *raw_ptr()
-	{
-		return _origin;
-	}
-
-	const void *raw_ptr() const
-	{
-		return _origin;
-	}
-
-	// ## Derived property functions
-
-	int ndims() const
-	{
-		return _size.length();
-	}
-
-	bool empty() const
-	{
-		return raw_ptr() == nullptr || length() == 0;
-	}
-
-	int length() const
-	{
-		return size().product();
-	}
-
-	int byteSize() const
-	{
-		return length() * itemSize();
 	}
 
 	template <typename T>
