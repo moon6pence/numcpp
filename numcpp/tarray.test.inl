@@ -24,15 +24,15 @@ TEST(TArray, DeclareArrayWithSize)
 	EXPECT_EQ(5, a1.size<0>());
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-//	Array<float> a2(3, 2);
-//
-//	EXPECT_FALSE(a2.empty());
-//	EXPECT_EQ(sizeof(float), a2.itemSize());
-//	ASSERT_EQ(2, a2.ndims());
-//	EXPECT_EQ(3, a2.size(0));
-//	EXPECT_EQ(2, a2.size(1));
-//	EXPECT_NE(nullptr, a2.raw_ptr());
-//
+	TArray<float, 2> a2(3, 2);
+
+	EXPECT_FALSE(a2.empty());
+	EXPECT_EQ(sizeof(float), a2.itemSize());
+	ASSERT_EQ(2, a2.ndims());
+	EXPECT_EQ(3, a2.size<0>());
+	EXPECT_EQ(2, a2.size<1>());
+	EXPECT_NE(nullptr, a2.raw_ptr());
+
 //	int shape[3] = { 4, 3, 2 };
 //	Array<double> a3(tuple(3, shape));
 //
@@ -58,16 +58,16 @@ TEST(TArray, SetSize)
 	// a1.size<1>();
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-//	Array<int> a2;
-//	a2 = Array<int>(3, 2);
-//
-//	EXPECT_FALSE(a2.empty());
-//	EXPECT_EQ(sizeof(float), a2.itemSize());
-//	ASSERT_EQ(2, a2.ndims());
-//	EXPECT_EQ(3, a2.size(0));
-//	EXPECT_EQ(2, a2.size(1));
-//	EXPECT_NE(nullptr, a2.raw_ptr());
-//
+	TArray<int, 2> a2;
+	a2 = TArray<int, 2>(3, 2);
+
+	EXPECT_FALSE(a2.empty());
+	EXPECT_EQ(sizeof(float), a2.itemSize());
+	ASSERT_EQ(2, a2.ndims());
+	EXPECT_EQ(3, a2.size<0>());
+	EXPECT_EQ(2, a2.size<1>());
+	EXPECT_NE(nullptr, a2.raw_ptr());
+
 //	Array<double> a3;
 //	int shape[3] = { 4, 3, 2 };
 //	a3 = Array<int>(tuple(3, shape));
@@ -95,19 +95,18 @@ TEST(TArray, MoveSemantics)
 	EXPECT_EQ(5, moved.size<0>());
 	EXPECT_NE(nullptr, moved.raw_ptr());
 
-//	// move assign
-//	Array<int> a2(3, 2), moved2;
-//	moved2 = std::move(a2);
-//
-//	EXPECT_TRUE(a2.empty());
-//	EXPECT_EQ(0, a2.ndims());
-//	EXPECT_EQ(nullptr, a2.raw_ptr());
-//
-//	EXPECT_FALSE(moved2.empty());
-//	ASSERT_EQ(2, moved2.ndims());
-//	EXPECT_EQ(3, moved2.size(0));
-//	EXPECT_EQ(2, moved2.size(1));
-//	EXPECT_NE(nullptr, moved2.raw_ptr());
+	// move assign
+	TArray<int, 2> a2(3, 2);
+	auto moved2 = std::move(a2);
+
+	EXPECT_TRUE(a2.empty());
+	EXPECT_EQ(nullptr, a2.raw_ptr());
+
+	EXPECT_FALSE(moved2.empty());
+	ASSERT_EQ(2, moved2.ndims());
+	EXPECT_EQ(3, moved2.size<0>());
+	EXPECT_EQ(2, moved2.size<1>());
+	EXPECT_NE(nullptr, moved2.raw_ptr());
 }
 
 //TEST(Array, MoveFromBaseArray)
@@ -168,14 +167,14 @@ TEST(TArray, DerivedFunctions)
 	// this line have to cause compile error
 	// EXPECT_EQ(sizeof(int), a1.stride<1>());
 
-//	Array<float> a2(3, 2);
-//
-//	EXPECT_FALSE(a2.empty());
-//	EXPECT_EQ(3 * 2, a2.length());
-//	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
-//	EXPECT_EQ(sizeof(float), a2.stride(0));
-//	EXPECT_EQ(sizeof(float) * 3, a2.stride(1));
-//
+	TArray<float, 2> a2(3, 2);
+
+	EXPECT_FALSE(a2.empty());
+	EXPECT_EQ(3 * 2, a2.length());
+	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
+	EXPECT_EQ(sizeof(float), a2.stride<0>());
+	EXPECT_EQ(sizeof(float) * 3, a2.stride<1>());
+
 //	int shape[3] = { 4, 3, 2 };
 //	Array<char> a3(tuple(3, shape));
 //
