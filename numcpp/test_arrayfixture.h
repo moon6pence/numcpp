@@ -9,8 +9,7 @@ class ArrayFixture : public ::testing::Test
 public:
 	ArrayFixture() : a1(5), a2(2, 3)
 	{
-		int shape[3] = { 2, 3, 4 };
-		a3 = np::Array<int>(tuple(3, shape));
+		a3 = np::Array<int>(make_vector(2, 3, 4));
 	}
 
 protected:

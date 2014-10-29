@@ -40,7 +40,7 @@ struct Circularize
 
 	void operator() (Array<uint8_t> &dst, const Array<uint8_t> &src, int DIAMETER)
 	{
-		const tuple expected(DIAMETER, DIAMETER);
+		auto expected = make_vector(DIAMETER, DIAMETER);
 		if (dst.size() != expected) 
 			dst = Array<uint8_t>(expected);
 
@@ -60,7 +60,7 @@ struct Circularize_d : private Circularize
 
 	void operator() (GpuArray<uint8_t> &dst, const GpuArray<uint8_t> &src, int DIAMETER)
 	{
-		const tuple expected(DIAMETER, DIAMETER);
+		auto expected = make_vector(DIAMETER, DIAMETER);
 		if (dst.size() != expected) 
 			dst = GpuArray<uint8_t>(expected);
 

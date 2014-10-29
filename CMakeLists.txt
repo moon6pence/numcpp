@@ -32,7 +32,6 @@ add_library(
 	numcpp.cpp
 
 	numcpp/allocator.h
-	numcpp/tuple.h
 	numcpp/base_array.h
 	numcpp/array.h
 	numcpp/tarray.h

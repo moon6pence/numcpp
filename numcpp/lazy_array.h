@@ -14,7 +14,7 @@ struct lazy_array_with_binary_function
 	lazy_array_with_binary_function(const Array1 &a1, const Array2 &a2) : 
 		a1(a1), a2(a2)
 	{
-		assert(a1.size() == a2.size());
+		//assert(a1.size() == a2.size());
 	}
 
 	int ndims() const
@@ -22,7 +22,7 @@ struct lazy_array_with_binary_function
 		return a1.ndims();
 	}
 
-	const tuple &size() const
+	const std::vector<int> &size() const
 	{
 		return a1.size();
 	}
@@ -58,7 +58,7 @@ struct lazy_array_with_binary_function<Array1, T, T, Function>
 		return a1.ndims();
 	}
 
-	const tuple &size() const
+	const std::vector<int> &size() const
 	{
 		return a1.size();
 	}
@@ -92,7 +92,7 @@ struct lazy_array_with_unary_function
 		return a1.ndims();
 	}
 
-	const tuple &size() const
+	const std::vector<int> &size() const
 	{
 		return a1.size();
 	}
@@ -187,7 +187,7 @@ struct lazy_array_cast
 		return a1.ndims();
 	}
 
-	const tuple &size() const
+	const std::vector<int> &size() const
 	{
 		return a1.size();
 	}

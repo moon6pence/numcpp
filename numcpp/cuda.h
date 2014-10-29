@@ -32,21 +32,21 @@ public:
 	}
 
 	explicit GpuArray(int size0) : 
-		BaseArray(sizeof(T), tuple(size0), device_allocator::allocate, device_allocator::free)
+		BaseArray(sizeof(T), make_vector(size0), device_allocator::allocate, device_allocator::free)
 	{
 	}
 
 	GpuArray(int size0, int size1) : 
-		BaseArray(sizeof(T), tuple(size0, size1), device_allocator::allocate, device_allocator::free)
+		BaseArray(sizeof(T), make_vector(size0, size1), device_allocator::allocate, device_allocator::free)
 	{
 	}
 
 	GpuArray(int size0, int size1, int size2) : 
-		BaseArray(sizeof(T), tuple(size0, size1, size2), device_allocator::allocate, device_allocator::free)
+		BaseArray(sizeof(T), make_vector(size0, size1, size2), device_allocator::allocate, device_allocator::free)
 	{
 	}
 
-	explicit GpuArray(const tuple &size) : 
+	explicit GpuArray(const std::vector<int> &size) : 
 		BaseArray(sizeof(T), size, device_allocator::allocate, device_allocator::free)
 	{
 	}

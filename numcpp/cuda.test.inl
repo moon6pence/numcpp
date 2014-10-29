@@ -89,7 +89,7 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	int shape[3] = { 2, 3, 4 };
-	GpuArray<double> a3(tuple(3, shape));
+	GpuArray<double> a3(make_vector(2, 3, 4));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());

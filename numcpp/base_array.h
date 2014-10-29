@@ -2,19 +2,49 @@
 #define NUMCPP_BASE_ARRAY_H_
 
 #include "allocator.h"
-#include "tuple.h"
-
-#include <memory>
-#include <assert.h>
+#include <vector>
 
 namespace np {
 
-inline tuple build_stride(int itemSize, const tuple &size)
+inline int product(const std::vector<int> &size)
 {
-	// FIXME: similar()?
-	tuple stride(size);
+	int result = 1;
+
+	for (int size0 : size)
+		result *= size0;
+
+	return result;
+}
+
+inline std::vector<int> make_vector(int size0)
+{
+	std::vector<int> result(1);
+	result[0] = size0;
+	return std::move(result);
+}
+
+inline std::vector<int> make_vector(int size0, int size1)
+{
+	std::vector<int> result(2);
+	result[0] = size0;
+	result[1] = size1;
+	return std::move(result);
+}
+
+inline std::vector<int> make_vector(int size0, int size1, int size2)
+{
+	std::vector<int> result(3);
+	result[0] = size0;
+	result[1] = size1;
+	result[2] = size2;
+	return std::move(result);
+}
+
+inline std::vector<int> make_stride(int itemSize, const std::vector<int> &size)
+{
+	std::vector<int> stride(size.size());
 	stride[0] = itemSize;
-	for (int i = 1; i < stride.length(); i++)
+	for (int i = 1; i < stride.size(); i++)
 		stride[i] = stride[i - 1] * size[i - 1];
 
 	return std::move(stride);
@@ -23,8 +53,11 @@ inline tuple build_stride(int itemSize, const tuple &size)
 struct BaseArray
 {
 public:
+	typedef std::vector<int> size_type;
+
+private:
 	const int _itemSize;
-	tuple _size, _stride;
+	size_type _size, _stride;
 	std::shared_ptr<void> _address;
 	void *_origin;
 
@@ -39,23 +72,23 @@ public:
 	{ 
 	}
 
-	BaseArray(int itemSize, const tuple &size) :
+	BaseArray(int itemSize, const size_type &size) :
 		_itemSize(itemSize), 
 		_size(size), 
-		_stride(build_stride(itemSize, size)), 
-		_address(heap_allocator<char>::allocate(_size.product() * itemSize)), // in byte size
+		_stride(make_stride(itemSize, size)), 
+		_address(heap_allocator<char>::allocate(product(size) * itemSize)), // in byte size
 		_origin(nullptr)
 	{
 		_origin = _address.get();
 	}
 
 	// TODO: deprecate this
-	BaseArray(int itemSize, const tuple &size, void *(*allocate)(int), void (*free)(void *)) :
+	BaseArray(int itemSize, const size_type &size, void *(*allocate)(int), void (*free)(void *)) :
 		_itemSize(itemSize), 
 		_size(size), 
-		_stride(build_stride(itemSize, size))
+		_stride(make_stride(itemSize, size))
 	{
-		void *ptr = allocate(size.product() * _itemSize);
+		void *ptr = allocate(product(size) * itemSize);
 
 		_address = std::shared_ptr<void>(ptr, free);
 		_origin = ptr;
@@ -115,10 +148,10 @@ public:
 
 	int ndims() const
 	{
-		return _size.length();
+		return (int)_size.size();
 	}
 
-	const tuple &size() const
+	const size_type &size() const
 	{
 		return _size;
 	}
@@ -130,7 +163,7 @@ public:
 
 	int length() const
 	{
-		return size().product();
+		return product(size());
 	}
 
 	int byteSize() const
@@ -165,14 +198,11 @@ public:
 
 	BaseArray slice(int from, int to)
 	{
-		assert(from <= to);	
+		//assert(from <= to);	
 
 		BaseArray result(itemSize());
 
-		int *shape = new int[1];
-		shape[0] = to - from;
-		result._size = tuple(1, shape);
-
+		result._size = make_vector(to - from);
 		result._stride = this->_stride;
 
 		// add reference count here
@@ -186,16 +216,12 @@ public:
 
 	BaseArray slice(int from0, int from1, int to0, int to1)
 	{
-		assert(from0 <= to0);	
-		assert(from1 <= to1);	
+		//assert(from0 <= to0);	
+		//assert(from1 <= to1);	
 
 		BaseArray result(itemSize());
 
-		int *shape = new int[2];
-		shape[0] = to0 - from0;
-		shape[1] = to1 - from1;
-		result._size = tuple(2, shape);
-
+		result._size = make_vector(to0 - from0, to1 - from1);
 		result._stride = this->_stride;
 
 		// add reference count here

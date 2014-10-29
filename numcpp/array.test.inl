@@ -33,8 +33,7 @@ TEST(Array, DeclareArrayWithSize)
 	EXPECT_EQ(2, a2.size(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-	int shape[3] = { 4, 3, 2 };
-	Array<double> a3(tuple(3, shape));
+	Array<double> a3(make_vector(4, 3, 2));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -60,7 +59,7 @@ TEST(Array, SetSize)
 	int *ptr = a1_same.raw_ptr();
 
 	// Do not allocate again
-	if (a1_same.size() != tuple(5))
+	if (a1_same.size() != make_vector(5))
 		a1_same = Array<int>(5);
 	EXPECT_EQ(ptr, a1_same.raw_ptr());
 
@@ -75,8 +74,7 @@ TEST(Array, SetSize)
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
 	Array<double> a3;
-	int shape[3] = { 4, 3, 2 };
-	a3 = Array<int>(tuple(3, shape));
+	a3 = Array<int>(make_vector(4, 3, 2));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -121,7 +119,7 @@ TEST(Array, MoveFromBaseArray)
 {
 	// move constructor
 	{
-		BaseArray base1(sizeof(int), tuple(5));
+		BaseArray base1(sizeof(int), make_vector(5));
 
 		EXPECT_FALSE(base1.empty());
 		EXPECT_EQ(1, base1.ndims());
@@ -141,7 +139,7 @@ TEST(Array, MoveFromBaseArray)
 
 	// move assign
 	{
-		BaseArray base2(sizeof(float), tuple(3, 2));
+		BaseArray base2(sizeof(float), make_vector(3, 2));
 
 		Array<int> a2(5);
 		a2 = std::move(base2);
@@ -182,7 +180,7 @@ TEST(Array, DerivedFunctions)
 	EXPECT_EQ(sizeof(float) * 3, a2.stride(1));
 
 	int shape[3] = { 4, 3, 2 };
-	Array<char> a3(tuple(3, shape));
+	Array<char> a3(make_vector(4, 3, 2));
 
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(4 * 3 * 2, a3.length());

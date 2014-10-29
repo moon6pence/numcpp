@@ -52,7 +52,7 @@ inline const cv::Mat to_cv_mat(const Array<cv::Vec3b> &array)
 
 inline BaseArray from_cv_mat(const cv::Mat &cv_mat)
 {
-	BaseArray result((int)cv_mat.elemSize(), tuple(cv_mat.cols, cv_mat.rows));
+	BaseArray result((int)cv_mat.elemSize(), make_vector(cv_mat.cols, cv_mat.rows));
 
 	// TODO: Do not copy
 	memcpy(result.raw_ptr<void>(), cv_mat.data, result.byteSize());
@@ -70,7 +70,7 @@ template <typename T>
 void from_cv_mat(Array<T> &dst, const cv::Mat &src)
 {
 	// TODO: check type of src
-	if (dst.size() != tuple(src.cols, src.rows))
+	if (dst.size() != make_vector(src.cols, src.rows))
 		dst = Array<T>(src.cols, src.rows);
 
 	// TODO: Do not copy

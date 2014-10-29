@@ -15,19 +15,19 @@ public:
 	{
 	}
 
-	explicit Array(int size0) : BaseArray(sizeof(T), tuple(size0))
+	explicit Array(int size0) : BaseArray(sizeof(T), make_vector(size0))
 	{
 	}
 
-	Array(int size0, int size1) : BaseArray(sizeof(T), tuple(size0, size1))
+	Array(int size0, int size1) : BaseArray(sizeof(T), make_vector(size0, size1))
 	{
 	}
 
-	Array(int size0, int size1, int size2) : BaseArray(sizeof(T), tuple(size0, size1, size2))
+	Array(int size0, int size1, int size2) : BaseArray(sizeof(T), make_vector(size0, size1, size2))
 	{
 	}
 
-	explicit Array(const tuple &size) : BaseArray(sizeof(T), size)
+	explicit Array(const std::vector<int> &size) : BaseArray(sizeof(T), size)
 	{
 	}
 
@@ -45,7 +45,7 @@ public:
 	// move constructor (for BaseArray)
 	Array(BaseArray &&other) : BaseArray(std::move(other))
 	{
-		assert(other.itemSize() == sizeof(T));
+		//assert(other.itemSize() == sizeof(T));
 	}
 
 	// move assign (inherited)

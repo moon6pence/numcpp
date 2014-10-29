@@ -52,7 +52,7 @@ void meshgrid(
 	Array<T> &X, Array<T> &Y, 
 	const Array<T> &xgv, const Array<T> &ygv)
 {
-	tuple expected_size(xgv.length(), ygv.length());
+	auto expected_size = make_vector(xgv.length(), ygv.length());
 
 	if (X.size() != expected_size) X = Array<T>(expected_size);
 	if (Y.size() != expected_size) Y = Array<T>(expected_size);

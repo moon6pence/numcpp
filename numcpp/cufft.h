@@ -51,7 +51,7 @@ struct CuFFT_R2C
 				CUFFT_ERROR(cufftSetStream(plan, stream));
 		}
 
-		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
+		auto expected = make_vector(getLeastPower2Over(src.size(0)), src.size(1));
 		if (dst.size() != expected) 
 			dst = GpuArray<float2>(expected);
 
@@ -95,7 +95,7 @@ struct CuFFT_C2C
 				CUFFT_ERROR(cufftSetStream(plan, stream));
 		}
 
-		const tuple expected(getLeastPower2Over(src.size(0)), src.size(1));
+		auto expected = make_vector(getLeastPower2Over(src.size(0)), src.size(1));
 		if (dst.size() != expected) 
 			dst = GpuArray<float2>(expected);
 
