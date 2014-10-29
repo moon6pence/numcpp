@@ -18,7 +18,7 @@ struct QuickDialog : public property_visitor
 	{
 		QCheckBox *checkBox = new QCheckBox(" ", widget);
 		checkBox->setChecked(property);
-		checkBox->setEnabled(property.readonly);
+		checkBox->setEnabled(!property.readonly);
 
 		// Update property when checkbox is clicked
 		QObject::connect(
