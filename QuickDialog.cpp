@@ -67,10 +67,10 @@ struct QuickDialog : public property_visitor
 		// Update property when spinbox is changed
 		QObject::connect(
 			spinBox, 
-			static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), 
-			[&property](int value)
+			&QSpinBox::editingFinished, 
+			[&property, spinBox]()
 			{
-				property.set(value);
+				property.set(spinBox->value());
 			});
 
 		// Update spinbox if property is changed
@@ -126,10 +126,10 @@ struct QuickDialog : public property_visitor
 		// Update property when spinbox is changed
 		QObject::connect(
 			spinBox, 
-			static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), 
-			[&property](double value)
+			&QDoubleSpinBox::editingFinished, 
+			[&property, spinBox]()
 			{
-				property.set(value);
+				property.set(spinBox->value());
 			});
 
 		// Update spinbox if property is changed
