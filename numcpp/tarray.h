@@ -1,23 +1,10 @@
 #ifndef NUMCPP_TARRAY_H_
 #define NUMCPP_TARRAY_H_
 
+#include "allocator.h"
 #include <array>
 
 namespace np {
-
-template <typename T>
-struct default_allocator
-{
-	static std::shared_ptr<T> allocate(int size)
-	{
-		return std::shared_ptr<T>(new T[size], free);
-	}
-
-	static void free(T *ptr)
-	{
-		delete[] ptr;
-	}
-};
 
 // TODO: variadic template
 std::array<int, 3> make_array(int size0, int size1, int size2)
@@ -74,7 +61,7 @@ public:
 	TArray(const size_type &size) : 
 		_size(size), 
 		_stride(make_stride(size)), 
-		_address(default_allocator<value_type>::allocate(product_array(size))), // FIXME
+		_address(heap_allocator<value_type>::allocate(product_array(size))), 
 		_origin(nullptr)
 	{
 		_origin = _address.get();
@@ -175,7 +162,7 @@ public:
 
 	TArray(int size0) : 
 		_size0(size0), 
-		_address(default_allocator<value_type>::allocate(size0)), 
+		_address(heap_allocator<value_type>::allocate(size0)), 
 		_origin(nullptr)
 	{
 		_origin = _address.get();
@@ -286,7 +273,7 @@ public:
 
 	TArray(int size0, int size1) : 
 		_size0(size0), _size1(size1), 
-		_address(default_allocator<value_type>::allocate(size0)), 
+		_address(heap_allocator<value_type>::allocate(size0)), 
 		_origin(nullptr)
 	{
 		_origin = _address.get();

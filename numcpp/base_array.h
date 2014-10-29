@@ -1,25 +1,13 @@
 #ifndef NUMCPP_BASE_ARRAY_H_
 #define NUMCPP_BASE_ARRAY_H_
 
+#include "allocator.h"
 #include "tuple.h"
 
 #include <memory>
 #include <assert.h>
 
 namespace np {
-
-struct heap_allocator
-{
-	static void *allocate(int size)
-	{
-		return new char[size];
-	}
-
-	static void free(void *ptr)
-	{
-		delete[] reinterpret_cast<char *>(ptr);
-	}
-};
 
 inline tuple build_stride(int itemSize, const tuple &size)
 {
@@ -54,14 +42,14 @@ public:
 	BaseArray(int itemSize, const tuple &size) :
 		_itemSize(itemSize), 
 		_size(size), 
-		_stride(build_stride(itemSize, size))
+		_stride(build_stride(itemSize, size)), 
+		_address(heap_allocator<char>::allocate(_size.product() * itemSize)), // in byte size
+		_origin(nullptr)
 	{
-		void *ptr = heap_allocator::allocate(_size.product() * _itemSize);
-
-		_address = std::shared_ptr<void>(ptr, heap_allocator::free);
-		_origin = ptr;
+		_origin = _address.get();
 	}
 
+	// TODO: deprecate this
 	BaseArray(int itemSize, const tuple &size, void *(*allocate)(int), void (*free)(void *)) :
 		_itemSize(itemSize), 
 		_size(size), 
