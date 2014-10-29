@@ -5,11 +5,6 @@
 
 namespace np {
 
-template <typename T, int Dim = 1>
-struct TArray
-{
-};
-
 template <typename T>
 struct default_allocator
 {
@@ -21,6 +16,141 @@ struct default_allocator
 	static void free(T *ptr)
 	{
 		delete[] ptr;
+	}
+};
+
+// TODO: variadic template
+std::array<int, 3> make_array(int size0, int size1, int size2)
+{
+	std::array<int, 3> result;
+	result[0] = size0;
+	result[1] = size1;
+	result[2] = size2;
+	return result;
+}
+
+template <int N> 
+inline int product_array(const std::array<int, N> &array)
+{
+	// TODO: do not use runtime loop
+	int result = 1;
+
+	for (int i = 0; i < N; i++)
+		result *= array[i];
+
+	return result;
+}
+
+template <int N>
+inline std::array<int, N> make_stride(const std::array<int, N> &size)
+{
+	// TODO do not use runtime loop
+	std::array<int, N> stride;
+
+	stride[0] = 1;
+	for (int i = 1; i < N; i++)
+		stride[i] = stride[i - 1] * size[i - 1];
+
+	return std::move(stride);
+}
+
+template <typename T, int Dim = 1>
+struct TArray
+{
+public:
+	typedef T value_type;
+	typedef std::array<int, Dim> size_type;
+
+private:
+	size_type _size, _stride;
+	std::shared_ptr<value_type> _address;
+	value_type *_origin;
+
+public:
+	TArray() : _origin(nullptr)
+	{
+	}
+
+	TArray(const size_type &size) : 
+		_size(size), 
+		_stride(make_stride(size)), 
+		_address(default_allocator<value_type>::allocate(product_array(size))), // FIXME
+		_origin(nullptr)
+	{
+		_origin = _address.get();
+	}
+
+	// copy constructor: shallow copy
+	explicit TArray(const TArray &other) :
+		_size(other._size), 
+		_stride(other._stride), 
+		_address(other._address), 
+		_origin(other._origin)
+	{
+	}
+
+	// move constructor
+	TArray(TArray &&other) :
+		_size(other._size), 
+		_stride(other._stride), 
+		_address(std::move(other._address)), 
+		_origin(other._origin)
+	{
+		other._origin = nullptr;
+	}
+
+	int itemSize() const
+	{
+		return sizeof(value_type);
+	}
+
+	int ndims() const
+	{
+		return Dim;
+	}
+
+	// TODO: returns const size_type& ?
+	size_type size() const
+	{
+		return _size;
+	}
+
+	// TODO: index boundary check?
+	template <int N>
+	int size() const
+	{
+		return _size[N];
+	}
+
+	int length() const
+	{
+		return product_array(_size);
+	}
+
+	int byteSize() const
+	{
+		return length() * itemSize();
+	}
+	
+	template <int N>
+	int stride() const
+	{
+		return _stride[N];
+	}
+
+	value_type *raw_ptr()
+	{
+		return _origin;
+	}
+
+	const value_type *raw_ptr() const
+	{
+		return _origin;
+	}
+
+	bool empty() const
+	{
+		return raw_ptr() == nullptr;
 	}
 };
 

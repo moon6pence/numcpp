@@ -33,16 +33,15 @@ TEST(TArray, DeclareArrayWithSize)
 	EXPECT_EQ(2, a2.size<1>());
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-//	int shape[3] = { 4, 3, 2 };
-//	Array<double> a3(tuple(3, shape));
-//
-//	EXPECT_FALSE(a3.empty());
-//	EXPECT_EQ(sizeof(double), a3.itemSize());
-//	ASSERT_EQ(3, a3.ndims());
-//	EXPECT_EQ(4, a3.size(0));
-//	EXPECT_EQ(3, a3.size(1));
-//	EXPECT_EQ(2, a3.size(2));
-//	EXPECT_NE(nullptr, a3.raw_ptr());
+	TArray<double, 3> a3(make_array(4, 3, 2));
+
+	EXPECT_FALSE(a3.empty());
+	EXPECT_EQ(sizeof(double), a3.itemSize());
+	ASSERT_EQ(3, a3.ndims());
+	EXPECT_EQ(4, a3.size<0>());
+	EXPECT_EQ(3, a3.size<1>());
+	EXPECT_EQ(2, a3.size<2>());
+	EXPECT_NE(nullptr, a3.raw_ptr());
 }
 
 TEST(TArray, SetSize)
@@ -68,17 +67,16 @@ TEST(TArray, SetSize)
 	EXPECT_EQ(2, a2.size<1>());
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-//	Array<double> a3;
-//	int shape[3] = { 4, 3, 2 };
-//	a3 = Array<int>(tuple(3, shape));
-//
-//	EXPECT_FALSE(a3.empty());
-//	EXPECT_EQ(sizeof(double), a3.itemSize());
-//	ASSERT_EQ(3, a3.ndims());
-//	EXPECT_EQ(4, a3.size(0));
-//	EXPECT_EQ(3, a3.size(1));
-//	EXPECT_EQ(2, a3.size(2));
-//	EXPECT_NE(nullptr, a3.raw_ptr());
+	TArray<double, 3> a3;
+	a3 = TArray<double, 3>(make_array(4, 3, 2));
+
+	EXPECT_FALSE(a3.empty());
+	EXPECT_EQ(sizeof(double), a3.itemSize());
+	ASSERT_EQ(3, a3.ndims());
+	EXPECT_EQ(4, a3.size<0>());
+	EXPECT_EQ(3, a3.size<1>());
+	EXPECT_EQ(2, a3.size<2>());
+	EXPECT_NE(nullptr, a3.raw_ptr());
 }
 
 TEST(TArray, MoveSemantics)
@@ -175,15 +173,14 @@ TEST(TArray, DerivedFunctions)
 	EXPECT_EQ(sizeof(float), a2.stride<0>());
 	EXPECT_EQ(sizeof(float) * 3, a2.stride<1>());
 
-//	int shape[3] = { 4, 3, 2 };
-//	Array<char> a3(tuple(3, shape));
-//
-//	EXPECT_FALSE(a3.empty());
-//	EXPECT_EQ(4 * 3 * 2, a3.length());
-//	EXPECT_EQ(4 * 3 * 2 * sizeof(char), a3.byteSize());
-//	EXPECT_EQ(sizeof(char), a3.stride(0));
-//	EXPECT_EQ(sizeof(char) * 4, a3.stride(1));
-//	EXPECT_EQ(sizeof(char) * 4 * 3, a3.stride(2));
+	TArray<char, 3> a3(make_array(4, 3, 2));
+
+	EXPECT_FALSE(a3.empty());
+	EXPECT_EQ(4 * 3 * 2, a3.length());
+	EXPECT_EQ(4 * 3 * 2 * sizeof(char), a3.byteSize());
+	EXPECT_EQ(sizeof(char), a3.stride<0>());
+	EXPECT_EQ(sizeof(char) * 4, a3.stride<1>());
+	EXPECT_EQ(sizeof(char) * 4 * 3, a3.stride<2>());
 }
 
 //TEST(Array, AccessElements)
