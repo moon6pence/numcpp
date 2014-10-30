@@ -169,15 +169,15 @@ TEST(Array, DerivedFunctions)
 	EXPECT_FALSE(a1.empty());
 	EXPECT_EQ(5, a1.length());
 	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
-	EXPECT_EQ(sizeof(int), a1.stride(0));
+	EXPECT_EQ(1, a1.stride(0));
 
 	Array<float> a2(3, 2);
 
 	EXPECT_FALSE(a2.empty());
 	EXPECT_EQ(3 * 2, a2.length());
 	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
-	EXPECT_EQ(sizeof(float), a2.stride(0));
-	EXPECT_EQ(sizeof(float) * 3, a2.stride(1));
+	EXPECT_EQ(1, a2.stride(0));
+	EXPECT_EQ(3, a2.stride(1));
 
 	int shape[3] = { 4, 3, 2 };
 	Array<char> a3(make_vector(4, 3, 2));
@@ -185,9 +185,9 @@ TEST(Array, DerivedFunctions)
 	EXPECT_FALSE(a3.empty());
 	EXPECT_EQ(4 * 3 * 2, a3.length());
 	EXPECT_EQ(4 * 3 * 2 * sizeof(char), a3.byteSize());
-	EXPECT_EQ(sizeof(char), a3.stride(0));
-	EXPECT_EQ(sizeof(char) * 4, a3.stride(1));
-	EXPECT_EQ(sizeof(char) * 4 * 3, a3.stride(2));
+	EXPECT_EQ(1, a3.stride(0));
+	EXPECT_EQ(4, a3.stride(1));
+	EXPECT_EQ(4 * 3, a3.stride(2));
 }
 
 TEST(Array, AccessElements)

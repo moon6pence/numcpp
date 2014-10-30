@@ -17,7 +17,7 @@ cv::Mat to_cv_mat(Array<T> &array)
 		array.size(1), array.size(0), 
 		cv::DataType<T>::type, 
 		array.raw_ptr(), 
-		array.stride(1));
+		array.stride(1) * array.itemSize());
 }
 
 template <typename T>
@@ -27,7 +27,7 @@ const cv::Mat to_cv_mat(const Array<T> &array)
 		array.size(1), array.size(0), 
 		cv::DataType<T>::type, 
 		const_cast<T *>(array.raw_ptr()), 
-		array.stride(1));
+		array.stride(1) * array.itemSize());
 }
 
 template <>
@@ -37,7 +37,7 @@ inline cv::Mat to_cv_mat(Array<cv::Vec3b> &array)
 		array.size(1), array.size(0), 
 		CV_8UC3, 
 		array.raw_ptr(), 
-		array.stride(1));
+		array.stride(1) * array.itemSize());
 }
 
 template <>
@@ -47,7 +47,7 @@ inline const cv::Mat to_cv_mat(const Array<cv::Vec3b> &array)
 		array.size(1), array.size(0), 
 		CV_8UC3, 
 		const_cast<cv::Vec3b *>(array.raw_ptr()), 
-		array.stride(1));
+		array.stride(1) * array.itemSize());
 }
 
 inline BaseArray from_cv_mat(const cv::Mat &cv_mat)

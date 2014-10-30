@@ -40,10 +40,10 @@ inline std::vector<int> make_vector(int size0, int size1, int size2)
 	return std::move(result);
 }
 
-inline std::vector<std::ptrdiff_t> make_stride(int itemSize, const std::vector<int> &size)
+inline std::vector<std::ptrdiff_t> make_stride(const std::vector<int> &size)
 {
 	std::vector<std::ptrdiff_t> stride(size.size());
-	stride[0] = itemSize;
+	stride[0] = 1;
 	for (int i = 1; i < stride.size(); i++)
 		stride[i] = stride[i - 1] * size[i - 1];
 
@@ -77,7 +77,7 @@ public:
 	BaseArray(int itemSize, const size_type &size) :
 		_itemSize(itemSize), 
 		_size(size), 
-		_stride(make_stride(itemSize, size)), 
+		_stride(make_stride(size)), 
 		_address(heap_allocator<char>::allocate(product(size) * itemSize)), // in byte size
 		_origin(nullptr)
 	{
@@ -88,7 +88,7 @@ public:
 	BaseArray(int itemSize, const size_type &size, void *(*allocate)(int), void (*free)(void *)) :
 		_itemSize(itemSize), 
 		_size(size), 
-		_stride(make_stride(itemSize, size))
+		_stride(make_stride(size))
 	{
 		void *ptr = allocate(product(size) * itemSize);
 
@@ -249,22 +249,22 @@ public:
 
 	void *ptr_at(int index0)
 	{
-		return raw_ptr<char>() + index0 * stride(0);
+		return raw_ptr<char>() + (index0 * stride(0)) * itemSize();
 	}
 
 	void *ptr_at(int index0, int index1)
 	{
-		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1);
+		return raw_ptr<char>() + (index0 * stride(0) + index1 * stride(1)) * itemSize();
 	}
 
 	const void *ptr_at(int index0) const
 	{
-		return raw_ptr<char>() + index0 * stride(0);
+		return raw_ptr<char>() + (index0 * stride(0)) * itemSize();
 	}
 
 	const void *ptr_at(int index0, int index1) const
 	{
-		return raw_ptr<char>() + index0 * stride(0) + index1 * stride(1);
+		return raw_ptr<char>() + (index0 * stride(0) + index1 * stride(1)) * itemSize();
 	}
 
 	template <typename T>
