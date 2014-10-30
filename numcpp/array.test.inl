@@ -161,8 +161,8 @@ TEST(Array, DerivedFunctions)
 	Array<int> a0;
 
 	EXPECT_TRUE(a0.empty());
-	EXPECT_EQ(1, a0.length()); // Be careful, not 0
-	EXPECT_EQ(1 * sizeof(int), a0.byteSize());
+	EXPECT_EQ(0, a0.length()); 
+	EXPECT_EQ(0, a0.byteSize());
 
 	Array<int> a1(5);
 

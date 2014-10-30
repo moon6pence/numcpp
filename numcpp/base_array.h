@@ -165,7 +165,10 @@ public:
 
 	int length() const
 	{
-		return product(size());
+		if (ndims() == 0)
+			return 0;
+		else
+			return product(size());
 	}
 
 	int byteSize() const
@@ -190,7 +193,7 @@ public:
 
 	bool empty() const
 	{
-		return raw_ptr() == nullptr;
+		return raw_ptr() == nullptr || length() == 0;
 	}
 
 
