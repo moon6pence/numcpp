@@ -55,7 +55,7 @@ inline BaseArray from_cv_mat(const cv::Mat &cv_mat)
 	BaseArray result((int)cv_mat.elemSize(), make_vector(cv_mat.cols, cv_mat.rows));
 
 	// TODO: Do not copy
-	memcpy(result.raw_ptr<void>(), cv_mat.data, byteSize(result));
+	memcpy(result.raw_ptr(), cv_mat.data, byteSize(result));
 
 	return std::move(result);
 }

@@ -113,11 +113,12 @@ TEST(OpenCV, FromCvMatRuntime)
 	ASSERT_EQ(cv_mat.rows, a1.size(0));
 	ASSERT_EQ(cv_mat.cols, a1.size(1));
 
-	EXPECT_EQ(123, a1.at<uint8_t>(2, 3));
-	EXPECT_EQ(7, a1.at<uint8_t>(4, 1));
-	for (int y = 0; y < a1.size(0); y++)
-		for (int x = 0; x < a1.size(1); x++)
-			EXPECT_EQ(cv_mat.at<uint8_t>(y, x), a1.at<uint8_t>(x, y));
+	Array<uint8_t> image(std::move(a1));
+	EXPECT_EQ(123, image(2, 3));
+	EXPECT_EQ(7, image(4, 1));
+	for (int y = 0; y < image.size(0); y++)
+		for (int x = 0; x < image.size(1); x++)
+			EXPECT_EQ(cv_mat.at<uint8_t>(y, x), image(x, y));
 }
 
 TEST(OpenCV, ImRead)

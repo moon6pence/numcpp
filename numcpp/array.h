@@ -68,74 +68,94 @@ public:
 
 	T *raw_ptr()
 	{
-		return BaseArray::raw_ptr<T>();
+		return static_cast<T *>(BaseArray::raw_ptr());
 	}
 
 	const T *raw_ptr() const
 	{
-		return BaseArray::raw_ptr<T>();
+		return static_cast<const T *>(BaseArray::raw_ptr());
 	}
 
 	operator T * ()
 	{
-		return BaseArray::raw_ptr<T>();
+		return raw_ptr();
 	}
 
 	operator const T * () const
 	{
-		return BaseArray::raw_ptr<T>();
+		return raw_ptr();
 	}
 
 	// at(index0, index...) : access array elements
 
 	T& at(int index0)
 	{
-		return BaseArray::at<T>(index0);
+		return *static_cast<T *>(ptr_at(index0));
 	}
 
 	T& at(int index0, int index1)
 	{
-		return BaseArray::at<T>(index0, index1);
+		return *static_cast<T *>(ptr_at(index0, index1));
 	}
 
 	const T& at(int index0) const
 	{
-		return BaseArray::at<T>(index0);
+		return *static_cast<const T *>(ptr_at(index0));
 	}
 
 	const T& at(int index0, int index1) const
 	{
-		return BaseArray::at<T>(index0, index1);
+		return *static_cast<const T *>(ptr_at(index0, index1));
 	}
+
+	//T& at(int index0)
+	//{
+	//	return BaseArray::at<T>(index0);
+	//}
+
+	//T& at(int index0, int index1)
+	//{
+	//	return BaseArray::at<T>(index0, index1);
+	//}
+
+	//const T& at(int index0) const
+	//{
+	//	return BaseArray::at<T>(index0);
+	//}
+
+	//const T& at(int index0, int index1) const
+	//{
+	//	return BaseArray::at<T>(index0, index1);
+	//}
 
 	T& operator() (int index0)
 	{
-		return BaseArray::at<T>(index0);
+		return at(index0);
 	}
 
 	T& operator() (int index0, int index1)
 	{
-		return BaseArray::at<T>(index0, index1);
+		return at(index0, index1);
 	}
 
 	const T& operator() (int index0) const
 	{
-		return BaseArray::at<T>(index0);
+		return at(index0);
 	}
 
 	const T& operator() (int index0, int index1) const
 	{
-		return BaseArray::at<T>(index0, index1);
+		return at(index0, index1);
 	}
 
 	Array<T> slice(int from, int to)
 	{
-		return Array<T>(BaseArray::slice(from, to));
+		return Array<T>(BaseArray_slice(from, to));
 	}
 
 	Array<T> slice(int from0, int from1, int to0, int to1)
 	{
-		return Array<T>(BaseArray::slice(from0, from1, to0, to1));
+		return Array<T>(BaseArray_slice(from0, from1, to0, to1));
 	}
 
 	template <class LazyArray>
@@ -159,6 +179,65 @@ public:
 	bool empty() const
 	{
 		return raw_ptr() == nullptr || length() == 0;
+	}
+
+	BaseArray BaseArray_slice(int from, int to)
+	{
+		//assert(from <= to);	
+
+		BaseArray result(itemSize());
+
+		result._size = make_vector(to - from);
+		result._length = product(result._size); // TODO
+		result._stride = this->_stride;
+
+		// add reference count here
+		result._address = this->_address;
+
+		// new origin with offset
+		result._origin = this->ptr_at(from);
+
+		return result;
+	}
+
+	BaseArray BaseArray_slice(int from0, int from1, int to0, int to1)
+	{
+		//assert(from0 <= to0);	
+		//assert(from1 <= to1);	
+
+		BaseArray result(itemSize());
+
+		result._size = make_vector(to0 - from0, to1 - from1);
+		result._length = product(result._size); // TODO
+		result._stride = this->_stride;
+
+		// add reference count here
+		result._address = this->_address;
+
+		// new origin with offset
+		result._origin = this->ptr_at(from0, from1);
+
+		return result;
+	}
+
+	void *ptr_at(int index0)
+	{
+		return ((char *)raw_ptr()) + (index0 * stride(0)) * itemSize();
+	}
+
+	void *ptr_at(int index0, int index1)
+	{
+		return ((char *)raw_ptr()) + (index0 * stride(0) + index1 * stride(1)) * itemSize();
+	}
+
+	const void *ptr_at(int index0) const
+	{
+		return ((char *)raw_ptr()) + (index0 * stride(0)) * itemSize();
+	}
+
+	const void *ptr_at(int index0, int index1) const
+	{
+		return ((char *)raw_ptr()) + (index0 * stride(0) + index1 * stride(1)) * itemSize();
 	}
 };
 
