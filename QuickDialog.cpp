@@ -38,27 +38,23 @@ struct QuickDialog : public property_visitor
 		addFormWidget(property.name(), checkBox);
 	}
 
-	class QuickSpinBox : public QSpinBox
+	class QSpinBoxIgnoreWheel : public QSpinBox
 	{
 	public:
-		QuickSpinBox(QWidget *parent) : QSpinBox(parent) { }
+		QSpinBoxIgnoreWheel(QWidget *parent) : QSpinBox(parent) { }
 
 		void wheelEvent(QWheelEvent *event) 
 		{
 			if (!hasFocus()) 
-			{
 				event->ignore();
-			} 
 			else 
-			{
 				QSpinBox::wheelEvent(event);
-			}
 		}
 	};
 
 	void visit(property<int> &property) const
 	{
-		QuickSpinBox *spinBox = new QuickSpinBox(widget);
+		QSpinBox *spinBox = new QSpinBoxIgnoreWheel(widget);
 		spinBox->setRange(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
 		spinBox->setValue(property);
 		spinBox->setReadOnly(property.readonly);
@@ -90,13 +86,9 @@ struct QuickDialog : public property_visitor
 		void wheelEvent(QWheelEvent *event) override
 		{
 			if (!hasFocus()) 
-			{
 				event->ignore();
-			} 
 			else 
-			{
 				QDoubleSpinBox::wheelEvent(event);
-			}
 		}
 
 		// To prevent too long spin box
@@ -165,9 +157,24 @@ struct QuickDialog : public property_visitor
 		addFormWidget(property.name(), edit);
 	}
 
+	class QComboBoxIgnoreWheel : public QComboBox 
+	{
+	public:
+		QComboBoxIgnoreWheel(QWidget* parent = 0) : QComboBox(parent) { }
+ 
+		void wheelEvent(QWheelEvent *event) override
+		{
+			if (!hasFocus()) 
+				event->ignore();
+			else 
+				QComboBox::wheelEvent(event);
+		}
+	};
+
 	void visit(property<Object> &property) const
 	{
-		QComboBox *comboBox = new QComboBox(widget);
+		QComboBox *comboBox = new QComboBoxIgnoreWheel(widget);
+		comboBox->setFocusPolicy(Qt::StrongFocus);
 		comboBox->addItem("");
 
 		Context &context = property.getContext();
