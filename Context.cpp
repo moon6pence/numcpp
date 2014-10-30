@@ -30,7 +30,7 @@ Object *Context::object(const std::string &name)
 		if (object->getName() == name)
 			return object.get();
 
-	throw std::exception("Unknown object name");
+	return nullptr;
 }
 
 Object &Context::getObject(const std::string &name)
