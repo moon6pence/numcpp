@@ -179,11 +179,6 @@ public:
 		return _size[dim];
 	}
 
-	int byteSize() const
-	{
-		return length() * itemSize();
-	}
-
 	std::ptrdiff_t stride(int dim) const
 	{
 		return _stride[dim];
@@ -199,10 +194,6 @@ public:
 		return _origin;
 	}
 
-	bool empty() const
-	{
-		return raw_ptr() == nullptr || length() == 0;
-	}
 
 
 
@@ -304,6 +295,18 @@ public:
 		return *static_cast<const T *>(ptr_at(index0, index1));
 	}
 };
+
+template <class Array>
+int byteSize(const Array &array)
+{
+	return array.length() * array.itemSize();
+}
+
+template <class Array>
+bool empty(const Array &array)
+{
+	return array.raw_ptr() == nullptr || array.length() == 0;
+}
 
 } // namespace np
 

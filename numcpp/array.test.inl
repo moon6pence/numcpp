@@ -121,13 +121,13 @@ TEST(Array, MoveFromBaseArray)
 	{
 		BaseArray base1(sizeof(int), make_vector(5));
 
-		EXPECT_FALSE(base1.empty());
+		EXPECT_FALSE(empty(base1));
 		EXPECT_EQ(1, base1.ndims());
 		EXPECT_NE(nullptr, base1.raw_ptr());
 
 		Array<int> a1(std::move(base1));
 
-		EXPECT_TRUE(base1.empty());
+		EXPECT_TRUE(empty(base1));
 		EXPECT_EQ(0, base1.ndims());
 		EXPECT_EQ(nullptr, base1.raw_ptr());
 
@@ -144,7 +144,7 @@ TEST(Array, MoveFromBaseArray)
 		Array<int> a2(5);
 		a2 = std::move(base2);
 
-		EXPECT_TRUE(base2.empty());
+		EXPECT_TRUE(empty(base2));
 		EXPECT_EQ(0, base2.ndims());
 		EXPECT_EQ(nullptr, base2.raw_ptr());
 

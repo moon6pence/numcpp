@@ -149,6 +149,17 @@ public:
 
 		return *this;
 	}
+
+	// for backward compatibility
+	int byteSize() const
+	{
+		return length() * itemSize();
+	}
+
+	bool empty() const
+	{
+		return raw_ptr() == nullptr || length() == 0;
+	}
 };
 
 template <typename T, typename U>

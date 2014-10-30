@@ -55,7 +55,7 @@ inline BaseArray from_cv_mat(const cv::Mat &cv_mat)
 	BaseArray result((int)cv_mat.elemSize(), make_vector(cv_mat.cols, cv_mat.rows));
 
 	// TODO: Do not copy
-	memcpy(result.raw_ptr<void>(), cv_mat.data, result.byteSize());
+	memcpy(result.raw_ptr<void>(), cv_mat.data, byteSize(result));
 
 	return std::move(result);
 }
@@ -74,7 +74,7 @@ void from_cv_mat(Array<T> &dst, const cv::Mat &src)
 		dst = Array<T>(src.cols, src.rows);
 
 	// TODO: Do not copy
-	memcpy(dst, src.data, dst.byteSize());
+	memcpy(dst, src.data, byteSize(dst));
 }
 
 #ifdef USE_CUDA

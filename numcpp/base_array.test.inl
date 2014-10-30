@@ -31,7 +31,7 @@ TEST(BaseArray, SetSize)
 
 	BaseArray a2(sizeof(float), make_vector(2, 3));
 
-	EXPECT_FALSE(a2.empty());
+	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(sizeof(float), a2.itemSize());
 	EXPECT_EQ(2, a2.ndims());
 	EXPECT_EQ(2, a2.size(0));
@@ -40,7 +40,7 @@ TEST(BaseArray, SetSize)
 
 	BaseArray a3(sizeof(double), make_vector(2, 3, 4));
 
-	EXPECT_FALSE(a3.empty());
+	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(sizeof(double), a3.itemSize());
 	EXPECT_EQ(3, a3.ndims());
 	EXPECT_EQ(2, a3.size(0));
