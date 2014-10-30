@@ -58,6 +58,7 @@ public:
 
 private:
 	const int _itemSize;
+	int _length;
 	size_type _size;
 	stride_type _stride;
 	std::shared_ptr<void> _address;
@@ -65,17 +66,18 @@ private:
 
 public:
 	BaseArray() : 
-		_itemSize(1), _origin(nullptr)
+		_itemSize(1), _length(0), _origin(nullptr)
 	{
 	}
 
 	explicit BaseArray(int itemSize) : 
-		_itemSize(itemSize), _origin(nullptr) 
+		_itemSize(itemSize), _length(0), _origin(nullptr) 
 	{ 
 	}
 
 	BaseArray(int itemSize, const size_type &size) :
 		_itemSize(itemSize), 
+		_length(product(size)), 
 		_size(size), 
 		_stride(make_stride(size)), 
 		_address(heap_allocator<char>::allocate(product(size) * itemSize)), // in byte size
@@ -87,8 +89,11 @@ public:
 	// TODO: deprecate this
 	BaseArray(int itemSize, const size_type &size, void *(*allocate)(int), void (*free)(void *)) :
 		_itemSize(itemSize), 
+		_length(product(size)), 
 		_size(size), 
-		_stride(make_stride(size))
+		_stride(make_stride(size)), 
+		_address(), 
+		_origin(nullptr)
 	{
 		void *ptr = allocate(product(size) * itemSize);
 
@@ -99,6 +104,7 @@ public:
 	// copy constructor: shallow copy
 	explicit BaseArray(const BaseArray &other) :
 		_itemSize(other._itemSize), 
+		_length(other._length), 
 		_size(other._size), 
 		_stride(other._stride), 
 		_address(other._address), 
@@ -110,6 +116,7 @@ public:
 	const BaseArray &operator=(const BaseArray &other) 
 	{ 
 		(int &)_itemSize = other._itemSize;
+		_length = other._length;
 		_size = other._size;
 		_stride = other._stride;
 		_address = other._address; // add refrence count here
@@ -121,24 +128,28 @@ public:
 	// move constructor
 	BaseArray(BaseArray &&other) : 
 		_itemSize(other._itemSize), 
+		_length(other._length), 
 		_size(std::move(other._size)), 
 		_stride(std::move(other._stride)), 
 		_address(other._address), 
 		_origin(other._origin)
 	{
 		other._origin = nullptr;
+		other._length = 0;
 	}
 
 	// move assign
 	const BaseArray &operator=(BaseArray &&other)
 	{
 		(int &)_itemSize = other._itemSize;
+		_length = other._length;
 		_size = std::move(other._size);
 		_stride = std::move(other._stride);
 		_address = std::move(other._address);
 		_origin = other._origin;
 
 		other._origin = nullptr;
+		other._length = 0;
 
 		return *this;
 	}
@@ -146,6 +157,11 @@ public:
 	int itemSize() const
 	{
 		return _itemSize;
+	}
+
+	int length() const
+	{
+		return _length;
 	}
 
 	int ndims() const
@@ -161,14 +177,6 @@ public:
 	int size(int dim) const
 	{
 		return _size[dim];
-	}
-
-	int length() const
-	{
-		if (ndims() == 0)
-			return 0;
-		else
-			return product(size());
 	}
 
 	int byteSize() const
@@ -208,6 +216,7 @@ public:
 		BaseArray result(itemSize());
 
 		result._size = make_vector(to - from);
+		result._length = product(result._size); // TODO
 		result._stride = this->_stride;
 
 		// add reference count here
@@ -227,6 +236,7 @@ public:
 		BaseArray result(itemSize());
 
 		result._size = make_vector(to0 - from0, to1 - from1);
+		result._length = product(result._size); // TODO
 		result._stride = this->_stride;
 
 		// add reference count here
