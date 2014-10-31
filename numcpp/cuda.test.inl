@@ -63,7 +63,7 @@ TEST(CUDA, DeclareEmptyDeviceArray)
 {
 	GpuArray<int> a0;
 
-	EXPECT_TRUE(a0.empty());
+	EXPECT_TRUE(empty(a0));
 	EXPECT_EQ(sizeof(int), a0.itemSize());
 	EXPECT_EQ(0, a0.ndims());
 	EXPECT_EQ(nullptr, a0.raw_ptr());
@@ -73,7 +73,7 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 {
 	GpuArray<int> a1(5);
 
-	EXPECT_FALSE(a1.empty());
+	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(sizeof(int), a1.itemSize());
 	EXPECT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size(0));
@@ -81,7 +81,7 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 
 	GpuArray<float> a2(2, 3);
 
-	EXPECT_FALSE(a2.empty());
+	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(sizeof(float), a2.itemSize());
 	EXPECT_EQ(2, a2.ndims());
 	EXPECT_EQ(2, a2.size(0));
@@ -91,7 +91,7 @@ TEST(CUDA, DeclareDeviceArrayWithSize)
 	int shape[3] = { 2, 3, 4 };
 	GpuArray<double> a3(make_vector(2, 3, 4));
 
-	EXPECT_FALSE(a3.empty());
+	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(sizeof(double), a3.itemSize());
 	EXPECT_EQ(3, a3.ndims());
 	EXPECT_EQ(2, a3.size(0));
@@ -136,7 +136,7 @@ TEST_F(CUDA_F, ConstructorWithHostArray)
 {
 	GpuArray<int> a1_d(a1);
 
-	EXPECT_FALSE(a1_d.empty());
+	EXPECT_FALSE(empty(a1_d));
 	EXPECT_EQ(a1_d.ndims(), 1);
 	EXPECT_EQ(a1_d.size(0), 5);
 	EXPECT_NE(a1_d.raw_ptr(), nullptr);

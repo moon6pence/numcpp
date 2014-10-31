@@ -79,22 +79,22 @@ public:
 
 	T *raw_ptr()
 	{
-		return BaseArray::raw_ptr<T>();
+		return static_cast<T *>(BaseArray::raw_ptr());
 	}
 
 	const T *raw_ptr() const
 	{
-		return BaseArray::raw_ptr<T>();
+		return static_cast<const T *>(BaseArray::raw_ptr());
 	}
 
 	operator T * ()
 	{
-		return BaseArray::raw_ptr<T>();
+		return raw_ptr();
 	}
 
 	operator const T * () const
 	{
-		return BaseArray::raw_ptr<T>();
+		return raw_ptr();
 	}
 };
 
@@ -104,7 +104,7 @@ void to_device(GpuArray<T> &dst_d, const Array<T> &src)
 	if (dst_d.size() != src.size())
 		dst_d = GpuArray<T>(src.size());
 
-	cudaMemcpy(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice);
+	cudaMemcpy(dst_d, src, byteSize(dst_d), cudaMemcpyHostToDevice);
 }
 
 template <typename T>
@@ -113,7 +113,7 @@ void to_device(GpuArray<T> &dst_d, const Array<T> &src, cudaStream_t stream)
 	if (dst_d.size() != src.size())
 		dst_d = GpuArray<T>(src.size());
 
-	cudaMemcpyAsync(dst_d, src, dst_d.byteSize(), cudaMemcpyHostToDevice, stream);
+	cudaMemcpyAsync(dst_d, src, byteSize(dst_d), cudaMemcpyHostToDevice, stream);
 }
 
 template <typename T>
@@ -122,7 +122,7 @@ void to_host(Array<T> &dst, const GpuArray<T> &src_d)
 	if (dst.size() != src_d.size())
 		dst = Array<T>(src_d.size());
 
-	cudaMemcpy(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost);
+	cudaMemcpy(dst, src_d, byteSize(dst), cudaMemcpyDeviceToHost);
 }
 
 template <typename T>
@@ -131,7 +131,7 @@ void to_host(Array<T> &dst, const GpuArray<T> &src_d, cudaStream_t stream)
 	if (dst.size() != src_d.size())
 		dst = Array<T>(src_d.size());
 
-	cudaMemcpyAsync(dst, src_d, dst.byteSize(), cudaMemcpyDeviceToHost, stream);
+	cudaMemcpyAsync(dst, src_d, byteSize(dst), cudaMemcpyDeviceToHost, stream);
 }
 
 } // namespace np
