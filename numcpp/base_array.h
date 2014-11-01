@@ -179,6 +179,11 @@ public:
 		return _size[dim];
 	}
 
+	const stride_type &strides() const
+	{
+		return _stride;
+	}
+
 	std::ptrdiff_t stride(int dim) const
 	{
 		return _stride[dim];
@@ -200,15 +205,15 @@ public:
 };
 
 template <class Array>
-int byteSize(const Array &array)
-{
-	return array.length() * array.itemSize();
-}
-
-template <class Array>
 bool empty(const Array &array)
 {
 	return array.raw_ptr() == nullptr || array.length() == 0;
+}
+
+template <class Array>
+int byteSize(const Array &array)
+{
+	return array.length() * array.itemSize();
 }
 
 } // namespace np
