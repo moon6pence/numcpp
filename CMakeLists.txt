@@ -35,6 +35,7 @@ add_library(
 	numcpp/base_array.h
 	numcpp/array.h
 	numcpp/tarray.h
+	numcpp/array_functions.h
 	numcpp/stl.h
 	numcpp/functions.h
 	numcpp/lazy_array.h

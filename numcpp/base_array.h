@@ -2,6 +2,8 @@
 #define NUMCPP_BASE_ARRAY_H_
 
 #include "allocator.h"
+#include "array_functions.h"
+
 #include <vector>
 
 namespace np {
@@ -86,33 +88,18 @@ public:
 		_origin = _address.get();
 	}
 
-	// TODO: deprecate this
-	BaseArray(int itemSize, const size_type &size, void *(*allocate)(int), void (*free)(void *)) :
-		_itemSize(itemSize), 
-		_length(product(size)), 
-		_size(size), 
-		_stride(make_stride(size)), 
-		_address(), 
-		_origin(nullptr)
-	{
-		void *ptr = allocate(product(size) * itemSize);
-
-		_address = std::shared_ptr<void>(ptr, free);
-		_origin = ptr;
-	}
-
-	// copy constructor: shallow copy
+	// copy constructor (shallow copy)
 	explicit BaseArray(const BaseArray &other) :
 		_itemSize(other._itemSize), 
 		_length(other._length), 
 		_size(other._size), 
 		_stride(other._stride), 
-		_address(other._address), 
+		_address(other._address), // add refrence count here
 		_origin(other._origin)
 	{
 	}
 
-	// copy assign
+	// copy assign (shallow copy)
 	const BaseArray &operator=(const BaseArray &other) 
 	{ 
 		(int &)_itemSize = other._itemSize;
@@ -134,8 +121,8 @@ public:
 		_address(other._address), 
 		_origin(other._origin)
 	{
-		other._origin = nullptr;
 		other._length = 0;
+		other._origin = nullptr;
 	}
 
 	// move assign
@@ -148,8 +135,8 @@ public:
 		_address = std::move(other._address);
 		_origin = other._origin;
 
-		other._origin = nullptr;
 		other._length = 0;
+		other._origin = nullptr;
 
 		return *this;
 	}
@@ -202,19 +189,22 @@ public:
 	// FIXME: remove this
 	template <typename T>
 	friend struct Array;
+
+	// TODO: deprecate this
+	BaseArray(int itemSize, const size_type &size, void *(*allocate)(int), void (*free)(void *)) :
+		_itemSize(itemSize), 
+		_length(product(size)), 
+		_size(size), 
+		_stride(make_stride(size)), 
+		_address(), 
+		_origin(nullptr)
+	{
+		void *ptr = allocate(product(size) * itemSize);
+
+		_address = std::shared_ptr<void>(ptr, free);
+		_origin = ptr;
+	}
 };
-
-template <class Array>
-bool empty(const Array &array)
-{
-	return array.raw_ptr() == nullptr || array.length() == 0;
-}
-
-template <class Array>
-int byteSize(const Array &array)
-{
-	return array.length() * array.itemSize();
-}
 
 } // namespace np
 

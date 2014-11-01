@@ -8,7 +8,7 @@ TEST(TArray, DeclareEmptyArray)
 {
 	TArray<int> a0;
 
-	EXPECT_TRUE(a0.empty());
+	EXPECT_TRUE(empty(a0));
 	EXPECT_EQ(sizeof(int), a0.itemSize());
 	EXPECT_EQ(1, a0.ndims());
 	EXPECT_EQ(nullptr, a0.raw_ptr());
@@ -18,7 +18,7 @@ TEST(TArray, DeclareArrayWithSize)
 {
 	TArray<int> a1(5);
 
-	EXPECT_FALSE(a1.empty());
+	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(sizeof(int), a1.itemSize());
 	ASSERT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size<0>());
@@ -26,7 +26,7 @@ TEST(TArray, DeclareArrayWithSize)
 
 	TArray<float, 2> a2(3, 2);
 
-	EXPECT_FALSE(a2.empty());
+	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(sizeof(float), a2.itemSize());
 	ASSERT_EQ(2, a2.ndims());
 	EXPECT_EQ(3, a2.size<0>());
@@ -35,7 +35,7 @@ TEST(TArray, DeclareArrayWithSize)
 
 	TArray<double, 3> a3(make_array(4, 3, 2));
 
-	EXPECT_FALSE(a3.empty());
+	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(sizeof(double), a3.itemSize());
 	ASSERT_EQ(3, a3.ndims());
 	EXPECT_EQ(4, a3.size<0>());
@@ -49,7 +49,7 @@ TEST(TArray, SetSize)
 	TArray<int> a1;
 	a1 = TArray<int>(5);
 
-	EXPECT_FALSE(a1.empty());
+	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(sizeof(int), a1.itemSize());
 	ASSERT_EQ(1, a1.ndims());
 	EXPECT_EQ(5, a1.size<0>());
@@ -60,7 +60,7 @@ TEST(TArray, SetSize)
 	TArray<int, 2> a2;
 	a2 = TArray<int, 2>(3, 2);
 
-	EXPECT_FALSE(a2.empty());
+	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(sizeof(float), a2.itemSize());
 	ASSERT_EQ(2, a2.ndims());
 	EXPECT_EQ(3, a2.size<0>());
@@ -70,7 +70,7 @@ TEST(TArray, SetSize)
 	TArray<double, 3> a3;
 	a3 = TArray<double, 3>(make_array(4, 3, 2));
 
-	EXPECT_FALSE(a3.empty());
+	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(sizeof(double), a3.itemSize());
 	ASSERT_EQ(3, a3.ndims());
 	EXPECT_EQ(4, a3.size<0>());
@@ -85,10 +85,10 @@ TEST(TArray, MoveSemantics)
 	TArray<int> a1(5);
 	auto moved = std::move(a1);
 
-	EXPECT_TRUE(a1.empty());
+	EXPECT_TRUE(empty(a1));
 	EXPECT_EQ(nullptr, a1.raw_ptr());
 
-	EXPECT_FALSE(moved.empty());
+	EXPECT_FALSE(empty(moved));
 	ASSERT_EQ(1, moved.ndims());
 	EXPECT_EQ(5, moved.size<0>());
 	EXPECT_NE(nullptr, moved.raw_ptr());
@@ -97,10 +97,10 @@ TEST(TArray, MoveSemantics)
 	TArray<int, 2> a2(3, 2);
 	auto moved2 = std::move(a2);
 
-	EXPECT_TRUE(a2.empty());
+	EXPECT_TRUE(empty(a2));
 	EXPECT_EQ(nullptr, a2.raw_ptr());
 
-	EXPECT_FALSE(moved2.empty());
+	EXPECT_FALSE(empty(moved2));
 	ASSERT_EQ(2, moved2.ndims());
 	EXPECT_EQ(3, moved2.size<0>());
 	EXPECT_EQ(2, moved2.size<1>());
@@ -152,35 +152,35 @@ TEST(TArray, DerivedFunctions)
 {
 	TArray<int> a0;
 
-	EXPECT_TRUE(a0.empty());
+	EXPECT_TRUE(empty(a0));
 	EXPECT_EQ(0, a0.length());
-	EXPECT_EQ(0 * sizeof(int), a0.byteSize());
+	EXPECT_EQ(0 * sizeof(int), byteSize(a0));
 
 	TArray<int> a1(5);
 
-	EXPECT_FALSE(a1.empty());
+	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(5, a1.length());
-	EXPECT_EQ(5 * sizeof(int), a1.byteSize());
-	EXPECT_EQ(sizeof(int), a1.stride<0>());
+	EXPECT_EQ(5 * sizeof(int), byteSize(a1));
+	EXPECT_EQ(1, a1.stride<0>());
 	// this line have to cause compile error
 	// EXPECT_EQ(sizeof(int), a1.stride<1>());
 
 	TArray<float, 2> a2(3, 2);
 
-	EXPECT_FALSE(a2.empty());
+	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(3 * 2, a2.length());
-	EXPECT_EQ(3 * 2 * sizeof(float), a2.byteSize());
-	EXPECT_EQ(sizeof(float), a2.stride<0>());
-	EXPECT_EQ(sizeof(float) * 3, a2.stride<1>());
+	EXPECT_EQ(3 * 2 * sizeof(float), byteSize(a2));
+	EXPECT_EQ(1, a2.stride<0>());
+	EXPECT_EQ(3, a2.stride<1>());
 
 	TArray<char, 3> a3(make_array(4, 3, 2));
 
-	EXPECT_FALSE(a3.empty());
+	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(4 * 3 * 2, a3.length());
-	EXPECT_EQ(4 * 3 * 2 * sizeof(char), a3.byteSize());
-	EXPECT_EQ(sizeof(char), a3.stride<0>());
-	EXPECT_EQ(sizeof(char) * 4, a3.stride<1>());
-	EXPECT_EQ(sizeof(char) * 4 * 3, a3.stride<2>());
+	EXPECT_EQ(4 * 3 * 2 * sizeof(char), byteSize(a3));
+	EXPECT_EQ(1, a3.stride<0>());
+	EXPECT_EQ(4, a3.stride<1>());
+	EXPECT_EQ(4 * 3, a3.stride<2>());
 }
 
 //TEST(Array, AccessElements)
