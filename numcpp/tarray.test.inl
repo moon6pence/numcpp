@@ -67,6 +67,55 @@ TEST(TArray, DeclareArrayWithSize)
 	// TArray<int, 3> a3_error(3, 4);
 }
 
+TEST(TArray, AccessElements)
+{
+	// 1d array
+	np::TArray<int> a1(5);
+
+	const int data1[5] = 
+	{ 
+		2, 3, 5, 1, 7 
+	};
+
+	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
+
+	EXPECT_EQ(2, a1.at(0));
+	EXPECT_EQ(3, a1.at(1));
+	EXPECT_EQ(5, a1.at(2));
+	EXPECT_EQ(1, a1(3));
+	EXPECT_EQ(7, a1[4]);
+
+	int *ptr = a1.raw_ptr();
+	ptr[2] = 8;
+
+	EXPECT_EQ(8, a1(2));
+
+	// COMPILE ERROR: Array dimension bounds error
+	// a1(1, 1);
+
+	// 2d array
+	np::TArray<int, 2> a2(3, 2);
+
+	const int data2[6] = 
+	{ 
+		7, 2, 3, 
+		4, 1, 8 
+	};
+
+	memcpy(a2.raw_ptr(), data2, 6 * sizeof(int));
+
+	EXPECT_EQ(7, a2(0));
+	EXPECT_EQ(3, a2(2));
+	EXPECT_EQ(8, a2(5));
+
+	EXPECT_EQ(7, a2.at(0, 0));
+	EXPECT_EQ(1, a2(1, 1));
+	EXPECT_EQ(8, a2.at(2, 1));
+
+	a2.at(2, 0) = 5;
+	EXPECT_EQ(5, a2.at(2, 0));
+}
+
 TEST(TArray, SetSize)
 {
 	TArray<int> a1;
@@ -206,58 +255,6 @@ TEST(TArray, DerivedFunctions)
 	EXPECT_EQ(4 * 3, a3.stride<2>());
 }
 
-//TEST(Array, AccessElements)
-//{
-//	// 1d array
-//	np::Array<int> a1(5);
-//
-//	const int data1[5] = 
-//	{ 
-//		2, 3, 5, 1, 7 
-//	};
-//
-//	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
-//
-//	EXPECT_EQ(2, a1.at(0));
-//	EXPECT_EQ(3, a1.at(1));
-//	EXPECT_EQ(5, a1.at(2));
-//	EXPECT_EQ(1, a1(3));
-//	EXPECT_EQ(7, a1(4));
-//
-//	int *ptr = a1.raw_ptr();
-//	ptr[2] = 8;
-//
-//	EXPECT_EQ(8, a1(2));
-//
-//	int *ptr2 = a1;
-//	ptr[3] = 9;
-//
-//	EXPECT_EQ(9, a1(3));
-//	EXPECT_EQ(ptr, ptr2);
-//
-//	// 2d array
-//	np::Array<int> a2(3, 2);
-//
-//	const int data2[6] = 
-//	{ 
-//		7, 2, 3, 
-//		4, 1, 8 
-//	};
-//
-//	memcpy(a2.raw_ptr(), data2, 6 * sizeof(int));
-//
-//	EXPECT_EQ(7, a2(0));
-//	EXPECT_EQ(3, a2(2));
-//	EXPECT_EQ(8, a2(5));
-//
-//	EXPECT_EQ(7, a2.at(0, 0));
-//	EXPECT_EQ(1, a2(1, 1));
-//	EXPECT_EQ(8, a2.at(2, 1));
-//
-//	a2.at(2, 0) = 5;
-//	EXPECT_EQ(5, a2.at(2, 0));
-//}
-//
 //TEST(Array, Slice)
 //{
 //	// 1d array

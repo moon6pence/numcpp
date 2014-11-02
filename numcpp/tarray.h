@@ -221,6 +221,38 @@ public:
 	{
 		return _origin;
 	}
+
+	// Accessing elements
+
+	T &at(int index0) 
+	{ 
+		return _origin[index0 * stride<0>()]; 
+	}
+
+	const T &at(int index0) const 
+	{ 
+		return _origin[index0 * stride<0>()]; 
+	}
+
+	T &operator()(int index0) { return at(index0); }
+	const T &operator()(int index0) const { return at(index0); }
+	T &operator[](int index0) { return at(index0); }
+	const T &operator[](int index0) const { return at(index0); }
+
+	T &at(int index0, int index1)
+	{
+		static_assert(Dim >= 2, "Array dimension bounds error");
+		return _origin[index0 * stride<0>() + index1 * stride<1>()];
+	}
+
+	const T &at(int index0, int index1) const
+	{
+		static_assert(Dim >= 2, "Array dimension bounds error");
+		return _origin[index0 * stride<0>() + index1 * stride<1>()];
+	}
+
+	T &operator()(int index0, int index1) { return at(index0, index1); }
+	const T &operator()(int index0, int index1) const { return at(index0, index1); }
 };
 
 } // namespace np
