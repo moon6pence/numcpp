@@ -20,6 +20,17 @@ inline int product(const std::array<int, N> &array)
 	return result;
 }
 
+template <int N>
+std::array<int, N> zero_array()
+{
+	std::array<int, N> result;
+
+	for (int i = 0; i < N; i++)
+		result[i] = 0;
+
+	return std::move(result);
+}
+
 // TODO: variadic template
 std::array<int, 1> make_array(int size0)
 {
@@ -74,7 +85,12 @@ private:
 	value_type *_origin;
 
 public:
-	TArray() : _length(0), _origin(nullptr)
+	TArray() : 
+		_length(0), 
+		_size(zero_array<Dim>()), 
+		_stride(make_stride(zero_array<Dim>())), 
+		_address(), 
+		_origin(nullptr)
 	{
 	}
 
