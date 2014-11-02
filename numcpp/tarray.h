@@ -21,7 +21,7 @@ inline int product(const std::array<int, N> &array)
 }
 
 template <int N>
-std::array<int, N> zero_array()
+inline std::array<int, N> zero_array()
 {
 	std::array<int, N> result;
 
@@ -32,14 +32,14 @@ std::array<int, N> zero_array()
 }
 
 // TODO: variadic template
-std::array<int, 1> make_array(int size0)
+inline std::array<int, 1> make_array(int size0)
 {
 	std::array<int, 1> result;
 	result[0] = size0;
 	return result;
 }
 
-std::array<int, 2> make_array(int size0, int size1)
+inline std::array<int, 2> make_array(int size0, int size1)
 {
 	std::array<int, 2> result;
 	result[0] = size0;
@@ -47,7 +47,7 @@ std::array<int, 2> make_array(int size0, int size1)
 	return result;
 }
 
-std::array<int, 3> make_array(int size0, int size1, int size2)
+inline std::array<int, 3> make_array(int size0, int size1, int size2)
 {
 	std::array<int, 3> result;
 	result[0] = size0;
