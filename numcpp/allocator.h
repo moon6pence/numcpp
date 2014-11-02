@@ -3,6 +3,8 @@
 
 #include <memory>
 
+namespace np {
+
 template <typename T>
 struct heap_allocator
 {
@@ -16,5 +18,7 @@ struct heap_allocator
 		delete[] ptr;
 	}
 };
+
+} // namespace np
 
 #endif // NUMCPP_ALLOCATOR_H_
