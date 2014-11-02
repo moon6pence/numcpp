@@ -88,7 +88,6 @@ public:
 		_origin = _address.get();
 	}
 
-	// FIXME: make this constructor work with Dim != 1
 	TArray(int size0) : 
 		_length(size0), 
 		_size(make_array(size0)), 
@@ -96,10 +95,10 @@ public:
 		_address(heap_allocator<value_type>::allocate(size0)), 
 		_origin(nullptr)
 	{
+		static_assert(Dim == 1, "This function is only for Array<T, 1>");
 		_origin = _address.get();
 	}
 
-	// FIXME: make this constructor work with Dim != 2
 	TArray(int size0, int size1) : 
 		_length(size0 * size1), 
 		_size(make_array(size0, size1)), 
@@ -107,6 +106,7 @@ public:
 		_address(heap_allocator<value_type>::allocate(size0 * size1)), 
 		_origin(nullptr)
 	{
+		static_assert(Dim == 2, "This function is only for Array<T, 2>");
 		_origin = _address.get();
 	}
 

@@ -42,6 +42,9 @@ TEST(TArray, DeclareArrayWithSize)
 	EXPECT_EQ(3, a3.size<1>());
 	EXPECT_EQ(2, a3.size<2>());
 	EXPECT_NE(nullptr, a3.raw_ptr());
+
+	// COMPILE ERROR: This function is only for Array<T, 2>
+	// TArray<int, 3> a3_error(3, 4);
 }
 
 TEST(TArray, SetSize)
