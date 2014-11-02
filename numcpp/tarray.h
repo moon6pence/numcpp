@@ -46,10 +46,10 @@ std::array<int, 3> make_array(int size0, int size1, int size2)
 }
 
 template <int N>
-inline std::array<std::ptrdiff_t, N> make_stride(const std::array<int, N> &size)
+inline std::array<int, N> make_stride(const std::array<int, N> &size)
 {
 	// TODO do not use runtime loop
-	std::array<std::ptrdiff_t, N> stride;
+	std::array<int, N> stride;
 
 	stride[0] = 1;
 	for (int i = 1; i < N; i++)
@@ -64,7 +64,7 @@ struct TArray
 public:
 	typedef T value_type;
 	typedef std::array<int, Dim> size_type;
-	typedef std::array<std::ptrdiff_t, Dim> stride_type;
+	typedef std::array<int, Dim> stride_type;
 
 private:
 	int _length;
@@ -191,7 +191,7 @@ public:
 	}
 	
 	template <int N>
-	std::ptrdiff_t stride() const
+	int stride() const
 	{
 		return _stride[N];
 	}

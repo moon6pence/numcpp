@@ -42,9 +42,9 @@ inline std::vector<int> make_vector(int size0, int size1, int size2)
 	return std::move(result);
 }
 
-inline std::vector<std::ptrdiff_t> make_stride(const std::vector<int> &size)
+inline std::vector<int> make_stride(const std::vector<int> &size)
 {
-	std::vector<std::ptrdiff_t> stride(size.size());
+	std::vector<int> stride(size.size());
 	stride[0] = 1;
 	for (int i = 1; i < stride.size(); i++)
 		stride[i] = stride[i - 1] * size[i - 1];
@@ -56,7 +56,7 @@ struct BaseArray
 {
 public:
 	typedef std::vector<int> size_type;
-	typedef std::vector<std::ptrdiff_t> stride_type;
+	typedef std::vector<int> stride_type;
 
 private:
 	const int _itemSize;
@@ -171,7 +171,7 @@ public:
 		return _stride;
 	}
 
-	std::ptrdiff_t stride(int dim) const
+	int stride(int dim) const
 	{
 		return _stride[dim];
 	}
