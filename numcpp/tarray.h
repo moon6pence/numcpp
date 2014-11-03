@@ -222,6 +222,16 @@ public:
 		return _origin;
 	}
 
+	operator value_type *()
+	{
+		return raw_ptr();
+	}
+
+	operator const value_type *() const
+	{
+		return raw_ptr();
+	}
+
 	// Accessing elements
 
 	T &at(int index0) 
