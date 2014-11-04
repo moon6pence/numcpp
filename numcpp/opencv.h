@@ -1,6 +1,9 @@
 #ifndef NUMCPP_OPENCV_H_
 #define NUMCPP_OPENCV_H_
 
+#include "array.h"
+#include "tarray.h"
+
 #include <opencv2/opencv.hpp>
 
 #ifdef USE_CUDA
@@ -48,6 +51,16 @@ inline const cv::Mat to_cv_mat(const Array<cv::Vec3b> &array)
 		CV_8UC3, 
 		const_cast<cv::Vec3b *>(array.raw_ptr()), 
 		array.stride(1) * array.itemSize());
+}
+
+template <typename T>
+const cv::Mat to_cv_mat(const TArray<T, 2> &array)
+{
+	return cv::Mat(
+		array.size<1>(), array.size<0>(), 
+		cv::DataType<T>::type, 
+		const_cast<T *>(array.raw_ptr()), 
+		array.stride<1>() * array.itemSize());
 }
 
 inline BaseArray from_cv_mat(const cv::Mat &cv_mat)
@@ -122,6 +135,12 @@ inline bool imwrite(const Array<uint8_t> &image, const std::string &filename)
 }
 
 inline bool imwrite(const Array<cv::Vec3b> &image, const std::string &filename)
+{
+	return cv::imwrite(filename, to_cv_mat(image));
+}
+
+// TODO: imwrite for other types?
+inline bool imwrite(const TArray<uint8_t, 2> &image, const std::string &filename)
 {
 	return cv::imwrite(filename, to_cv_mat(image));
 }
