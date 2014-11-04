@@ -290,6 +290,13 @@ public:
 };
 
 template <typename T>
+inline void setSize(TArray<T, 2> &array, int size0, int size1)
+{
+	if (array.size<0>() != size0 || array.size<1>() != size1)
+		array = TArray<T, 2>(size0, size1);
+}
+
+template <typename T>
 inline TArray<T, 1> slice(const TArray<T> &array, const Range &range)
 {
 	// TODO: check range
