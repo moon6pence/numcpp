@@ -8,6 +8,27 @@
 
 namespace np {
 
+struct WholeRange
+{
+};
+
+struct Range
+{
+	int from, to;
+
+	Range(int from, int to) : from(from), to(to) { }
+};
+
+inline WholeRange _colon()
+{
+	return WholeRange();
+}
+
+inline Range _colon(int from, int to)
+{
+	return Range(from, to);
+}
+
 template <int N> 
 inline int product(const std::array<int, N> &array)
 {
@@ -77,7 +98,7 @@ public:
 	typedef std::array<int, Dim> size_type;
 	typedef std::array<int, Dim> stride_type;
 
-private:
+//private:
 	int _length;
 	size_type _size;
 	stride_type _stride;
@@ -263,7 +284,50 @@ public:
 
 	T &operator()(int index0, int index1) { return at(index0, index1); }
 	const T &operator()(int index0, int index1) const { return at(index0, index1); }
+
+public:
+	//friend TArray<T, 1> slice(const TArray<T> &array, const Range &range);
 };
+
+template <typename T>
+inline TArray<T, 1> slice(const TArray<T> &array, const Range &range)
+{
+	// TODO: check range
+	TArray<T, 1> result;
+
+	result._length = range.to - range.from;
+	result._size = make_array(range.to - range.from);
+	result._stride = array.strides();
+	result._address = array._address; // add reference count here
+	result._origin = array._origin + range.from; // new origin with offset
+
+	return result;
+}
+
+template <typename T>
+inline TArray<T, 2> slice(const TArray<T, 2> &array, const Range &range0, const Range &range1)
+{
+	// TODO: check range
+	TArray<T, 2> result;
+
+	// TODO: implement
+
+	return result;
+}
+
+template <typename T>
+inline TArray<T, 1> slice(TArray<T, 2> &array, const WholeRange &range0, int index1)
+{
+	TArray<T, 1> result;
+
+	result._length = array.size<0>();
+	result._size = make_array(array.size<0>());
+	result._stride = make_array(array.stride<0>());
+	result._address = array._address; // add reference count here
+	result._origin = &array.at(0, index1);
+
+	return result;
+}
 
 } // namespace np
 

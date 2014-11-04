@@ -255,40 +255,46 @@ TEST(TArray, DerivedFunctions)
 	EXPECT_EQ(4 * 3, a3.stride<2>());
 }
 
-//TEST(Array, Slice)
-//{
-//	// 1d array
-//	np::Array<int> a1(5);
-//
-//	const int data1[5] = 
-//	{ 
-//		2, 3, 5, 1, 7 
-//	};
-//
-//	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
-//
-//	auto slice1 = a1.slice(1, 4);
-//
-//	EXPECT_FALSE(slice1.empty());
-//	EXPECT_EQ(3, slice1.size(0));
-//
-//	EXPECT_EQ(3, slice1(0));
-//	EXPECT_EQ(5, slice1(1));
-//	EXPECT_EQ(1, slice1(2));
-//
-//	// 2d array
-//	np::Array<int> a2(3, 2);
-//
-//	const int data2[6] = 
-//	{ 
-//		7, 2, 3, 
-//		4, 1, 8 
-//	};
-//
-//	memcpy(a2.raw_ptr(), data2, 6 * sizeof(int));
-//
-//	auto slice2 = a2.slice(1, 0, 3, 2);
-//
+TEST(TArray, Slice)
+{
+	// 1d array
+	np::TArray<int> a1(5);
+
+	const int data1[5] = 
+	{ 
+		2, 3, 5, 1, 7 
+	};
+
+	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
+
+	auto slice1 = slice(a1, _colon(1, 4));
+
+	EXPECT_EQ(3, slice1.length());
+	EXPECT_EQ(1, slice1.ndims());
+	EXPECT_EQ(3, slice1.size<0>());
+	EXPECT_EQ(1, slice1.stride<0>());
+	EXPECT_EQ(&a1(1), slice1.raw_ptr());
+
+	// 2d array
+	np::TArray<int, 2> a2(3, 2);
+
+	const int data2[6] = 
+	{ 
+		7, 2, 3, 
+		4, 1, 8 
+	};
+
+	memcpy(a2.raw_ptr(), data2, 6 * sizeof(int));
+
+	auto slice2 = slice(a2, _colon(), 1);
+	EXPECT_EQ(3, slice2.length());
+	EXPECT_EQ(1, slice2.ndims());
+	EXPECT_EQ(3, slice2.size<0>());
+	EXPECT_EQ(1, slice2.stride<0>());
+	EXPECT_EQ(&a2(0, 1), slice2.raw_ptr());
+
+	//auto slice2 = slice(a2, _colon(1, 3), _colon(0, 2));
+
 //	EXPECT_EQ(2, slice2.size(0));
 //	EXPECT_EQ(2, slice2.size(1));
 //	EXPECT_EQ(a2.stride(0), slice2.stride(0));
@@ -298,6 +304,6 @@ TEST(TArray, DerivedFunctions)
 //	EXPECT_EQ(3, slice2(1, 0));
 //	EXPECT_EQ(1, slice2(0, 1));
 //	EXPECT_EQ(8, slice2(1, 1));
-//}
+}
 
 } // anonymous namespace
