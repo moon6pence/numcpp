@@ -36,6 +36,35 @@ private:
 	std::vector<std::function<void(Arg)>> _slots;
 };
 
+template <>
+struct signal<void>
+{
+public:
+	void connect(const std::function<void(void)> &slot)
+	{
+		_slots.push_back(slot);
+	}
+
+	void operator+=(const std::function<void(void)> &slot)
+	{
+		connect(slot);
+	}
+
+	void invoke()
+	{
+		for (auto i = begin(_slots); i != end(_slots); ++i)
+			(*i)();
+	}
+
+	void operator()()
+	{
+		invoke();
+	}
+
+private:
+	std::vector<std::function<void(void)>> _slots;
+};
+
 template <typename T>
 struct property
 {
