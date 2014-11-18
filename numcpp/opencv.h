@@ -6,10 +6,12 @@
 
 #include <opencv2/opencv.hpp>
 
+/*
 #ifdef USE_CUDA
 #include "cuda.h"
 #include <opencv2/gpu/gpu.hpp>
 #endif
+*/
 
 namespace np {
 
@@ -90,6 +92,7 @@ void from_cv_mat(Array<T> &dst, const cv::Mat &src)
 	memcpy(dst, src.data, byteSize(dst));
 }
 
+/*
 #ifdef USE_CUDA
 
 template <typename T>
@@ -105,6 +108,7 @@ inline const cv::gpu::GpuMat to_cv_gpu_mat(const GpuArray<T> &array_d)
 }
 
 #endif // USE_CUDA
+*/
 
 inline Array<uint8_t> imread(const std::string &filename)
 {
