@@ -59,10 +59,10 @@ template <typename T>
 const cv::Mat to_cv_mat(const TArray<T, 2> &array)
 {
 	return cv::Mat(
-		array.size<1>(), array.size<0>(), 
+		array.size(1), array.size(0), 
 		cv::DataType<T>::type, 
 		const_cast<T *>(array.raw_ptr()), 
-		array.stride<1>() * array.itemSize());
+		array.stride(1) * array.itemSize());
 }
 
 inline BaseArray from_cv_mat(const cv::Mat &cv_mat)

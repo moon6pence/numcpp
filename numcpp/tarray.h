@@ -216,10 +216,9 @@ public:
 		return _size;
 	}
 
-	template <int N>
-	int size() const
+	int size(int dim) const
 	{
-		return _size[N];
+		return _size[dim];
 	}
 
 	const stride_type &strides() const
@@ -227,10 +226,9 @@ public:
 		return _stride;
 	}
 	
-	template <int N>
-	int stride() const
+	int stride(int dim) const
 	{
-		return _stride[N];
+		return _stride[dim];
 	}
 
 	value_type *raw_ptr()
@@ -257,12 +255,12 @@ public:
 
 	T &at(int index0) 
 	{ 
-		return _origin[index0 * stride<0>()]; 
+		return _origin[index0 * stride(0)]; 
 	}
 
 	const T &at(int index0) const 
 	{ 
-		return _origin[index0 * stride<0>()]; 
+		return _origin[index0 * stride(0)]; 
 	}
 
 	T &operator()(int index0) { return at(index0); }
@@ -273,13 +271,13 @@ public:
 	T &at(int index0, int index1)
 	{
 		static_assert(Dim >= 2, "Array dimension bounds error");
-		return _origin[index0 * stride<0>() + index1 * stride<1>()];
+		return _origin[index0 * stride(0) + index1 * stride(1)];
 	}
 
 	const T &at(int index0, int index1) const
 	{
 		static_assert(Dim >= 2, "Array dimension bounds error");
-		return _origin[index0 * stride<0>() + index1 * stride<1>()];
+		return _origin[index0 * stride(0) + index1 * stride(1)];
 	}
 
 	T &operator()(int index0, int index1) { return at(index0, index1); }
@@ -292,7 +290,7 @@ public:
 template <typename T>
 inline void setSize(TArray<T, 2> &array, int size0, int size1)
 {
-	if (array.size<0>() != size0 || array.size<1>() != size1)
+	if (array.size(0) != size0 || array.size(1) != size1)
 		array = TArray<T, 2>(size0, size1);
 }
 
@@ -327,9 +325,9 @@ inline TArray<T, 1> slice(TArray<T, 2> &array, const WholeRange &range0, int ind
 {
 	TArray<T, 1> result;
 
-	result._length = array.size<0>();
-	result._size = make_array(array.size<0>());
-	result._stride = make_array(array.stride<0>());
+	result._length = array.size(0);
+	result._size = make_array(array.size(0));
+	result._stride = make_array(array.stride(0));
 	result._address = array._address; // add reference count here
 	result._origin = &array.at(0, index1);
 
