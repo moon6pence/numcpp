@@ -93,6 +93,7 @@ struct assign_properties : templated_property_visitor<assign_properties>
 	template <typename T>
 	void visit(property<T> &property) const 
 	{
+		// FIXME: O(n^2)?
 		get_property<T> getter(property.name());
 		src.accept(getter);
 
@@ -114,3 +115,10 @@ Object *clone(Object &object)
 
 	return new_object;
 }
+
+void copy_properties(Object &dst, Object &src)
+{
+	assign_properties visitor(dst, src);
+	dst.accept(visitor);
+}
+

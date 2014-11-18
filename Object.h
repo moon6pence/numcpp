@@ -80,9 +80,7 @@ private:
 	std::string _name;
 };
 
-// print object to console
-void print(Object &object);
-
+// FIXME: use AbstractObject
 // copy object properties
 Object *clone(Object &object);
 
@@ -91,5 +89,31 @@ ObjectType *clone(Object &object)
 {
 	return static_cast<ObjectType *>(clone(object));
 }
+
+// copy object properties
+void copy_properties(Object &dst, Object &src);
+
+template <class ObjectType>
+class AbstractObject : public Object
+{
+public:
+	AbstractObject(const std::string &typeName) : Object(typeName) { }
+	virtual ~AbstractObject() { }
+
+public:
+	Object *clone() override
+	{
+		// FIXME: context?
+		Object *new_object = new ObjectType();
+		copy_properties(*new_object, *this);
+
+		return new_object;
+	}
+
+	virtual void accept(property_visitor &visitor) = 0;
+};
+
+// print object to console
+void print(Object &object);
 
 #endif // QO_OBJECT_H_
