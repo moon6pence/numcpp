@@ -2,7 +2,6 @@
 #define NUMCPP_OPENCV_H_
 
 #include "array.h"
-#include "tarray.h"
 
 #include <opencv2/opencv.hpp>
 

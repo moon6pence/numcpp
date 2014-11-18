@@ -1,252 +1,339 @@
-#ifndef NUMCPP_ARRAY_H_
-#define NUMCPP_ARRAY_H_
+#ifndef NUMCPP_TARRAY_H_
+#define NUMCPP_TARRAY_H_
 
-#include "base_array.h"
+#include "allocator.h"
+#include "array_functions.h"
+
+#include <array>
 
 namespace np {
 
-template <typename T>
-struct Array : public BaseArray
+struct WholeRange
 {
-public:
-	typedef T element_type;
-
-	Array() : BaseArray(sizeof(T))
-	{
-	}
-
-	explicit Array(int size0) : BaseArray(sizeof(T), make_vector(size0))
-	{
-	}
-
-	Array(int size0, int size1) : BaseArray(sizeof(T), make_vector(size0, size1))
-	{
-	}
-
-	Array(int size0, int size1, int size2) : BaseArray(sizeof(T), make_vector(size0, size1, size2))
-	{
-	}
-
-	explicit Array(const std::vector<int> &size) : BaseArray(sizeof(T), size)
-	{
-	}
-
-private:
-	// delete copy constructor, assign
-	explicit Array(const Array &other)	{ }
-	const Array &operator=(const BaseArray &other) { return *this; }
-
-public:
-	// move constructor (inherited)
-	Array(Array &&other) : BaseArray(std::move(other))
-	{
-	}
-
-	// move constructor (for BaseArray)
-	Array(BaseArray &&other) : BaseArray(std::move(other))
-	{
-		//assert(other.itemSize() == sizeof(T));
-	}
-
-	// move assign (inherited)
-	const Array &operator=(Array &&other)
-	{
-		BaseArray::operator=(std::move(other));
-		return *this;
-	}
-
-	// move assign (for BaseArray)
-	const Array &operator=(BaseArray &&other)
-	{
-		assert(other.itemSize() == sizeof(T));
-
-		BaseArray::operator=(std::move(other));
-		return *this;
-	}
-
-	// raw_ptr(): access raw pointer
-
-	T *raw_ptr()
-	{
-		return static_cast<T *>(BaseArray::raw_ptr());
-	}
-
-	const T *raw_ptr() const
-	{
-		return static_cast<const T *>(BaseArray::raw_ptr());
-	}
-
-	operator T * ()
-	{
-		return raw_ptr();
-	}
-
-	operator const T * () const
-	{
-		return raw_ptr();
-	}
-
-	// at(index0, index...) : access array elements
-
-	T& at(int index0)
-	{
-		return *static_cast<T *>(ptr_at(index0));
-	}
-
-	T& at(int index0, int index1)
-	{
-		return *static_cast<T *>(ptr_at(index0, index1));
-	}
-
-	const T& at(int index0) const
-	{
-		return *static_cast<const T *>(ptr_at(index0));
-	}
-
-	const T& at(int index0, int index1) const
-	{
-		return *static_cast<const T *>(ptr_at(index0, index1));
-	}
-
-	//T& at(int index0)
-	//{
-	//	return BaseArray::at<T>(index0);
-	//}
-
-	//T& at(int index0, int index1)
-	//{
-	//	return BaseArray::at<T>(index0, index1);
-	//}
-
-	//const T& at(int index0) const
-	//{
-	//	return BaseArray::at<T>(index0);
-	//}
-
-	//const T& at(int index0, int index1) const
-	//{
-	//	return BaseArray::at<T>(index0, index1);
-	//}
-
-	T& operator() (int index0)
-	{
-		return at(index0);
-	}
-
-	T& operator() (int index0, int index1)
-	{
-		return at(index0, index1);
-	}
-
-	const T& operator() (int index0) const
-	{
-		return at(index0);
-	}
-
-	const T& operator() (int index0, int index1) const
-	{
-		return at(index0, index1);
-	}
-
-	Array<T> slice(int from, int to)
-	{
-		return Array<T>(BaseArray_slice(from, to));
-	}
-
-	Array<T> slice(int from0, int from1, int to0, int to1)
-	{
-		return Array<T>(BaseArray_slice(from0, from1, to0, to1));
-	}
-
-	template <class LazyArray>
-	const Array<T> &operator=(LazyArray lazy_array)
-	{
-		if (this->size() != lazy_array.size())
-			(*this) = Array<T>(lazy_array.size());
-
-		for (int i = 0; i < lazy_array.length(); i++)
-			this->at(i) = lazy_array.at(i);
-
-		return *this;
-	}
-
-	// for backward compatibility
-	int byteSize() const
-	{
-		return length() * itemSize();
-	}
-
-	bool empty() const
-	{
-		return raw_ptr() == nullptr || length() == 0;
-	}
-
-	BaseArray BaseArray_slice(int from, int to)
-	{
-		//assert(from <= to);	
-
-		BaseArray result(itemSize());
-
-		result._size = make_vector(to - from);
-		result._length = product(result._size); // TODO
-		result._stride = this->_stride;
-
-		// add reference count here
-		result._address = this->_address;
-
-		// new origin with offset
-		result._origin = this->ptr_at(from);
-
-		return result;
-	}
-
-	BaseArray BaseArray_slice(int from0, int from1, int to0, int to1)
-	{
-		//assert(from0 <= to0);	
-		//assert(from1 <= to1);	
-
-		BaseArray result(itemSize());
-
-		result._size = make_vector(to0 - from0, to1 - from1);
-		result._length = product(result._size); // TODO
-		result._stride = this->_stride;
-
-		// add reference count here
-		result._address = this->_address;
-
-		// new origin with offset
-		result._origin = this->ptr_at(from0, from1);
-
-		return result;
-	}
-
-	void *ptr_at(int index0)
-	{
-		return ((char *)raw_ptr()) + (index0 * stride(0)) * itemSize();
-	}
-
-	void *ptr_at(int index0, int index1)
-	{
-		return ((char *)raw_ptr()) + (index0 * stride(0) + index1 * stride(1)) * itemSize();
-	}
-
-	const void *ptr_at(int index0) const
-	{
-		return ((char *)raw_ptr()) + (index0 * stride(0)) * itemSize();
-	}
-
-	const void *ptr_at(int index0, int index1) const
-	{
-		return ((char *)raw_ptr()) + (index0 * stride(0) + index1 * stride(1)) * itemSize();
-	}
 };
 
-template <typename T, typename U>
-Array<T> similar(const Array<U> &other)
+struct Range
 {
-	return Array<T>(other.size());
+	int from, to;
+
+	Range(int from, int to) : from(from), to(to) { }
+};
+
+inline WholeRange _colon()
+{
+	return WholeRange();
+}
+
+inline Range _colon(int from, int to)
+{
+	return Range(from, to);
+}
+
+template <int N> 
+inline int product(const std::array<int, N> &array)
+{
+	// TODO: do not use runtime loop
+	int result = 1;
+
+	for (int i = 0; i < N; i++)
+		result *= array[i];
+
+	return result;
+}
+
+template <int N>
+inline std::array<int, N> zero_array()
+{
+	std::array<int, N> result;
+
+	for (int i = 0; i < N; i++)
+		result[i] = 0;
+
+	return std::move(result);
+}
+
+// TODO: variadic template
+inline std::array<int, 1> make_array(int size0)
+{
+	std::array<int, 1> result;
+	result[0] = size0;
+	return result;
+}
+
+inline std::array<int, 2> make_array(int size0, int size1)
+{
+	std::array<int, 2> result;
+	result[0] = size0;
+	result[1] = size1;
+	return result;
+}
+
+inline std::array<int, 3> make_array(int size0, int size1, int size2)
+{
+	std::array<int, 3> result;
+	result[0] = size0;
+	result[1] = size1;
+	result[2] = size2;
+	return result;
+}
+
+template <int N>
+inline std::array<int, N> make_stride(const std::array<int, N> &size)
+{
+	// TODO do not use runtime loop
+	std::array<int, N> stride;
+
+	stride[0] = 1;
+	for (int i = 1; i < N; i++)
+		stride[i] = stride[i - 1] * size[i - 1];
+
+	return std::move(stride);
+}
+
+template <typename T, int Dim = 1>
+struct TArray
+{
+public:
+	typedef T value_type;
+	typedef std::array<int, Dim> size_type;
+	typedef std::array<int, Dim> stride_type;
+
+//private:
+	int _length;
+	size_type _size;
+	stride_type _stride;
+	std::shared_ptr<value_type> _address;
+	value_type *_origin;
+
+public:
+	TArray() : 
+		_length(0), 
+		_size(zero_array<Dim>()), 
+		_stride(make_stride(zero_array<Dim>())), 
+		_address(), 
+		_origin(nullptr)
+	{
+	}
+
+	TArray(const size_type &size) : 
+		_length(product(size)), 
+		_size(size), 
+		_stride(make_stride(size)), 
+		_address(heap_allocator<value_type>::allocate(product(size))), 
+		_origin(nullptr)
+	{
+		_origin = _address.get();
+	}
+
+	TArray(int size0) : 
+		_length(size0), 
+		_size(make_array(size0)), 
+		_stride(make_stride(make_array(size0))), 
+		_address(heap_allocator<value_type>::allocate(size0)), 
+		_origin(nullptr)
+	{
+		static_assert(Dim == 1, "This function is only for Array<T, 1>");
+		_origin = _address.get();
+	}
+
+	TArray(int size0, int size1) : 
+		_length(size0 * size1), 
+		_size(make_array(size0, size1)), 
+		_stride(make_stride(make_array(size0, size1))), 
+		_address(heap_allocator<value_type>::allocate(size0 * size1)), 
+		_origin(nullptr)
+	{
+		static_assert(Dim == 2, "This function is only for Array<T, 2>");
+		_origin = _address.get();
+	}
+
+	// copy constructor (shallow copy)
+	explicit TArray(const TArray &other) :
+		_length(other._length), 
+		_size(other._size), 
+		_stride(other._stride), 
+		_address(other._address), // add refrence count here
+		_origin(other._origin)
+	{
+	}
+
+	// copy assign (shallow copy)
+	const TArray &operator=(const TArray &other) 
+	{ 
+		_length = other._length;
+		_size = other._size;
+		_stride = other._stride;
+		_address = other._address; // add refrence count here
+		_origin = other._origin;
+
+		return *this; 
+	}
+
+	// move constructor
+	TArray(TArray &&other) :
+		_length(other._length), 
+		_size(std::move(other._size)), 
+		_stride(std::move(other._stride)), 
+		_address(std::move(other._address)), 
+		_origin(other._origin)
+	{
+		other._length = 0;
+		other._origin = nullptr;
+	}
+
+	// move assign
+	const TArray &operator=(TArray &&other)
+	{
+		_length = other._length;
+		_size = std::move(other._size);
+		_stride = std::move(other._stride);
+		_address = std::move(other._address);
+		_origin = other._origin;
+
+		other._length = 0;
+		other._origin = nullptr;
+
+		return *this;
+	}
+
+	int itemSize() const
+	{
+		return sizeof(value_type);
+	}
+
+	int length() const
+	{
+		return _length;
+	}
+
+	int ndims() const
+	{
+		return Dim;
+	}
+
+	const size_type &size() const
+	{
+		return _size;
+	}
+
+	int size(int dim) const
+	{
+		return _size[dim];
+	}
+
+	const stride_type &strides() const
+	{
+		return _stride;
+	}
+	
+	int stride(int dim) const
+	{
+		return _stride[dim];
+	}
+
+	value_type *raw_ptr()
+	{
+		return _origin;
+	}
+
+	const value_type *raw_ptr() const
+	{
+		return _origin;
+	}
+
+	operator value_type *()
+	{
+		return raw_ptr();
+	}
+
+	operator const value_type *() const
+	{
+		return raw_ptr();
+	}
+
+	// Accessing elements
+
+	T &at(int index0) 
+	{ 
+		return _origin[index0 * stride(0)]; 
+	}
+
+	const T &at(int index0) const 
+	{ 
+		return _origin[index0 * stride(0)]; 
+	}
+
+	T &operator()(int index0) { return at(index0); }
+	const T &operator()(int index0) const { return at(index0); }
+	T &operator[](int index0) { return at(index0); }
+	const T &operator[](int index0) const { return at(index0); }
+
+	T &at(int index0, int index1)
+	{
+		static_assert(Dim >= 2, "Array dimension bounds error");
+		return _origin[index0 * stride(0) + index1 * stride(1)];
+	}
+
+	const T &at(int index0, int index1) const
+	{
+		static_assert(Dim >= 2, "Array dimension bounds error");
+		return _origin[index0 * stride(0) + index1 * stride(1)];
+	}
+
+	T &operator()(int index0, int index1) { return at(index0, index1); }
+	const T &operator()(int index0, int index1) const { return at(index0, index1); }
+
+public:
+	//friend TArray<T, 1> slice(const TArray<T> &array, const Range &range);
+};
+
+template <typename T>
+inline void setSize(TArray<T, 2> &array, int size0, int size1)
+{
+	if (array.size(0) != size0 || array.size(1) != size1)
+		array = TArray<T, 2>(size0, size1);
+}
+
+template <typename T>
+inline TArray<T, 1> slice(const TArray<T> &array, const Range &range)
+{
+	// TODO: check range
+	TArray<T, 1> result;
+
+	result._length = range.to - range.from;
+	result._size = make_array(range.to - range.from);
+	result._stride = array.strides();
+	result._address = array._address; // add reference count here
+	result._origin = array._origin + range.from; // new origin with offset
+
+	return result;
+}
+
+template <typename T>
+inline TArray<T, 2> slice(const TArray<T, 2> &array, const Range &range0, const Range &range1)
+{
+	// TODO: check range
+	TArray<T, 2> result;
+
+	// TODO: implement
+
+	return result;
+}
+
+template <typename T>
+inline TArray<T, 1> slice(TArray<T, 2> &array, const WholeRange &range0, int index1)
+{
+	TArray<T, 1> result;
+
+	result._length = array.size(0);
+	result._size = make_array(array.size(0));
+	result._stride = make_array(array.stride(0));
+	result._address = array._address; // add reference count here
+	result._origin = &array.at(0, index1);
+
+	return result;
 }
 
 } // namespace np
 
-#endif // NUMCPP_ARRAY_H_
+#endif // NUMCPP_TARRAY_H_
