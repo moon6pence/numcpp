@@ -185,25 +185,6 @@ public:
 	{
 		return _origin;
 	}
-
-	// FIXME: remove this
-	template <typename T>
-	friend struct Array;
-
-	// TODO: deprecate this
-	BaseArray(int itemSize, const size_type &size, void *(*allocate)(int), void (*free)(void *)) :
-		_itemSize(itemSize), 
-		_length(product(size)), 
-		_size(size), 
-		_stride(make_stride(size)), 
-		_address(), 
-		_origin(nullptr)
-	{
-		void *ptr = allocate(product(size) * itemSize);
-
-		_address = std::shared_ptr<void>(ptr, free);
-		_origin = ptr;
-	}
 };
 
 } // namespace np

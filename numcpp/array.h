@@ -1,5 +1,5 @@
-#ifndef NUMCPP_TARRAY_H_
-#define NUMCPP_TARRAY_H_
+#ifndef NUMCPP_ARRAY_H_
+#define NUMCPP_ARRAY_H_
 
 #include "allocator.h"
 #include "array_functions.h"
@@ -91,7 +91,7 @@ inline std::array<int, N> make_stride(const std::array<int, N> &size)
 }
 
 template <typename T, int Dim = 1>
-struct TArray
+struct Array
 {
 public:
 	typedef T value_type;
@@ -106,7 +106,7 @@ public:
 	value_type *_origin;
 
 public:
-	TArray() : 
+	Array() : 
 		_length(0), 
 		_size(zero_array<Dim>()), 
 		_stride(make_stride(zero_array<Dim>())), 
@@ -115,7 +115,7 @@ public:
 	{
 	}
 
-	TArray(const size_type &size) : 
+	Array(const size_type &size) : 
 		_length(product(size)), 
 		_size(size), 
 		_stride(make_stride(size)), 
@@ -125,7 +125,7 @@ public:
 		_origin = _address.get();
 	}
 
-	TArray(int size0) : 
+	Array(int size0) : 
 		_length(size0), 
 		_size(make_array(size0)), 
 		_stride(make_stride(make_array(size0))), 
@@ -136,7 +136,7 @@ public:
 		_origin = _address.get();
 	}
 
-	TArray(int size0, int size1) : 
+	Array(int size0, int size1) : 
 		_length(size0 * size1), 
 		_size(make_array(size0, size1)), 
 		_stride(make_stride(make_array(size0, size1))), 
@@ -148,7 +148,7 @@ public:
 	}
 
 	// copy constructor (shallow copy)
-	explicit TArray(const TArray &other) :
+	explicit Array(const Array &other) :
 		_length(other._length), 
 		_size(other._size), 
 		_stride(other._stride), 
@@ -158,7 +158,7 @@ public:
 	}
 
 	// copy assign (shallow copy)
-	const TArray &operator=(const TArray &other) 
+	const Array &operator=(const Array &other) 
 	{ 
 		_length = other._length;
 		_size = other._size;
@@ -170,7 +170,7 @@ public:
 	}
 
 	// move constructor
-	TArray(TArray &&other) :
+	Array(Array &&other) :
 		_length(other._length), 
 		_size(std::move(other._size)), 
 		_stride(std::move(other._stride)), 
@@ -182,7 +182,7 @@ public:
 	}
 
 	// move assign
-	const TArray &operator=(TArray &&other)
+	const Array &operator=(Array &&other)
 	{
 		_length = other._length;
 		_size = std::move(other._size);
@@ -284,21 +284,21 @@ public:
 	const T &operator()(int index0, int index1) const { return at(index0, index1); }
 
 public:
-	//friend TArray<T, 1> slice(const TArray<T> &array, const Range &range);
+	//friend Array<T, 1> slice(const Array<T> &array, const Range &range);
 };
 
 template <typename T>
-inline void setSize(TArray<T, 2> &array, int size0, int size1)
+inline void setSize(Array<T, 2> &array, int size0, int size1)
 {
 	if (array.size(0) != size0 || array.size(1) != size1)
-		array = TArray<T, 2>(size0, size1);
+		array = Array<T, 2>(size0, size1);
 }
 
 template <typename T>
-inline TArray<T, 1> slice(const TArray<T> &array, const Range &range)
+inline Array<T, 1> slice(const Array<T> &array, const Range &range)
 {
 	// TODO: check range
-	TArray<T, 1> result;
+	Array<T, 1> result;
 
 	result._length = range.to - range.from;
 	result._size = make_array(range.to - range.from);
@@ -310,10 +310,10 @@ inline TArray<T, 1> slice(const TArray<T> &array, const Range &range)
 }
 
 template <typename T>
-inline TArray<T, 2> slice(const TArray<T, 2> &array, const Range &range0, const Range &range1)
+inline Array<T, 2> slice(const Array<T, 2> &array, const Range &range0, const Range &range1)
 {
 	// TODO: check range
-	TArray<T, 2> result;
+	Array<T, 2> result;
 
 	// TODO: implement
 
@@ -321,9 +321,9 @@ inline TArray<T, 2> slice(const TArray<T, 2> &array, const Range &range0, const 
 }
 
 template <typename T>
-inline TArray<T, 1> slice(TArray<T, 2> &array, const WholeRange &range0, int index1)
+inline Array<T, 1> slice(Array<T, 2> &array, const WholeRange &range0, int index1)
 {
-	TArray<T, 1> result;
+	Array<T, 1> result;
 
 	result._length = array.size(0);
 	result._size = make_array(array.size(0));
@@ -336,4 +336,4 @@ inline TArray<T, 1> slice(TArray<T, 2> &array, const WholeRange &range0, int ind
 
 } // namespace np
 
-#endif // NUMCPP_TARRAY_H_
+#endif // NUMCPP_ARRAY_H_

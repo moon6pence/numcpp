@@ -4,9 +4,9 @@ namespace {
 
 using namespace np;
 
-TEST(TArray, DeclareEmptyArray)
+TEST(Array, DeclareEmptyArray)
 {
-	TArray<int> a0;
+	Array<int> a0;
 
 	EXPECT_EQ(sizeof(int), a0.itemSize());
 	EXPECT_EQ(0, a0.length());
@@ -19,9 +19,9 @@ TEST(TArray, DeclareEmptyArray)
 	EXPECT_EQ(0, byteSize(a0));
 }
 
-TEST(TArray, DeclareArrayWithSize)
+TEST(Array, DeclareArrayWithSize)
 {
-	TArray<int> a1(5);
+	Array<int> a1(5);
 
 	EXPECT_EQ(sizeof(int), a1.itemSize());
 	EXPECT_EQ(5, a1.length());
@@ -33,7 +33,7 @@ TEST(TArray, DeclareArrayWithSize)
 	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(5 * sizeof(int), byteSize(a1));
 
-	TArray<float, 2> a2(2, 3);
+	Array<float, 2> a2(2, 3);
 
 	EXPECT_EQ(sizeof(float), a2.itemSize());
 	EXPECT_EQ(2 * 3, a2.length());
@@ -47,7 +47,7 @@ TEST(TArray, DeclareArrayWithSize)
 	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(2 * 3 * sizeof(int), byteSize(a2));
 
-	TArray<double, 3> a3(make_array(2, 3, 4));
+	Array<double, 3> a3(make_array(2, 3, 4));
 
 	EXPECT_EQ(sizeof(double), a3.itemSize());
 	EXPECT_EQ(2 * 3 * 4, a3.length());
@@ -64,13 +64,13 @@ TEST(TArray, DeclareArrayWithSize)
 	EXPECT_EQ(2 * 3 * 4 * sizeof(double), byteSize(a3));
 
 	// COMPILE ERROR: This function is only for Array<T, 2>
-	// TArray<int, 3> a3_error(3, 4);
+	// Array<int, 3> a3_error(3, 4);
 }
 
-TEST(TArray, AccessElements)
+TEST(Array, AccessElements)
 {
 	// 1d array
-	np::TArray<int> a1(5);
+	np::Array<int> a1(5);
 
 	const int data1[5] = 
 	{ 
@@ -94,7 +94,7 @@ TEST(TArray, AccessElements)
 	// a1(1, 1);
 
 	// 2d array
-	np::TArray<int, 2> a2(3, 2);
+	np::Array<int, 2> a2(3, 2);
 
 	const int data2[6] = 
 	{ 
@@ -116,10 +116,10 @@ TEST(TArray, AccessElements)
 	EXPECT_EQ(5, a2.at(2, 0));
 }
 
-TEST(TArray, SetSize)
+TEST(Array, SetSize)
 {
-	TArray<int> a1;
-	a1 = TArray<int>(5);
+	Array<int> a1;
+	a1 = Array<int>(5);
 
 	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(sizeof(int), a1.itemSize());
@@ -127,8 +127,8 @@ TEST(TArray, SetSize)
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-	TArray<int, 2> a2;
-	a2 = TArray<int, 2>(3, 2);
+	Array<int, 2> a2;
+	a2 = Array<int, 2>(3, 2);
 
 	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(sizeof(float), a2.itemSize());
@@ -137,8 +137,8 @@ TEST(TArray, SetSize)
 	EXPECT_EQ(2, a2.size(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-	TArray<double, 3> a3;
-	a3 = TArray<double, 3>(make_array(4, 3, 2));
+	Array<double, 3> a3;
+	a3 = Array<double, 3>(make_array(4, 3, 2));
 
 	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(sizeof(double), a3.itemSize());
@@ -149,10 +149,10 @@ TEST(TArray, SetSize)
 	EXPECT_NE(nullptr, a3.raw_ptr());
 }
 
-TEST(TArray, MoveSemantics)
+TEST(Array, MoveSemantics)
 {
 	// move constructor
-	TArray<int> a1(5);
+	Array<int> a1(5);
 	auto moved = std::move(a1);
 
 	EXPECT_TRUE(empty(a1));
@@ -164,7 +164,7 @@ TEST(TArray, MoveSemantics)
 	EXPECT_NE(nullptr, moved.raw_ptr());
 
 	// move assign
-	TArray<int, 2> a2(3, 2);
+	Array<int, 2> a2(3, 2);
 	auto moved2 = std::move(a2);
 
 	EXPECT_TRUE(empty(a2));
@@ -218,22 +218,22 @@ TEST(TArray, MoveSemantics)
 //	}
 //}
 
-TEST(TArray, DerivedFunctions)
+TEST(Array, DerivedFunctions)
 {
-	TArray<int> a0;
+	Array<int> a0;
 
 	EXPECT_TRUE(empty(a0));
 	EXPECT_EQ(0, a0.length());
 	EXPECT_EQ(0 * sizeof(int), byteSize(a0));
 
-	TArray<int> a1(5);
+	Array<int> a1(5);
 
 	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(5, a1.length());
 	EXPECT_EQ(5 * sizeof(int), byteSize(a1));
 	EXPECT_EQ(1, a1.stride(0));
 
-	TArray<float, 2> a2(3, 2);
+	Array<float, 2> a2(3, 2);
 
 	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(3 * 2, a2.length());
@@ -241,7 +241,7 @@ TEST(TArray, DerivedFunctions)
 	EXPECT_EQ(1, a2.stride(0));
 	EXPECT_EQ(3, a2.stride(1));
 
-	TArray<char, 3> a3(make_array(4, 3, 2));
+	Array<char, 3> a3(make_array(4, 3, 2));
 
 	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(4 * 3 * 2, a3.length());
@@ -251,10 +251,10 @@ TEST(TArray, DerivedFunctions)
 	EXPECT_EQ(4 * 3, a3.stride(2));
 }
 
-TEST(TArray, Slice)
+TEST(Array, Slice)
 {
 	// 1d array
-	np::TArray<int> a1(5);
+	np::Array<int> a1(5);
 
 	const int data1[5] = 
 	{ 
@@ -272,7 +272,7 @@ TEST(TArray, Slice)
 	EXPECT_EQ(&a1(1), slice1.raw_ptr());
 
 	// 2d array
-	np::TArray<int, 2> a2(3, 2);
+	np::Array<int, 2> a2(3, 2);
 
 	const int data2[6] = 
 	{ 
