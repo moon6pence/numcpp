@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 
 	imshow(result_image);
 
+/*
 #ifdef USE_CUDA
 
 	// Run GPU version
@@ -41,6 +42,7 @@ int main(int argc, char *argv[])
 	imshow(result_image_h); 
 
 #endif // USE_CUDA
+*/
 	
 	return 0;
 }

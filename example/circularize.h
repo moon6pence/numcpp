@@ -52,6 +52,7 @@ struct Circularize
 	}
 };
 
+/*
 #ifdef USE_CUDA
 
 struct Circularize_d : private Circularize
@@ -80,5 +81,6 @@ struct Circularize_d : private Circularize
 };
 
 #endif // USE_CUDA
+*/
 
 } // namespace np
