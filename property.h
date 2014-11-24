@@ -1,69 +1,12 @@
 #ifndef QD_PROPERTY_H_
 #define QD_PROPERTY_H_
 
+#include "signal.h"
+
 #include <string>
-#include <vector>
 #include <functional>
 #include <limits>
 #include <iostream>
-
-template <typename Arg>
-struct signal
-{
-public:
-	void connect(const std::function<void(Arg)> &slot)
-	{
-		_slots.push_back(slot);
-	}
-
-	void operator+=(const std::function<void(Arg)> &slot)
-	{
-		connect(slot);
-	}
-
-	void invoke(const Arg &arg)
-	{
-		for (auto i = begin(_slots); i != end(_slots); ++i)
-			(*i)(arg);
-	}
-
-	void operator()(const Arg &arg)
-	{
-		invoke(arg);
-	}
-
-private:
-	std::vector<std::function<void(Arg)>> _slots;
-};
-
-template <>
-struct signal<void>
-{
-public:
-	void connect(const std::function<void(void)> &slot)
-	{
-		_slots.push_back(slot);
-	}
-
-	void operator+=(const std::function<void(void)> &slot)
-	{
-		connect(slot);
-	}
-
-	void invoke()
-	{
-		for (auto i = begin(_slots); i != end(_slots); ++i)
-			(*i)();
-	}
-
-	void operator()()
-	{
-		invoke();
-	}
-
-private:
-	std::vector<std::function<void(void)>> _slots;
-};
 
 template <typename T>
 struct property

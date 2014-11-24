@@ -21,7 +21,8 @@ qt5_wrap_ui(UI_FILES ContextWindow.ui)
 qt5_add_resources(QRC_FILES ContextWindow.qrc)
 
 # Library: QuickDialog
-add_library(QuickDialog
+add_library(QuickDialog	
+	signal.h
 	property.h
 	Object.h
 	Object.cpp
