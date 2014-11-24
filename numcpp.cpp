@@ -1,10 +1,4 @@
-#include <numcpp/numcpp.h>
+#include "config.h"
 
-// FIXME
-//#ifdef USE_OPENCV
-//#include <numcpp/opencv.h>
-//#endif
-//
-//#ifdef USE_CUDA
-//#include <numcpp/cuda.h>
-//#endif
+#include "numcpp/base_array.h"
+#include "numcpp/array.h"

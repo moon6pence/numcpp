@@ -26,21 +26,20 @@ if (${MSVC})
 endif (${MSVC})
 
 # numcpp library
-add_library(
-	numcpp
-	numcpp/numcpp.h
+add_library(numcpp
 	numcpp.cpp
 
 	numcpp/allocator.h
 	numcpp/base_array.h
 	numcpp/array.h
 	numcpp/array_functions.h
+	numcpp/opencv.h
+
 	# numcpp/stl.h
 	# numcpp/functions.h
 	# numcpp/lazy_array.h
 
 	# TODO: conditional include?
-	# numcpp/opencv.h
 	# numcpp/cuda.h
 	# numcpp/cufft.h
 )
@@ -92,17 +91,17 @@ if (BUILD_TEST)
 	endif (USE_CUDA)
 
 	# test executable
-	add_executable(
-		numcpp.test 
+	add_executable(numcpp.test 
 		test.cpp
 
 		numcpp/base_array.test.inl
 		numcpp/array.test.inl
+		numcpp/opencv.test.inl
+
 		# numcpp/stl.test.inl
 		# numcpp/functions.test.inl
 		# numcpp/lazy_array.test.inl
 		
-		# numcpp/opencv.test.inl
 		# numcpp/cuda.test.inl
 		# ${TEST_CUDA_KERNEL_O}
 

@@ -1,5 +1,4 @@
 #include <numcpp/opencv.h>
-#include <numcpp/stl.h>
 
 namespace {
 
@@ -8,8 +7,8 @@ using namespace np;
 TEST(OpenCV, HelloOpenCV)
 {
 	cv::Mat image = cv::imread("Lena.bmp");
-	ASSERT_EQ(image.cols, 512);
-	ASSERT_EQ(image.rows, 512);
+	EXPECT_EQ(image.cols, 512);
+	EXPECT_EQ(image.rows, 512);
 
 	// cv::imshow("Hello OpenCV", image);
 	// cv::waitKey(0);
@@ -17,8 +16,10 @@ TEST(OpenCV, HelloOpenCV)
 
 TEST(OpenCV, ToCvMat)
 {
-	Array<uint8_t> mat(5, 8);
-	fill(mat, (uint8_t)128);
+	// uint_t
+	Array<uint8_t, 2> mat(5, 8);
+	for (int i = 0; i < mat.length(); i++)
+		mat(i) = 128;
 	mat(2, 3) = 255;
 	mat(4, 1) = 0;
 
@@ -31,8 +32,11 @@ TEST(OpenCV, ToCvMat)
 		for (int x = 0; x < mat.size(0); x++)
 			ASSERT_EQ(mat(y, x), cv_mat.at<uint8_t>(x, y));
 
-	Array<float> mat2(5, 8);
-	fill(mat2, 0.5f);
+	// float
+	Array<float, 2> mat2(5, 8);
+	for (int i = 0; i < mat2.length(); i++)
+		mat2(i) = 0.5f;
+	//fill(mat2, 0.5f);
 	mat2(2, 3) = 1.0f;
 	mat2(4, 1) = 0.0f;
 
@@ -46,61 +50,74 @@ TEST(OpenCV, ToCvMat)
 			ASSERT_EQ(mat2(y, x), cv_mat2.at<float>(x, y));
 }
 
-TEST(OpenCV, FromCvMat)
-{
-	cv::Mat cv_mat(5, 8, CV_8U, cvScalar(128));
-	cv_mat.at<uint8_t>(3, 2) = 123;
-	cv_mat.at<uint8_t>(1, 4) = 7;
-
-	auto mat = from_cv_mat<uint8_t>(cv_mat);
-	ASSERT_EQ(cv_mat.cols, mat.size(0));
-	ASSERT_EQ(cv_mat.rows, mat.size(1));
-	for (int y = 0; y < mat.size(1); y++)
-		for (int x = 0; x < mat.size(0); x++)
-			ASSERT_EQ(mat(x, y), cv_mat.at<uint8_t>(y, x));
-	ASSERT_EQ(mat(2, 3), 123);
-	ASSERT_EQ(mat(4, 1), 7);
-
-	cv::Mat cv_mat2(5, 8, CV_32F, cvScalar(0.5f));
-	cv_mat2.at<float>(3, 2) = 1.0f;
-	cv_mat2.at<float>(1, 4) = 0.0f;
-
-	auto mat2 = from_cv_mat<float>(cv_mat2);
-	ASSERT_EQ(cv_mat2.cols, mat2.size(0));
-	ASSERT_EQ(cv_mat2.rows, mat2.size(1));
-	for (int y = 0; y < mat2.size(1); y++)
-		for (int x = 0; x < mat2.size(0); x++)
-			ASSERT_EQ(mat2(x, y), cv_mat2.at<float>(y, x));
-}
-
 TEST(OpenCV, FromCvMatVoid)
 {
 	cv::Mat cv_mat(5, 8, CV_8U, cvScalar(128));
 	cv_mat.at<uint8_t>(3, 2) = 123;
 	cv_mat.at<uint8_t>(1, 4) = 7;
 
-	Array<uint8_t> mat;
+	// uint8_t
+	Array<uint8_t, 2> mat;
 	from_cv_mat(mat, cv_mat);
 	ASSERT_EQ(cv_mat.cols, mat.size(0));
 	ASSERT_EQ(cv_mat.rows, mat.size(1));
 	for (int y = 0; y < mat.size(1); y++)
 		for (int x = 0; x < mat.size(0); x++)
-			ASSERT_EQ(mat(x, y), cv_mat.at<uint8_t>(y, x));
-	ASSERT_EQ(mat(2, 3), 123);
-	ASSERT_EQ(mat(4, 1), 7);
+			EXPECT_EQ(mat(x, y), cv_mat.at<uint8_t>(y, x));
+	EXPECT_EQ(mat(2, 3), 123);
+	EXPECT_EQ(mat(4, 1), 7);
 
+	// wrong type of array
+	Array<double, 2> mat_error;
+	from_cv_mat(mat_error, cv_mat);
+	EXPECT_TRUE(empty(mat_error));
+
+	// float
 	cv::Mat cv_mat2(5, 8, CV_32F, cvScalar(0.5f));
 	cv_mat2.at<float>(3, 2) = 1.0f;
 	cv_mat2.at<float>(1, 4) = 0.0f;
 
-	Array<float> mat2;
+	Array<float, 2> mat2;
 	from_cv_mat(mat2, cv_mat2);
 	ASSERT_EQ(cv_mat2.cols, mat2.size(0));
 	ASSERT_EQ(cv_mat2.rows, mat2.size(1));
 	for (int y = 0; y < mat2.size(1); y++)
 		for (int x = 0; x < mat2.size(0); x++)
-			ASSERT_EQ(mat2(x, y), cv_mat2.at<float>(y, x));
+			EXPECT_EQ(mat2(x, y), cv_mat2.at<float>(y, x));
 }
+
+TEST(OpenCV, ImRead)
+{
+	cv::Mat cv_image = cv::imread("Lena.bmp");
+	ASSERT_EQ(cv_image.rows, 512);
+	ASSERT_EQ(cv_image.cols, 512);
+
+	cv::Mat cv_grayscale;
+	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
+
+	Array<uint8_t, 2> image;
+	bool result = imread(image, "Lena.bmp");
+	ASSERT_TRUE(result);
+	ASSERT_EQ(cv_image.rows, image.size(0));
+	ASSERT_EQ(cv_image.cols, image.size(1));
+
+	EXPECT_EQ(image(412, 43), cv_grayscale.at<uint8_t>(43, 412));
+	EXPECT_EQ(image(240, 360), cv_grayscale.at<uint8_t>(360, 240));
+	EXPECT_EQ(image(0, 0), cv_grayscale.at<uint8_t>(0, 0));
+	EXPECT_EQ(image(511, 511), cv_grayscale.at<uint8_t>(511, 511));
+}
+
+TEST(OpenCV, ImWrite)
+{
+	Array<uint8_t, 2> image;
+	bool result = imread(image, "Lena.bmp");
+	ASSERT_TRUE(result);
+	// imshow(image);
+	result = imwrite(image, "result_imwrite.bmp");
+	ASSERT_TRUE(result);
+}
+
+#if 0
 
 TEST(OpenCV, FromCvMatRuntime)
 {
@@ -119,37 +136,6 @@ TEST(OpenCV, FromCvMatRuntime)
 	for (int y = 0; y < image.size(0); y++)
 		for (int x = 0; x < image.size(1); x++)
 			EXPECT_EQ(cv_mat.at<uint8_t>(y, x), image(x, y));
-}
-
-TEST(OpenCV, ImRead)
-{
-	cv::Mat cv_image = cv::imread("Lena.bmp");
-	ASSERT_EQ(cv_image.rows, 512);
-	ASSERT_EQ(cv_image.cols, 512);
-
-	cv::Mat cv_grayscale;
-	cv::cvtColor(cv_image, cv_grayscale, CV_BGR2GRAY);
-
-	auto image = imread("Lena.bmp");
-	ASSERT_EQ(image.size(0), cv_image.rows);
-	ASSERT_EQ(image.size(1), cv_image.cols);
-
-	EXPECT_EQ(image(412, 43), cv_grayscale.at<uint8_t>(43, 412));
-	EXPECT_EQ(image(240, 360), cv_grayscale.at<uint8_t>(360, 240));
-	EXPECT_EQ(image(0, 0), cv_grayscale.at<uint8_t>(0, 0));
-	EXPECT_EQ(image(511, 511), cv_grayscale.at<uint8_t>(511, 511));
-
-	Array<uint8_t> image2;
-	imread(image2, "Lena.bmp");
-	ASSERT_EQ(cv_image.rows, image2.size(0));
-	ASSERT_EQ(cv_image.cols, image2.size(1));
-}
-
-TEST(OpenCV, ImWrite)
-{
-	auto image = imread("Lena.bmp");
-	// imshow(image);
-	ASSERT_TRUE(imwrite(image, "result_imwrite.bmp"));
 }
 
 TEST(OpenCV, ColorImage)
@@ -173,5 +159,7 @@ TEST(OpenCV, ColorImage)
 	// np::imshow(image3b);
 	ASSERT_TRUE(imwrite(image3b, "result_imwrite.bmp"));
 }
+
+#endif // if 0
 
 } // anonymous namespace
