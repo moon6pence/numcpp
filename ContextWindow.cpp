@@ -60,7 +60,7 @@ void ContextWindow::loadContextFile(const std::string &filepath)
 			return;
 
 		// Add UI for objects
-		for (unique_ptr<Object> &object : _context.objects())
+		for (unique_ptr<Object> &object : _context.getObjectList())
 			addObjectUI(*object);
 	}
 
@@ -80,7 +80,7 @@ void ContextWindow::updateContextUI()
 	}
 
 	// Add UI for objects
-	for (unique_ptr<Object> &object : _context.objects())
+	for (unique_ptr<Object> &object : _context.getObjectList())
 		addObjectUI(*object);
 }
 

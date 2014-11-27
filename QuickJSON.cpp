@@ -145,7 +145,7 @@ void writeJson(Context &context, const std::string &filename)
 	cout << "Save json file: " << filename << endl;
 	Json::Value root;
 
-	for (unique_ptr<Object> &object : context.objects())
+	for (unique_ptr<Object> &object : context.getObjectList())
 	{
 		Json::Value instance;
 		{

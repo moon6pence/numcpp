@@ -178,7 +178,7 @@ struct QuickDialog : public property_visitor
 		comboBox->addItem("");
 
 		Context &context = property.getContext();
-		for (auto &object : context.objects())
+		for (auto &object : context.getObjectList())
 		{
 			comboBox->addItem(QString(object->getName().c_str()));
 

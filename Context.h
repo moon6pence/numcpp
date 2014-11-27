@@ -22,23 +22,15 @@ public:
 	Object *create(const std::string &typeName);
 	void addObject(Object *object);
 
-	Object *object(const std::string &name);
+	Object *getObject(const std::string &name);
 
 	template <typename T>
-	T *object(const std::string &name) 
+	T *getObject(const std::string &name) 
 	{ 
-		return static_cast<T *>(object(name));
+		return dynamic_cast<T *>(getObject(name));
 	}
 
-	Object &getObject(const std::string &name);
-
-	template <typename T>
-	T &getObject(const std::string &name) 
-	{ 
-		return static_cast<T &>(getObject(name));
-	}
-
-	std::vector<std::unique_ptr<Object>> &objects() { return _objects; }
+	std::vector<std::unique_ptr<Object>> &getObjectList() { return _objects; }
 	void clear() { _objects.clear(); }
 
 private:

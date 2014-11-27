@@ -24,20 +24,11 @@ void Context::addObject(Object *object)
 	_objects.push_back(std::unique_ptr<Object>(object));
 }
 
-Object *Context::object(const std::string &name)
+Object *Context::getObject(const std::string &name)
 {
 	for (std::unique_ptr<Object> &object: _objects)
 		if (object->getName() == name)
 			return object.get();
 
 	return nullptr;
-}
-
-Object &Context::getObject(const std::string &name)
-{
-	for (std::unique_ptr<Object> &object: _objects)
-		if (object->getName() == name)
-			return *object.get();
-
-	throw std::exception("Unknown object name");
 }
