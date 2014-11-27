@@ -205,7 +205,7 @@ struct property<Object>
 	template <class ObjectType>
 	ObjectType &getObject() const
 	{
-		return _context.getObject<ObjectType>(_value);
+		return *_context.getObject<ObjectType>(_value);
 	}
 
 private:
