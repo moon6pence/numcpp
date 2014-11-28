@@ -8,7 +8,11 @@ TEST(Main, HelloGoogleTest)
 
 #include "numcpp/base_array.test.inl"
 #include "numcpp/array.test.inl"
+
+#ifdef USE_OPENCV
 #include "numcpp/opencv.test.inl"
+#endif
+
 //#include "numcpp/stl.test.inl"
 //#include "numcpp/functions.test.inl"
 //#include "numcpp/lazy_array.test.inl"

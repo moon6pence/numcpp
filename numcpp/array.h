@@ -29,7 +29,7 @@ inline Range _colon(int from, int to)
 	return Range(from, to);
 }
 
-template <int N> 
+template <size_t N> 
 inline int product(const std::array<int, N> &array)
 {
 	// TODO: do not use runtime loop
@@ -41,7 +41,7 @@ inline int product(const std::array<int, N> &array)
 	return result;
 }
 
-template <int N>
+template <size_t N>
 inline std::array<int, N> zero_array()
 {
 	std::array<int, N> result;
@@ -77,7 +77,7 @@ inline std::array<int, 3> make_array(int size0, int size1, int size2)
 	return result;
 }
 
-template <int N>
+template <size_t N>
 inline std::array<int, N> make_stride(const std::array<int, N> &size)
 {
 	// TODO do not use runtime loop
@@ -90,7 +90,7 @@ inline std::array<int, N> make_stride(const std::array<int, N> &size)
 	return std::move(stride);
 }
 
-template <typename T, int Dim = 1>
+template <typename T, size_t Dim = 1>
 struct Array
 {
 public:
@@ -128,7 +128,7 @@ public:
 	Array(int size0) : 
 		_length(size0), 
 		_size(make_array(size0)), 
-		_stride(make_stride(make_array(size0))), 
+		_stride(make_stride<1>(make_array(size0))), 
 		_address(heap_allocator<value_type>::allocate(size0)), 
 		_origin(nullptr)
 	{
@@ -139,7 +139,7 @@ public:
 	Array(int size0, int size1) : 
 		_length(size0 * size1), 
 		_size(make_array(size0, size1)), 
-		_stride(make_stride(make_array(size0, size1))), 
+		_stride(make_stride<2>(make_array(size0, size1))), 
 		_address(heap_allocator<value_type>::allocate(size0 * size1)), 
 		_origin(nullptr)
 	{
