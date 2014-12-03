@@ -1,5 +1,7 @@
 #include "Context.h"
 
+namespace nbb {
+
 void Context::addPrototype(Object *prototype)
 {
 	_prototypes.push_back(std::unique_ptr<Object>(prototype));
@@ -32,3 +34,5 @@ Object *Context::getObject(const std::string &name)
 
 	return nullptr;
 }
+
+} // namespace nbb

@@ -10,6 +10,8 @@
 
 using namespace std;
 
+namespace nbb {
+
 ContextWindow::ContextWindow() : ui(nullptr), FoldAllPanelsByDefault(true)
 {
 	ui = new Ui::ContextWindowClass();
@@ -189,3 +191,5 @@ void ContextWindow::dropEvent(QDropEvent* event)
 		loadContextFile(mimeData->urls().at(0).toLocalFile().toStdString());
 	}
 }
+
+} // namespace nbb

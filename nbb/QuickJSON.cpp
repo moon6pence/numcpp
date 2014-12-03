@@ -6,6 +6,8 @@
 
 using namespace std;
 
+namespace nbb {
+
 struct json_reader : public property_visitor
 {
 	const Json::Value &dictionary;
@@ -165,3 +167,5 @@ void writeJson(Context &context, const std::string &filename)
 	fstream json_file(filename, ios::out);
 	json_file << writer.write(root);
 }
+
+} // namespace nbb

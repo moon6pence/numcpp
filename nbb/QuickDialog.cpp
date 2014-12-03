@@ -1,7 +1,8 @@
 #include "QuickDialog.h"
+
 #include <QtWidgets>
 
-#include <iostream>
+namespace nbb {
 
 struct QuickDialog : public property_visitor
 {
@@ -249,7 +250,6 @@ private:
 	}
 };
 
-
 QWidget *createWidget(Object &object, QWidget *parent)
 {
 	QuickDialog dialog(parent);
@@ -257,3 +257,5 @@ QWidget *createWidget(Object &object, QWidget *parent)
 
 	return dialog.widget;
 }
+
+} // namespace nbb

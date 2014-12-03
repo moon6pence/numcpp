@@ -1,11 +1,13 @@
-#ifndef CONTEXT_H_
-#define CONTEXT_H_
+#ifndef NBB_CONTEXT_H_
+#define NBB_CONTEXT_H_
 
 #include <memory>
 #include <vector>
 #include <map>
 
 #include "object.h"
+
+namespace nbb {
 
 class Context
 {
@@ -38,4 +40,6 @@ private:
 	std::vector<std::unique_ptr<Object>> _objects;
 };
 
-#endif // CONTEXT_H_
+} // namespace nbb
+
+#endif // NBB_CONTEXT_H_

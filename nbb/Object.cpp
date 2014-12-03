@@ -1,7 +1,8 @@
-#include "QuickDialog.h"
-#include <iostream>
+#include "Object.h"
 
 using namespace std;
+
+namespace nbb {
 
 struct print_visitor : public templated_property_visitor<print_visitor>
 {
@@ -122,3 +123,4 @@ void copy_properties(Object &dst, Object &src)
 	dst.accept(visitor);
 }
 
+} // namespace nbb
