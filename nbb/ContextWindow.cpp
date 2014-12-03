@@ -2,8 +2,8 @@
 #include "ui_ContextWindow.h"
 #include "moc_ContextWindow.cpp"
 
-#include <QuickDialog/QuickDialog.h>
-#include <QuickDialog/QuickJSON.h>
+#include "QuickDialog.h"
+#include "QuickJSON.h"
 
 #include <QFileInfo>
 #include <filesystem>
