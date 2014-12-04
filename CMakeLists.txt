@@ -126,3 +126,10 @@ if (BUILD_EXAMPLE)
 		target_link_libraries(circularize numcpp)
 	endif (USE_OPENCV)
 endif (BUILD_EXAMPLE)
+
+# JsonCPP
+include_directories(jsoncpp/include)
+get_filename_component(jsoncpp_LIB "jsoncpp/lib/jsoncpp.lib" REALPATH) # to absolute path
+
+# subdirectory: nbb
+add_subdirectory(nbb)
