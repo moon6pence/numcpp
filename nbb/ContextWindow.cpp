@@ -2,13 +2,15 @@
 #include "ui_ContextWindow.h"
 #include "moc_ContextWindow.cpp"
 
-#include <QuickDialog/QuickDialog.h>
-#include <QuickDialog/QuickJSON.h>
+#include "QuickDialog.h"
+#include "QuickJSON.h"
 
 #include <QFileInfo>
 #include <filesystem>
 
 using namespace std;
+
+namespace nbb {
 
 ContextWindow::ContextWindow() : ui(nullptr), FoldAllPanelsByDefault(true)
 {
@@ -189,3 +191,5 @@ void ContextWindow::dropEvent(QDropEvent* event)
 		loadContextFile(mimeData->urls().at(0).toLocalFile().toStdString());
 	}
 }
+
+} // namespace nbb

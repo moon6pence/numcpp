@@ -1,12 +1,14 @@
-#ifndef QD_CONTEXT_WINDOW_H_
-#define QD_CONTEXT_WINDOW_H_
+#ifndef NBB_CONTEXT_WINDOW_H_
+#define NBB_CONTEXT_WINDOW_H_
 
-#include "Object.h"
-#include "Context.h"
+#include "object.h"
+#include "context.h"
 
 #include <QtWidgets>
 
 namespace Ui { class ContextWindowClass; }
+
+namespace nbb {
 
 class ContextWindow : public QMainWindow
 {
@@ -42,5 +44,7 @@ private:
 	Ui::ContextWindowClass *ui;
 	void addObjectUI(Object &object);
 };
+
+} // namespace nbb
 
 #endif // QD_CONTEXT_WINDOW_H_

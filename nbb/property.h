@@ -1,5 +1,5 @@
-#ifndef QD_PROPERTY_H_
-#define QD_PROPERTY_H_
+#ifndef NBB_PROPERTY_H_
+#define NBB_PROPERTY_H_
 
 #include "signal.h"
 
@@ -7,6 +7,8 @@
 #include <functional>
 #include <limits>
 #include <iostream>
+
+namespace nbb {
 
 template <typename T>
 struct property
@@ -258,4 +260,6 @@ private:
 	std::function<void()> _function;
 };
 
-#endif // QO_PROPERTY_H_
+} // namespace nbb
+
+#endif // NBB_PROPERTY_H_

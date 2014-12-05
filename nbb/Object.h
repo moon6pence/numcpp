@@ -1,7 +1,9 @@
-#ifndef QD_OBJECT_H_
-#define QD_OBJECT_H_
+#ifndef NBB_OBJECT_H_
+#define NBB_OBJECT_H_
 
 #include "property.h"
+
+namespace nbb {
 
 struct property_visitor
 {
@@ -116,4 +118,6 @@ public:
 // print object to console
 void print(Object &object);
 
-#endif // QO_OBJECT_H_
+} // namespace nbb
+
+#endif // NBB_OBJECT_H_

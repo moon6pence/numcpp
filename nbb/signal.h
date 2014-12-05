@@ -4,6 +4,8 @@
 #include <vector>
 #include <functional>
 
+namespace nbb {
+
 template <typename Arg1>
 struct signal
 {
@@ -91,5 +93,7 @@ public:
 private:
 	std::vector<std::function<void(Arg1, Arg2)>> _slots;
 };
+
+} // namespace nbb
 
 #endif // NBB_SIGNAL_H_
