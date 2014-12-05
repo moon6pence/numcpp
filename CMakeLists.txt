@@ -5,7 +5,7 @@ if (POLICY CMP0043)
 	cmake_policy(SET CMP0043 NEW)
 endif (POLICY CMP0043)
 
-project(numcpp)
+project(nbb)
 
 # Conditional build with external dependencies
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
@@ -15,7 +15,10 @@ set(BUILD_EXAMPLE OFF CACHE BOOL "Build examples")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
 # Project header directory
-include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+
+# Link library directory
+set(CMAKE_LIBRARY_PATH "$ENV{ProgramFiles}/Windows Kits/8.0/Lib/win8/um/x86")
 
 # Compiler option for gcc
 if (${CMAKE_COMPILER_IS_GNUCXX})
@@ -128,9 +131,39 @@ if (BUILD_EXAMPLE)
 	endif (USE_OPENCV)
 endif (BUILD_EXAMPLE)
 
-# JsonCPP
-include_directories(jsoncpp/include)
-get_filename_component(jsoncpp_LIB "jsoncpp/lib/jsoncpp.lib" REALPATH) # to absolute path
+# ----------
 
-# subdirectory: nbb
-add_subdirectory(nbb)
+# Qt
+find_package(Qt5Widgets REQUIRED)
+
+qt5_wrap_ui(UI_FILES nbb/ContextWindow.ui)
+qt5_add_resources(QRC_FILES nbb/ContextWindow.qrc)
+
+# JsonCPP
+include_directories(thirdparty/jsoncpp/include)
+get_filename_component(jsoncpp_LIB "thirdparty/jsoncpp/lib/jsoncpp.lib" REALPATH) # to absolute path
+
+# Library: nbb
+add_library(nbb
+	nbb/signal.h
+	nbb/property.h
+	nbb/Object.h
+	nbb/Object.cpp
+	nbb/Context.h
+	nbb/Context.cpp
+	nbb/QuickDialog.h
+	nbb/QuickDialog.cpp
+	nbb/QuickJSON.h
+	nbb/QuickJSON.cpp
+
+	nbb/ContextWindow.h
+	nbb/ContextWindow.cpp
+	${UI_FILES}
+	${QRC_FILES}
+)
+
+target_link_libraries(nbb ${jsoncpp_LIB})
+qt5_use_modules(nbb Core Widgets)
+
+# Auto moc
+set_target_properties(nbb PROPERTIES AUTOMOC TRUE)
