@@ -39,6 +39,7 @@ add_library(numcpp
 	numcpp/base_array.h
 	numcpp/array.h
 	numcpp/array_functions.h
+	numcpp/gpu_array.h
 	numcpp/opencv.h
 
 	# numcpp/stl.h
@@ -102,16 +103,8 @@ if (BUILD_TEST)
 
 		numcpp/base_array.test.inl
 		numcpp/array.test.inl
+		numcpp/gpu_array.test.inl
 		numcpp/opencv.test.inl
-
-		# numcpp/stl.test.inl
-		# numcpp/functions.test.inl
-		# numcpp/lazy_array.test.inl
-		
-		# numcpp/cuda.test.inl
-		# ${TEST_CUDA_KERNEL_O}
-
-		# numcpp/test_arrayfixture.h
 	)
 
 	find_package(Threads)
