@@ -90,7 +90,7 @@ inline std::array<int, N> make_stride(const std::array<int, N> &size)
 	return std::move(stride);
 }
 
-template <typename T, size_t Dim = 1>
+template <typename T, size_t Dim = 1, class Allocator = heap_allocator<T>>
 struct Array
 {
 public:
@@ -119,7 +119,7 @@ public:
 		_length(product(size)), 
 		_size(size), 
 		_stride(make_stride(size)), 
-		_address(heap_allocator<value_type>::allocate(product(size))), 
+		_address(Allocator::allocate(product(size))), 
 		_origin(nullptr)
 	{
 		_origin = _address.get();
@@ -129,7 +129,7 @@ public:
 		_length(size0), 
 		_size(make_array(size0)), 
 		_stride(make_stride<1>(make_array(size0))), 
-		_address(heap_allocator<value_type>::allocate(size0)), 
+		_address(Allocator::allocate(size0)), 
 		_origin(nullptr)
 	{
 		static_assert(Dim == 1, "This function is only for Array<T, 1>");
@@ -140,7 +140,7 @@ public:
 		_length(size0 * size1), 
 		_size(make_array(size0, size1)), 
 		_stride(make_stride<2>(make_array(size0, size1))), 
-		_address(heap_allocator<value_type>::allocate(size0 * size1)), 
+		_address(Allocator::allocate(size0 * size1)), 
 		_origin(nullptr)
 	{
 		static_assert(Dim == 2, "This function is only for Array<T, 2>");
