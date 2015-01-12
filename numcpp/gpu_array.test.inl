@@ -153,9 +153,7 @@ TEST(GpuArray, ConstructorWithHostArray)
 		EXPECT_EQ(data1[i], a1_h[i]);
 }
 
-#if 0
-
-TEST(CUDA, RunKernel2)
+TEST(GpuArray, RunKernel2)
 {
 	using namespace std;
 
@@ -169,7 +167,7 @@ TEST(CUDA, RunKernel2)
 	b(0) = 3; b(1) = 3; b(2) = 3; b(3) = 3; b(4) = 3;
 
 	// Data on the device memory
-	GpuArray<int> a_d(a), b_d(b);
+	GpuArray<int> a_d = to_device(a), b_d = to_device(b);
 	GpuArray<int> c_d(N);
 
 	// Run kernel
@@ -185,7 +183,5 @@ TEST(CUDA, RunKernel2)
 	for (int i = 0; i < N; i++)
 		EXPECT_EQ(c(i), a(i) + b(i));
 }
-
-#endif
 
 } // anonymous namespace
