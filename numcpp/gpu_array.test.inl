@@ -116,7 +116,7 @@ TEST(GpuArray, HostToDevice)
 	Array<int> a1_h(5);
 	to_host(a1_h, a1_d);
 
-	for (int i = 0; i < a1.length(); i++)
+	for (int i = 0; i < a1_h.length(); i++)
 		EXPECT_EQ(data1[i], a1_h[i]);
 
 	//GpuArray<int> a2_d(2, 3);
@@ -132,13 +132,14 @@ TEST(GpuArray, HostToDevice)
 	//cudaStreamSynchronize(stream);
 }
 
-#if 0
-
-typedef ArrayFixture CUDA_F;
-
-TEST_F(CUDA_F, ConstructorWithHostArray)
+TEST(GpuArray, ConstructorWithHostArray)
 {
-	GpuArray<int> a1_d(a1);
+	np::Array<int> a1(5);
+	const int data1[5] = { 2, 3, 5, 1, 7 };
+	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
+
+	//GpuArray<int> a1_d(a1);
+	GpuArray<int> a1_d = to_device(a1);
 
 	EXPECT_FALSE(empty(a1_d));
 	EXPECT_EQ(a1_d.ndims(), 1);
@@ -148,10 +149,11 @@ TEST_F(CUDA_F, ConstructorWithHostArray)
 	Array<int> a1_h(5);
 	to_host(a1_h, a1_d);
 
-	int *ptr1 = data1;
-	for (auto i = begin(a1_h); i != end(a1_h); ++i, ++ptr1)
-		EXPECT_EQ(*i, *ptr1);
+	for (int i = 0; i < a1_h.length(); i++)
+		EXPECT_EQ(data1[i], a1_h[i]);
 }
+
+#if 0
 
 TEST(CUDA, RunKernel2)
 {
