@@ -104,34 +104,37 @@ TEST(GpuArray, DeclareGpuArrayWithSize)
 	// EXPECT_EQ(attr.memoryType, cudaMemoryTypeDevice);
 }
 
-#if 0
-
-typedef ArrayFixture CUDA_F;
-
-TEST_F(CUDA_F, HostToDevice)
+TEST(GpuArray, HostToDevice)
 {
+	np::Array<int> a1(5);
+	const int data1[5] = { 2, 3, 5, 1, 7 };
+	memcpy(a1.raw_ptr(), data1, 5 * sizeof(int));
+
 	GpuArray<int> a1_d(5);
 	to_device(a1_d, a1);
 
 	Array<int> a1_h(5);
 	to_host(a1_h, a1_d);
 
-	int *ptr1 = data1;
-	for (auto i = begin(a1_h); i != end(a1_h); ++i, ++ptr1)
-		EXPECT_EQ(*i, *ptr1);
+	for (int i = 0; i < a1.length(); i++)
+		EXPECT_EQ(data1[i], a1_h[i]);
 
-	GpuArray<int> a2_d(2, 3);
-	to_device(a2_d, a2);
+	//GpuArray<int> a2_d(2, 3);
+	//to_device(a2_d, a2);
 
-	// Asynchronous copy
-	cudaStream_t stream;
-	cudaStreamCreate(&stream);
+	//// Asynchronous copy
+	//cudaStream_t stream;
+	//cudaStreamCreate(&stream);
 
-	to_device(a2_d, a2, stream);
-	to_host(a2, a2_d, stream);
+	//to_device(a2_d, a2, stream);
+	//to_host(a2, a2_d, stream);
 
-	cudaStreamSynchronize(stream);
+	//cudaStreamSynchronize(stream);
 }
+
+#if 0
+
+typedef ArrayFixture CUDA_F;
 
 TEST_F(CUDA_F, ConstructorWithHostArray)
 {
