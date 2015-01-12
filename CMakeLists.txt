@@ -63,14 +63,6 @@ if (USE_CUDA)
 	include_directories(${CUDA_INCLUDE_DIRS})
 	target_link_libraries(numcpp ${CUDA_LIBRARIES})
 
-	# Generate 2.0 code
-	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
-
-	if (${MSVC})
-		# VS2012 + CUDA 5.0
-		set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} --use-local-env --cl-version 2010")
-	endif (${MSVC})
-
 	if (${UNIX})
 		# Use C++03 compiler, not C++11
 		set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-Xcompiler -std=c++03)
@@ -104,6 +96,7 @@ if (BUILD_TEST)
 		numcpp/base_array.test.inl
 		numcpp/array.test.inl
 		numcpp/gpu_array.test.inl
+		${TEST_CUDA_KERNEL_O}
 		numcpp/opencv.test.inl
 	)
 

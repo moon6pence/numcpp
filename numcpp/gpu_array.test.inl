@@ -2,7 +2,7 @@
 #include <cuda_runtime.h>
 
 // function declared in cu file
-// void vecAdd(const int *A, const int *B, int *C, int N);
+void vecAdd(const int *A, const int *B, int *C, int N);
 
 namespace {
 
@@ -18,9 +18,7 @@ TEST(GpuArray, HelloCUDA)
 	ASSERT_TRUE(deviceCount > 0);
 }
 
-#if 0
-
-TEST(CUDA, RunKernel)
+TEST(GpuArray, RunKernel)
 {
 	using namespace std;
 
@@ -61,6 +59,8 @@ TEST(CUDA, RunKernel)
 	cudaFree(b_d);
 	cudaFree(c_d);
 }
+
+#if 0
 
 TEST(CUDA, DeclareEmptyDeviceArray)
 {
