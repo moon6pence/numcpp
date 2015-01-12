@@ -76,10 +76,12 @@ if (BUILD_TEST)
 	elseif (${MSVC})
 		if (${CMAKE_SIZEOF_VOID_P} MATCHES "8")
 			# Link 64 bit library
-			link_directories("thirdparty/gtest-1.7.0/lib/msvc2012_64")
+			# link_directories("thirdparty/gtest-1.7.0/lib/msvc2012_64")
+			link_directories("thirdparty/gtest-1.7.0/lib/msvc2013_64")
 		else ()
 			# Link 32 bit library
-			link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+			# link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+			link_directories("thirdparty/gtest-1.7.0/lib/msvc2013")
 		endif ()
 
 		add_definitions(-D_VARIADIC_MAX=10)

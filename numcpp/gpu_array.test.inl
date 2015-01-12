@@ -1,26 +1,4 @@
-#include <numcpp/array.h>
-#include <cuda_runtime.h>
-
-namespace np {
-
-template <typename T>
-struct cuda_allocator
-{
-	static std::shared_ptr<T> allocate(int size)
-	{
-		T *ptr = nullptr;
-		cudaMalloc<T>(&ptr, size);
-
-		return std::shared_ptr<T>(ptr, free);
-	}
-
-	static void free(T *ptr)
-	{
-		cudaFree(ptr);
-	}
-};
-
-} // namespace np
+#include <numcpp/gpu_array.h>
 
 // function declared in cu file
 void vecAdd(const int *A, const int *B, int *C, int N);
@@ -83,8 +61,7 @@ TEST(GpuArray, RunKernel)
 
 TEST(GpuArray, DeclareEmptyGpuArray)
 {
-	//GpuArray<int> a0;
-	Array<int, 1, np::cuda_allocator<int>> a0;
+	GpuArray<int> a0;
 
 	EXPECT_TRUE(empty(a0));
 	EXPECT_EQ(sizeof(int), a0.itemSize());
@@ -94,8 +71,7 @@ TEST(GpuArray, DeclareEmptyGpuArray)
 
 TEST(GpuArray, DeclareGpuArrayWithSize)
 {
-	//GpuArray<int> a1(5);
-	Array<int, 1, np::cuda_allocator<int>> a1(5);
+	GpuArray<int> a1(5);
 
 	EXPECT_FALSE(empty(a1));
 	EXPECT_EQ(sizeof(int), a1.itemSize());
@@ -103,8 +79,7 @@ TEST(GpuArray, DeclareGpuArrayWithSize)
 	EXPECT_EQ(5, a1.size(0));
 	EXPECT_NE(nullptr, a1.raw_ptr());
 
-	//GpuArray<float> a2(2, 3);
-	Array<float, 2, cuda_allocator<float>> a2(2, 3);
+	GpuArray<float, 2> a2(2, 3);
 
 	EXPECT_FALSE(empty(a2));
 	EXPECT_EQ(sizeof(float), a2.itemSize());
@@ -113,8 +88,7 @@ TEST(GpuArray, DeclareGpuArrayWithSize)
 	EXPECT_EQ(3, a2.size(1));
 	EXPECT_NE(nullptr, a2.raw_ptr());
 
-	//GpuArray<double> a3(make_vector(2, 3, 4));
-	Array<double, 3, cuda_allocator<double>> a3(make_array(2, 3, 4));
+	GpuArray<double, 3> a3(make_array(2, 3, 4));
 
 	EXPECT_FALSE(empty(a3));
 	EXPECT_EQ(sizeof(double), a3.itemSize());
