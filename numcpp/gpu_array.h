@@ -12,25 +12,24 @@
 
 namespace np {
 
-template <typename T>
 struct cuda_allocator
 {
-	static std::shared_ptr<T> allocate(int size)
+	static std::shared_ptr<void> allocate(int size)
 	{
-		T *ptr = nullptr;
-		CUDA_CALL(cudaMalloc<T>(&ptr, size * sizeof(T)));
+		void *ptr = nullptr;
+		CUDA_CALL(cudaMalloc(&ptr, size));
 
-		return std::shared_ptr<T>(ptr, free);
+		return std::shared_ptr<void>(ptr, free);
 	}
 
-	static void free(T *ptr)
+	static void free(void *ptr)
 	{
 		CUDA_CALL(cudaFree(ptr));
 	}
 };
 
 template <typename T, int Dim = 1>
-using GpuArray = Array<T, Dim, cuda_allocator<T>>;
+using GpuArray = Array<T, Dim, cuda_allocator>;
 
 //template <typename T, size_t Dim = 1>
 //struct GpuArray : public Array<T, Dim, cuda_allocator<T>>

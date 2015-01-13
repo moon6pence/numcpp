@@ -82,7 +82,7 @@ public:
 		_length(product(size)), 
 		_size(size), 
 		_stride(make_stride(size)), 
-		_address(heap_allocator<char>::allocate(product(size) * itemSize)), // in byte size
+		_address(heap_allocator::allocate(product(size) * itemSize)), // in byte size
 		_origin(nullptr)
 	{
 		_origin = _address.get();
