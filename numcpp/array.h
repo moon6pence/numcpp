@@ -90,7 +90,7 @@ inline std::array<int, N> make_stride(const std::array<int, N> &size)
 	return std::move(stride);
 }
 
-template <typename T, size_t Dim = 1>
+template <typename T, size_t Dim = 1, class Allocator = heap_allocator>
 struct Array
 {
 public:
@@ -102,7 +102,7 @@ public:
 	int _length;
 	size_type _size;
 	stride_type _stride;
-	std::shared_ptr<value_type> _address;
+	std::shared_ptr<void> _address;
 	value_type *_origin;
 
 public:
@@ -119,32 +119,32 @@ public:
 		_length(product(size)), 
 		_size(size), 
 		_stride(make_stride(size)), 
-		_address(heap_allocator<value_type>::allocate(product(size))), 
+		_address(Allocator::allocate(product(size) * sizeof(T))), 
 		_origin(nullptr)
 	{
-		_origin = _address.get();
+		_origin = reinterpret_cast<T *>(_address.get());
 	}
 
 	Array(int size0) : 
 		_length(size0), 
 		_size(make_array(size0)), 
 		_stride(make_stride<1>(make_array(size0))), 
-		_address(heap_allocator<value_type>::allocate(size0)), 
+		_address(Allocator::allocate(size0 * sizeof(T))), 
 		_origin(nullptr)
 	{
 		static_assert(Dim == 1, "This function is only for Array<T, 1>");
-		_origin = _address.get();
+		_origin = reinterpret_cast<T *>(_address.get());
 	}
 
 	Array(int size0, int size1) : 
 		_length(size0 * size1), 
 		_size(make_array(size0, size1)), 
 		_stride(make_stride<2>(make_array(size0, size1))), 
-		_address(heap_allocator<value_type>::allocate(size0 * size1)), 
+		_address(Allocator::allocate(size0 * size1 * sizeof(T))), 
 		_origin(nullptr)
 	{
 		static_assert(Dim == 2, "This function is only for Array<T, 2>");
-		_origin = _address.get();
+		_origin = reinterpret_cast<T *>(_address.get());
 	}
 
 	// copy constructor (shallow copy)

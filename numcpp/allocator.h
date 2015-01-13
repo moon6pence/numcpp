@@ -5,15 +5,14 @@
 
 namespace np {
 
-template <typename T>
 struct heap_allocator
 {
-	static std::shared_ptr<T> allocate(int size)
+	static std::shared_ptr<void> allocate(int size)
 	{
-		return std::shared_ptr<T>(new T[size], free);
+		return std::shared_ptr<void>(new char[size], free);
 	}
 
-	static void free(T *ptr)
+	static void free(void *ptr)
 	{
 		delete[] ptr;
 	}

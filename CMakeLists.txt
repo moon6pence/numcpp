@@ -5,6 +5,9 @@ if (POLICY CMP0043)
 	cmake_policy(SET CMP0043 NEW)
 endif (POLICY CMP0043)
 
+set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
+set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+   
 project(nbb)
 
 # Conditional build with external dependencies
@@ -39,6 +42,7 @@ add_library(numcpp
 	numcpp/base_array.h
 	numcpp/array.h
 	numcpp/array_functions.h
+	numcpp/gpu_array.h
 	numcpp/opencv.h
 
 	# numcpp/stl.h
@@ -52,6 +56,9 @@ add_library(numcpp
 
 # External library: OpenCV
 if (USE_OPENCV)
+    set(CMAKE_PREFIX_PATH "$ENV{HOME}/opencv")
+    set(OpenCV_STATIC ON)
+
 	find_package(OpenCV REQUIRED)
 	target_link_libraries(numcpp ${OpenCV_LIBS})
 endif (USE_OPENCV)
@@ -61,14 +68,6 @@ if (USE_CUDA)
 	find_package(CUDA REQUIRED)
 	include_directories(${CUDA_INCLUDE_DIRS})
 	target_link_libraries(numcpp ${CUDA_LIBRARIES})
-
-	# Generate 2.0 code
-	set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS};-gencode arch=compute_20,code=sm_20;)
-
-	if (${MSVC})
-		# VS2012 + CUDA 5.0
-		set(CUDA_NVCC_FLAGS "${CUDA_NVCC_FLAGS} --use-local-env --cl-version 2010")
-	endif (${MSVC})
 
 	if (${UNIX})
 		# Use C++03 compiler, not C++11
@@ -83,10 +82,12 @@ if (BUILD_TEST)
 	elseif (${MSVC})
 		if (${CMAKE_SIZEOF_VOID_P} MATCHES "8")
 			# Link 64 bit library
-			link_directories("thirdparty/gtest-1.7.0/lib/msvc2012_64")
+			# link_directories("thirdparty/gtest-1.7.0/lib/msvc2012_64")
+			link_directories("thirdparty/gtest-1.7.0/lib/msvc2013_64")
 		else ()
 			# Link 32 bit library
-			link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+			# link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
+			link_directories("thirdparty/gtest-1.7.0/lib/msvc2013")
 		endif ()
 
 		add_definitions(-D_VARIADIC_MAX=10)
@@ -102,16 +103,9 @@ if (BUILD_TEST)
 
 		numcpp/base_array.test.inl
 		numcpp/array.test.inl
+		numcpp/gpu_array.test.inl
+		${TEST_CUDA_KERNEL_O}
 		numcpp/opencv.test.inl
-
-		# numcpp/stl.test.inl
-		# numcpp/functions.test.inl
-		# numcpp/lazy_array.test.inl
-		
-		# numcpp/cuda.test.inl
-		# ${TEST_CUDA_KERNEL_O}
-
-		# numcpp/test_arrayfixture.h
 	)
 
 	find_package(Threads)
@@ -134,6 +128,7 @@ endif (BUILD_EXAMPLE)
 # ----------
 
 # Qt
+set(CMAKE_PREFIX_PATH "$ENV{QTDIR}")
 find_package(Qt5Widgets REQUIRED)
 
 qt5_wrap_ui(UI_FILES nbb/ContextWindow.ui)

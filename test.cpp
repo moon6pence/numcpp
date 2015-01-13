@@ -13,20 +13,9 @@ TEST(Main, HelloGoogleTest)
 #include "numcpp/opencv.test.inl"
 #endif
 
-//#include "numcpp/stl.test.inl"
-//#include "numcpp/functions.test.inl"
-//#include "numcpp/lazy_array.test.inl"
-
-// FIXME
-/*
-#ifdef USE_OPENCV
-#include "numcpp/opencv.test.inl"
-#endif
-
 #ifdef USE_CUDA
-#include "numcpp/cuda.test.inl"
+#include "numcpp/gpu_array.test.inl"
 #endif
-*/
 
 int main(int argc, char **argv)
 {
