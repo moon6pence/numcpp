@@ -5,6 +5,9 @@ if (POLICY CMP0043)
 	cmake_policy(SET CMP0043 NEW)
 endif (POLICY CMP0043)
 
+set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
+set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+   
 project(nbb)
 
 # Conditional build with external dependencies
@@ -53,6 +56,9 @@ add_library(numcpp
 
 # External library: OpenCV
 if (USE_OPENCV)
+    set(CMAKE_PREFIX_PATH "$ENV{HOME}/opencv")
+    set(OpenCV_STATIC ON)
+
 	find_package(OpenCV REQUIRED)
 	target_link_libraries(numcpp ${OpenCV_LIBS})
 endif (USE_OPENCV)
@@ -122,6 +128,7 @@ endif (BUILD_EXAMPLE)
 # ----------
 
 # Qt
+set(CMAKE_PREFIX_PATH "$ENV{QTDIR}")
 find_package(Qt5Widgets REQUIRED)
 
 qt5_wrap_ui(UI_FILES nbb/ContextWindow.ui)
