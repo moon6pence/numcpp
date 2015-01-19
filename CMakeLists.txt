@@ -61,6 +61,7 @@ endif (USE_CUDA)
 
 if (BUILD_TEST)
 	# Use google test
+	set(gtest_force_shared_crt ON CACHE BOOL "Use shared crt")
 	add_subdirectory(deps/google-test)
 	include_directories(deps/google-test/include)
 
@@ -100,6 +101,8 @@ set(CMAKE_PREFIX_PATH "$ENV{QTDIR}")
 find_package(Qt5Widgets REQUIRED)
 
 # jsoncpp
+set(JSONCPP_WITH_TESTS OFF CACHE BOOL "jsoncpp with tests")
+set(JSONCPP_WITH_POST_BUILD_UNITTEST OFF CACHE BOOL "jsoncpp with post build unittest")
 include_directories(deps/jsoncpp/include)
 add_subdirectory(deps/jsoncpp)
 
