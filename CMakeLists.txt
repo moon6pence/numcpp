@@ -99,9 +99,9 @@ endif (BUILD_EXAMPLE)
 set(CMAKE_PREFIX_PATH "$ENV{QTDIR}")
 find_package(Qt5Widgets REQUIRED)
 
-# JsonCPP
-include_directories(thirdparty/jsoncpp/include)
-get_filename_component(jsoncpp_LIB "thirdparty/jsoncpp/lib/jsoncpp.lib" REALPATH) # to absolute path
+# jsoncpp
+include_directories(deps/jsoncpp/include)
+add_subdirectory(deps/jsoncpp)
 
 # Library: nbb
 qt5_wrap_ui(UI_FILES nbb/ContextWindow.ui)
@@ -125,8 +125,15 @@ add_library(nbb
 	${QRC_FILES}
 )
 
-target_link_libraries(nbb ${jsoncpp_LIB})
+target_link_libraries(nbb jsoncpp_lib)
 qt5_use_modules(nbb Core Widgets)
 
 # Auto moc
 set_target_properties(nbb PROPERTIES AUTOMOC TRUE)
+
+if (BUILD_TEST)
+	# test executable
+	add_executable(nbb.test nbb/test.cpp)
+
+	target_link_libraries(nbb.test nbb)
+endif (BUILD_TEST)
