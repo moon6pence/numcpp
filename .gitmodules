@@ -1,0 +1,3 @@
+[submodule "deps/google-test"]
+	path = deps/google-test
+	url = https://github.com/khkim2/google-test

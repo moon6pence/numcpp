@@ -5,9 +5,6 @@ if (POLICY CMP0043)
 	cmake_policy(SET CMP0043 NEW)
 endif (POLICY CMP0043)
 
-set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
-set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
-   
 project(nbb)
 
 # Conditional build with external dependencies
@@ -20,12 +17,8 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_SOURCE_DI
 # Project header directory
 include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 
-# Link library directory
-set(CMAKE_LIBRARY_PATH "$ENV{ProgramFiles}/Windows Kits/8.0/Lib/win8/um/x86")
-
 # Compiler option for gcc
 if (${CMAKE_COMPILER_IS_GNUCXX})
-	# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -std=c++11" )
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 endif (${CMAKE_COMPILER_IS_GNUCXX})
 
@@ -43,21 +36,12 @@ add_library(numcpp
 	numcpp/array.h
 	numcpp/array_functions.h
 	numcpp/gpu_array.h
-	numcpp/opencv.h
-
-	# numcpp/stl.h
-	# numcpp/functions.h
-	# numcpp/lazy_array.h
-
-	# TODO: conditional include?
-	# numcpp/cuda.h
-	# numcpp/cufft.h
-)
+	numcpp/opencv.h)
 
 # External library: OpenCV
 if (USE_OPENCV)
     set(CMAKE_PREFIX_PATH "$ENV{HOME}/opencv")
-    set(OpenCV_STATIC ON)
+	set(OpenCV_STATIC OFF)
 
 	find_package(OpenCV REQUIRED)
 	target_link_libraries(numcpp ${OpenCV_LIBS})
@@ -76,22 +60,9 @@ if (USE_CUDA)
 endif (USE_CUDA)
 
 if (BUILD_TEST)
-	# Unit tests with Google Test
-	if (${CMAKE_COMPILER_IS_GNUCXX})
-		link_directories("thirdparty/gtest-1.7.0/lib/linux_x86_64")
-	elseif (${MSVC})
-		if (${CMAKE_SIZEOF_VOID_P} MATCHES "8")
-			# Link 64 bit library
-			# link_directories("thirdparty/gtest-1.7.0/lib/msvc2012_64")
-			link_directories("thirdparty/gtest-1.7.0/lib/msvc2013_64")
-		else ()
-			# Link 32 bit library
-			# link_directories("thirdparty/gtest-1.7.0/lib/msvc2012")
-			link_directories("thirdparty/gtest-1.7.0/lib/msvc2013")
-		endif ()
-
-		add_definitions(-D_VARIADIC_MAX=10)
-	endif()
+	# Use google test
+	add_subdirectory(deps/google-test)
+	include_directories(deps/google-test/include)
 
 	if (USE_CUDA)
 		cuda_compile(TEST_CUDA_KERNEL_O numcpp/test_cuda_kernel.cu)
@@ -108,13 +79,10 @@ if (BUILD_TEST)
 		numcpp/opencv.test.inl
 	)
 
-	find_package(Threads)
-	include_directories("thirdparty/gtest-1.7.0/include")
-	target_link_libraries(numcpp.test numcpp gtest ${CMAKE_THREAD_LIBS_INIT})
+	target_link_libraries(numcpp.test numcpp gtest)
 
 	# Copy files for test
 	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
-	file(COPY images/fromfile_int.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
 endif (BUILD_TEST)
 
 if (BUILD_EXAMPLE)
@@ -131,14 +99,14 @@ endif (BUILD_EXAMPLE)
 set(CMAKE_PREFIX_PATH "$ENV{QTDIR}")
 find_package(Qt5Widgets REQUIRED)
 
-qt5_wrap_ui(UI_FILES nbb/ContextWindow.ui)
-qt5_add_resources(QRC_FILES nbb/ContextWindow.qrc)
-
 # JsonCPP
 include_directories(thirdparty/jsoncpp/include)
 get_filename_component(jsoncpp_LIB "thirdparty/jsoncpp/lib/jsoncpp.lib" REALPATH) # to absolute path
 
 # Library: nbb
+qt5_wrap_ui(UI_FILES nbb/ContextWindow.ui)
+qt5_add_resources(QRC_FILES nbb/ContextWindow.qrc)
+
 add_library(nbb
 	nbb/signal.h
 	nbb/property.h
