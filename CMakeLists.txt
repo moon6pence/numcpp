@@ -65,6 +65,18 @@ if (BUILD_TEST)
 	endif (USE_CUDA)
 
 	# test executable
+	add_executable(numcpp.old.test 
+		test.old.cpp
+
+		numcpp/base_array.test.inl
+		numcpp/array.test.inl
+		numcpp/gpu_array.test.inl
+		${TEST_CUDA_KERNEL_O}
+		numcpp/opencv.test.inl)
+
+	target_link_libraries(numcpp.old.test numcpp gtest)
+
+	# test executable
 	add_executable(numcpp.test 
 		test.cpp
 
@@ -72,8 +84,7 @@ if (BUILD_TEST)
 		numcpp/array.test.inl
 		numcpp/gpu_array.test.inl
 		${TEST_CUDA_KERNEL_O}
-		numcpp/opencv.test.inl
-	)
+		numcpp/opencv.test.inl)
 
 	target_link_libraries(numcpp.test numcpp gtest)
 
