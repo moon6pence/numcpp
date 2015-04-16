@@ -6,7 +6,7 @@ TEST(Main, HelloGoogleTest)
 }
 
 #include "config.h"
-#include "numcpp/base_array.test.inl"
+//#include "numcpp/base_array.test.inl"
 #include "numcpp/array.test.inl"
 
 #ifdef USE_OPENCV
