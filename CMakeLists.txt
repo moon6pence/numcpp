@@ -55,19 +55,22 @@ if (USE_CUDA)
 endif (USE_CUDA)
 
 if (BUILD_TEST)
+    if (USE_OPENCV)
+        set(ADDITIONAL_TESTS "numcpp/opencv.test.cpp ${ADDITIONAL_TESTS}")
+    endif (USE_OPENCV)
+
 	if (USE_CUDA)
 		cuda_compile(TEST_CUDA_KERNEL_O numcpp/test_cuda_kernel.cu)
+        set(ADDTIONAL_TESTS "numcpp/cuda.test.cpp ${TEST_CUDA_KERNEL_O} ${ADDITIONAL_TESTS}")
 	endif (USE_CUDA)
 
 	# test executable
 	add_executable(numcpp.test 
 		test.cpp
 
-		numcpp/base_array.test.inl
-		numcpp/array.test.inl
-		numcpp/gpu_array.test.inl
-		${TEST_CUDA_KERNEL_O}
-		numcpp/opencv.test.inl)
+		numcpp/base_array.test.cpp
+		numcpp/array.test.cpp
+        ${ADDITIONAL_TESTS})
 
 	target_link_libraries(numcpp.test numcpp)
 

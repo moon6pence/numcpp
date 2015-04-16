@@ -1,3 +1,4 @@
+#include <catch.hpp>
 #include <numcpp/base_array.h>
 
 namespace {
