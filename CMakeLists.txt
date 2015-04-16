@@ -55,26 +55,9 @@ if (USE_CUDA)
 endif (USE_CUDA)
 
 if (BUILD_TEST)
-	# Use google test
-	set(gtest_force_shared_crt ON CACHE BOOL "Use shared crt")
-	add_subdirectory(deps/google-test)
-	include_directories(deps/google-test/include)
-
 	if (USE_CUDA)
 		cuda_compile(TEST_CUDA_KERNEL_O numcpp/test_cuda_kernel.cu)
 	endif (USE_CUDA)
-
-	# test executable
-	add_executable(numcpp.old.test 
-		test.old.cpp
-
-		numcpp/base_array.test.inl
-		numcpp/array.test.inl
-		numcpp/gpu_array.test.inl
-		${TEST_CUDA_KERNEL_O}
-		numcpp/opencv.test.inl)
-
-	target_link_libraries(numcpp.old.test numcpp gtest)
 
 	# test executable
 	add_executable(numcpp.test 
@@ -86,7 +69,7 @@ if (BUILD_TEST)
 		${TEST_CUDA_KERNEL_O}
 		numcpp/opencv.test.inl)
 
-	target_link_libraries(numcpp.test numcpp gtest)
+	target_link_libraries(numcpp.test numcpp)
 
 	# Copy files for test
 	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
