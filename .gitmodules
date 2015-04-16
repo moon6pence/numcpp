@@ -1,6 +1,0 @@
-[submodule "deps/google-test"]
-	path = deps/google-test
-	url = https://github.com/khkim2/google-test
-[submodule "deps/jsoncpp"]
-	path = deps/jsoncpp
-	url = https://github.com/khkim2/jsoncpp-config-cmake

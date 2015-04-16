@@ -1,11 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
-cmake_policy(SET CMP0015 NEW)
-cmake_policy(SET CMP0020 NEW)
-if (POLICY CMP0043)
-	cmake_policy(SET CMP0043 NEW)
-endif (POLICY CMP0043)
+cmake_minimum_required(VERSION 3.0)
 
-project(nbb)
+project(numcpp)
 
 # Conditional build with external dependencies
 set(USE_OPENCV ON CACHE BOOL "Use OpenCV")
@@ -60,27 +55,24 @@ if (USE_CUDA)
 endif (USE_CUDA)
 
 if (BUILD_TEST)
-	# Use google test
-	set(gtest_force_shared_crt ON CACHE BOOL "Use shared crt")
-	add_subdirectory(deps/google-test)
-	include_directories(deps/google-test/include)
+    if (USE_OPENCV)
+        set(ADDITIONAL_TESTS "numcpp/opencv.test.cpp ${ADDITIONAL_TESTS}")
+    endif (USE_OPENCV)
 
 	if (USE_CUDA)
 		cuda_compile(TEST_CUDA_KERNEL_O numcpp/test_cuda_kernel.cu)
+        set(ADDTIONAL_TESTS "numcpp/cuda.test.cpp ${TEST_CUDA_KERNEL_O} ${ADDITIONAL_TESTS}")
 	endif (USE_CUDA)
 
 	# test executable
 	add_executable(numcpp.test 
 		test.cpp
 
-		numcpp/base_array.test.inl
-		numcpp/array.test.inl
-		numcpp/gpu_array.test.inl
-		${TEST_CUDA_KERNEL_O}
-		numcpp/opencv.test.inl
-	)
+		numcpp/base_array.test.cpp
+		numcpp/array.test.cpp
+        ${ADDITIONAL_TESTS})
 
-	target_link_libraries(numcpp.test numcpp gtest)
+	target_link_libraries(numcpp.test numcpp)
 
 	# Copy files for test
 	file(COPY images/Lena.bmp DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
@@ -93,50 +85,3 @@ if (BUILD_EXAMPLE)
 		target_link_libraries(circularize numcpp)
 	endif (USE_OPENCV)
 endif (BUILD_EXAMPLE)
-
-# ----------
-
-# Qt
-set(CMAKE_PREFIX_PATH "$ENV{QTDIR}")
-find_package(Qt5Widgets REQUIRED)
-
-# jsoncpp
-set(JSONCPP_WITH_TESTS OFF CACHE BOOL "jsoncpp with tests")
-set(JSONCPP_WITH_POST_BUILD_UNITTEST OFF CACHE BOOL "jsoncpp with post build unittest")
-include_directories(deps/jsoncpp/include)
-add_subdirectory(deps/jsoncpp)
-
-# Library: nbb
-qt5_wrap_ui(UI_FILES nbb/ContextWindow.ui)
-qt5_add_resources(QRC_FILES nbb/ContextWindow.qrc)
-
-add_library(nbb
-	nbb/signal.h
-	nbb/property.h
-	nbb/Object.h
-	nbb/Object.cpp
-	nbb/Context.h
-	nbb/Context.cpp
-	nbb/QuickDialog.h
-	nbb/QuickDialog.cpp
-	nbb/QuickJSON.h
-	nbb/QuickJSON.cpp
-
-	nbb/ContextWindow.h
-	nbb/ContextWindow.cpp
-	${UI_FILES}
-	${QRC_FILES}
-)
-
-target_link_libraries(nbb jsoncpp_lib)
-qt5_use_modules(nbb Core Widgets)
-
-# Auto moc
-set_target_properties(nbb PROPERTIES AUTOMOC TRUE)
-
-if (BUILD_TEST)
-	# test executable
-	add_executable(nbb.test nbb/test.cpp)
-
-	target_link_libraries(nbb.test nbb)
-endif (BUILD_TEST)
