@@ -5,7 +5,7 @@ namespace {
 
 using namespace np;
 
-TEST_CASE("DeclareEmptyArray", "BaseArray")
+TEST_CASE("DeclareEmptyBaseArray", "BaseArray")
 {
 	BaseArray a0;
 
@@ -20,7 +20,7 @@ TEST_CASE("DeclareEmptyArray", "BaseArray")
 	CHECK(byteSize(a0) == 0);
 }
 
-TEST_CASE("DeclareArrayWithSize", "BaseArray")
+TEST_CASE("DeclareBaseArrayWithSize", "BaseArray")
 {
 	BaseArray a1(sizeof(int), make_vector(5));
 
