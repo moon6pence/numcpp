@@ -288,6 +288,13 @@ public:
 };
 
 template <typename T>
+inline void setSize(Array<T, 1> &array, int size0)
+{
+	if (array.size(0) != size0)
+		array = Array<T, 1>(size0);
+}
+
+template <typename T>
 inline void setSize(Array<T, 2> &array, int size0, int size1)
 {
 	if (array.size(0) != size0 || array.size(1) != size1)
