@@ -60,7 +60,8 @@ inline bool imread(Array<uint8_t, 2> &dst, const std::string &filename)
 template <typename T>
 inline bool imwrite(const Array<T, 2> &image, const std::string &filename)
 {
-	return cv::imwrite(filename, to_cv_mat(image));
+    // return cv::imwrite(filename, to_cv_mat(image));
+    return cvSaveImage(filename.c_str(), &(IplImage(to_cv_mat(image))));
 }
 
 } // namespace np
