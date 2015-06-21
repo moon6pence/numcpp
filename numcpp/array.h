@@ -125,7 +125,7 @@ public:
 		_origin = reinterpret_cast<T *>(_address.get());
 	}
 
-	Array(int size0) : 
+	explicit Array(int size0) : 
 		_length(size0), 
 		_size(make_array(size0)), 
 		_stride(make_stride<1>(make_array(size0))), 
@@ -147,7 +147,27 @@ public:
 		_origin = reinterpret_cast<T *>(_address.get());
 	}
 
-	// copy constructor (shallow copy)
+    Array(value_type *ptr, int size0) :
+        _length(size0),
+        _size(make_array(size0)),
+        _stride(make_stride<1>(make_array(size0))),
+        _address(), 
+        _origin(ptr)
+    {
+        static_assert(Dim == 1, "This function is only for Array<T, 1>");
+    }
+
+    Array(value_type *ptr, int size0, int size1) :
+        _length(size0 * size1),
+        _size(make_array(size0, size1)),
+        _stride(make_stride<2>(make_array(size0, size1))),
+        _address(), 
+        _origin(ptr)
+    {
+        static_assert(Dim == 2, "This function is only for Array<T, 2>");
+    }
+    
+    // copy constructor (shallow copy)
 	explicit Array(const Array &other) :
 		_length(other._length), 
 		_size(other._size), 
