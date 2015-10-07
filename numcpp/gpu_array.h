@@ -68,7 +68,9 @@ using GpuArray = Array<T, Dim, cuda_allocator>;
 template <typename T, int Dim>
 void to_device(GpuArray<T, Dim> &dst_d, const Array<T, Dim> &src)
 {
-	// FIXME: dst_d.setSize()
+    if (dst_d.size() != src.size())
+        dst_d = GpuArray<T, Dim>(src.size());
+
 	CUDA_CALL(cudaMemcpy(dst_d.raw_ptr(), src.raw_ptr(), byteSize(src), cudaMemcpyHostToDevice));
 }
 
@@ -84,7 +86,9 @@ GpuArray<T, Dim> to_device(const Array<T, Dim> &host_array)
 template <typename T, int Dim>
 void to_host(Array<T, Dim> &dst, const GpuArray<T, Dim> &src_d)
 {
-	// FIXME: dst.setSize()
+    if (dst.size() != src_d.size())
+        dst = Array<T, Dim>(src_d.size());
+
 	CUDA_CALL(cudaMemcpy(dst.raw_ptr(), src_d.raw_ptr(), byteSize(src_d), cudaMemcpyDeviceToHost));
 }
 

@@ -198,6 +198,7 @@ public:
 		_origin(other._origin)
 	{
 		other._length = 0;
+        other._size = zero_array<Dim>();
 		other._origin = nullptr;
 	}
 
@@ -211,6 +212,7 @@ public:
 		_origin = other._origin;
 
 		other._length = 0;
+        other._size = zero_array<Dim>();
 		other._origin = nullptr;
 
 		return *this;
