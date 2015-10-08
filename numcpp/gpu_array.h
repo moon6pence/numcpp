@@ -74,6 +74,16 @@ void to_device(GpuArray<T, Dim> &dst_d, const Array<T, Dim> &src)
 	CUDA_CALL(cudaMemcpy(dst_d.raw_ptr(), src.raw_ptr(), byteSize(src), cudaMemcpyHostToDevice));
 }
 
+// Async version
+template <typename T, int Dim>
+void to_device(GpuArray<T, Dim> &dst_d, const Array<T, Dim> &src, cudaStream_t stream)
+{
+    if (dst_d.size() != src.size())
+        dst_d = GpuArray<T, Dim>(src.size());
+
+    CUDA_CALL(cudaMemcpyAsync(dst_d.raw_ptr(), src.raw_ptr(), byteSize(src), cudaMemcpyHostToDevice, stream));
+}
+
 template <typename T, int Dim>
 GpuArray<T, Dim> to_device(const Array<T, Dim> &host_array)
 {
@@ -90,6 +100,16 @@ void to_host(Array<T, Dim> &dst, const GpuArray<T, Dim> &src_d)
         dst = Array<T, Dim>(src_d.size());
 
 	CUDA_CALL(cudaMemcpy(dst.raw_ptr(), src_d.raw_ptr(), byteSize(src_d), cudaMemcpyDeviceToHost));
+}
+
+// Async version
+template <typename T, int Dim>
+void to_host(Array<T, Dim> &dst, const GpuArray<T, Dim> &src_d, cudaStream_t stream)
+{
+    if (dst.size() != src_d.size())
+        dst = Array<T, Dim>(src_d.size());
+
+    CUDA_CALL(cudaMemcpyAsync(dst.raw_ptr(), src_d.raw_ptr(), byteSize(src_d), cudaMemcpyDeviceToHost, stream));
 }
 
 } // namespace np
