@@ -61,7 +61,7 @@ template <typename T>
 inline bool imwrite(const Array<T, 2> &image, const std::string &filename)
 {
     // return cv::imwrite(filename, to_cv_mat(image));
-    return cvSaveImage(filename.c_str(), &(IplImage(to_cv_mat(image))));
+    return cvSaveImage(filename.c_str(), &(IplImage(to_cv_mat(image)))) != 0;
 }
 
 } // namespace np
