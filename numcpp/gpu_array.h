@@ -3,6 +3,7 @@
 
 #include "array.h"
 #include <cuda_runtime.h>
+#include <iostream>
 
 #define CUDA_CALL(func) \
 	{ \
