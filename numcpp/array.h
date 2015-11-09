@@ -305,6 +305,21 @@ public:
 	T &operator()(int index0, int index1) { return at(index0, index1); }
 	const T &operator()(int index0, int index1) const { return at(index0, index1); }
 
+	T &at(int index0, int index1, int index2)
+	{
+		static_assert(Dim >= 3, "Array dimension bounds error");
+		return _origin[index0 * stride(0) + index1 * stride(1) + index2 * stride(2)];
+	}
+
+	const T &at(int index0, int index1, int index2) const
+	{
+		static_assert(Dim >= 3, "Array dimension bounds error");
+		return _origin[index0 * stride(0) + index1 * stride(1) + index2 * stride(2)];
+	}
+
+	T &operator()(int index0, int index1, int index2) { return at(index0, index1, index2); }
+	const T &operator()(int index0, int index1, int index2) const { return at(index0, index1, index2); }
+
 public:
 	//friend Array<T, 1> slice(const Array<T> &array, const Range &range);
 };
