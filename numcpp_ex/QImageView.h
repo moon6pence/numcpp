@@ -36,6 +36,16 @@ public:
         update();
     }
 
+    void setCrop(int left, int top, int right, int bottom)
+    {
+        _left = left;
+        _top = top;
+        _right = right;
+        _bottom = bottom;
+
+        update();
+    }
+
 	// signal
 	std::function<void(Qt::MouseButton button)> onClicked;
 
@@ -44,8 +54,9 @@ protected:
     {
         QPainter painter(this);
         painter.drawImage(
-            QRect(0, 0, width(), height()),
-            _qimage);
+            QRect(0, 0, width(), height()), 
+            _qimage, 
+            QRect(_left, _top, _qimage.width() - _left - _right, _qimage.height() - _top - _bottom));
         painter.end();
     }
 
@@ -58,6 +69,7 @@ protected:
 private:
 	QImage _qimage;
     QVector<QRgb> _colorTable;
+	int _left = 0, _top = 0, _right = 0, _bottom = 0; // crop
 };
 
 #endif // QIMAGE_VIEW_H_
